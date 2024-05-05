@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,21 +16,22 @@ public class BioSample {
     @TableId(value = "id",type = IdType.AUTO)
     private Long id;
 
+    @NotBlank
     @TableField("barCode")
     private String  barCode;
 
+    @NotBlank
     @TableField("type")
     private String sampleType ;
+
+    @TableField("sender")
+    private String  sender;
 
     @TableField("weight")
     private Double  weight;
 
     @TableField("volume")
     private Double volume ;
-
-    @TableField("sender")
-    private String  sender;
-
 
     @TableField("color")
     private String  color;
@@ -44,11 +46,12 @@ public class BioSample {
     private String  partnerCode ;
 
     @TableField("isVIP")
-    private Integer  isVIP ;
+    private boolean  isVIP ;
 
     @TableField("createTime")
     private LocalDateTime  createTime ;
 
+    @NotBlank
     @TableField("sampleImage")
     private String  sampleImage ;
 
