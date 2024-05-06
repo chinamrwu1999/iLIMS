@@ -1,7 +1,7 @@
 package com.amswh.MYLIMS.service;
 
 import com.amswh.MYLIMS.domain.Patient;
-import com.amswh.MYLIMS.mapper.IPatientMapper;
+import com.amswh.MYLIMS.mapper.lims.IPatientMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
