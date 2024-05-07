@@ -56,6 +56,7 @@
             <version>3.5.6</version>
         </dependency>
 
+<<<<<<< HEAD
 
 		<!-- JSR 303 - Bean Validation API -->
 		<dependency>
@@ -72,6 +73,16 @@
 		</dependency>
 
 
+=======
+		<dependency>
+			<groupId>com.iss.iescp</groupId>
+			<artifactId>iescp-web-sign-sdk</artifactId>
+			<version>1.0.1</version>
+			<scope>system</scope>
+			<systemPath>E:/LIS1.0/libs/iescp-web-sign-sdk-1.0.1.jar</systemPath>
+		</dependency>
+
+>>>>>>> 8876ca758182c85e0bdb0f4b85d414a0d47c6797
 	</dependencies>
 
 	<build>
@@ -80,6 +91,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<includeSystemScope>true</includeSystemScope>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>

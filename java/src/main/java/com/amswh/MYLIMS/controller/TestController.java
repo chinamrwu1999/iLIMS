@@ -4,6 +4,7 @@ import com.amswh.MYLIMS.domain.Analyte;
 import com.amswh.MYLIMS.domain.AnalyteProcess;
 import com.amswh.MYLIMS.domain.BioSample;
 import com.amswh.MYLIMS.domain.Patient;
+import com.amswh.MYLIMS.partner.rh.RHService;
 import com.amswh.MYLIMS.service.AnalyteProcessService;
 import com.amswh.MYLIMS.service.AnalyteService;
 import com.amswh.MYLIMS.service.BioSampleService;
@@ -33,15 +34,21 @@ public class TestController {
     @Resource
     AnalyteProcessService processService;
 
+    @Resource
+    RHService rhService;
+
+
     @GetMapping("/service")
     public void TestMe(){
-         this.create();
-         List<BioSample> list=bioSampleServiceservice.list();
-         System.out.println(list.size());
-         for(BioSample obj:list){
-             System.out.println(obj.getId()+"\t"+obj.getBarCode()+"\t"+obj.getPartnerCode());
-         }
-         this.query();
+//         this.create();
+//         List<BioSample> list=bioSampleServiceservice.list();
+//         System.out.println(list.size());
+//         for(BioSample obj:list){
+//             System.out.println(obj.getId()+"\t"+obj.getBarCode()+"\t"+obj.getPartnerCode());
+//         }
+//         this.query();
+
+         rhService.fetchServiceStatus("biz10000000");
          System.out.println("OK");
     }
 
@@ -79,12 +86,12 @@ public class TestController {
 
     }
 
-    private void query(){
-         List<Map<String,Object>> list=this.processService.getBaseMapper().getSampleStatus("AMS24000045301");
-         list.stream().forEach( x -> {
-              for(String key:x.keySet()){
-                  System.out.println(key+":"+x.get(key));
-              }
-         });
-    }
+//    private void query(){
+//         List<Map<String,Object>> list=this.processService.getBaseMapper().getSampleStatus("AMS24000045301");
+//         list.stream().forEach( x -> {
+//              for(String key:x.keySet()){
+//                  System.out.println(key+":"+x.get(key));
+//              }
+//         });
+//    }
 }
