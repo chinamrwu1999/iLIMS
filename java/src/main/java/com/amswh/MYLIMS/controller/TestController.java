@@ -48,7 +48,9 @@ public class TestController {
 //         }
 //         this.query();
 
-         rhService.fetchServiceStatus("biz10000000");
+         rhService.fetchServiceStatus("62400498308");
+         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        rhService.pushTestResult();
          System.out.println("OK");
     }
 

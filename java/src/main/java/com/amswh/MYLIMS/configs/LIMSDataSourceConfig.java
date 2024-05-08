@@ -17,35 +17,35 @@ import javax.sql.DataSource;
 
 
 @Configuration
-@MapperScan(basePackages = {"com.amswh.MYLIMS.mapper.lims"}, sqlSessionFactoryRef = "sqlSessionFactory")
+@MapperScan(basePackages = {"com.amswh.MYLIMS.mapper.lims"}, sqlSessionFactoryRef = "limsSqlSessionFactory")
 public class LIMSDataSourceConfig {
 
 
-    @Bean(name = "dataSource")
+    @Bean(name = "lims")
     @ConfigurationProperties(prefix = "spring.datasource.lims")
     @Primary
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "sqlSessionFactory")
+    @Bean(name = "limsSqlSessionFactory")
     @Primary
-    public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(@Qualifier("lims") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
        // bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
         return bean.getObject();
     }
 
-    @Bean(name = "transactionManager")
+    @Bean(name = "limsTransactionManager")
     @Primary
-    public DataSourceTransactionManager transactionManager(@Qualifier("dataSource") DataSource dataSource) {
+    public DataSourceTransactionManager transactionManager(@Qualifier("lims") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
-    @Bean(name = "sqlSessionTemplate")
+    @Bean(name = "limsSqlSessionTemplate")
     @Primary
-    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("limsSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 }

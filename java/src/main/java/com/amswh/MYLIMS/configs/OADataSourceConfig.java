@@ -17,35 +17,35 @@ import javax.sql.DataSource;
 
 
 @Configuration
-@MapperScan(basePackages = {"com.amswh.MYLIMS.mapper.oa"}, sqlSessionFactoryRef = "sqlSessionFactory")
+@MapperScan(basePackages = {"com.amswh.MYLIMS.mapper.oa"}, sqlSessionFactoryRef = "OASqlSessionFactory")
 public class OADataSourceConfig {
 
 
-    @Bean(name = "dataSource")
+    @Bean(name = "oa")
     @ConfigurationProperties(prefix = "spring.datasource.oa")
     @Primary
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "sqlSessionFactory")
+    @Bean(name = "OASqlSessionFactory")
     @Primary
-    public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(@Qualifier("oa") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         // bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
         return bean.getObject();
     }
 
-    @Bean(name = "transactionManager")
+    @Bean(name = "OATransactionManager")
     @Primary
-    public DataSourceTransactionManager transactionManager(@Qualifier("dataSource") DataSource dataSource) {
+    public DataSourceTransactionManager transactionManager(@Qualifier("oa") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
-    @Bean(name = "sqlSessionTemplate")
+    @Bean(name = "OASqlSessionTemplate")
     @Primary
-    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("OASqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 }

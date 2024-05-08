@@ -1,0 +1,14 @@
+{
+  "code": "0000",
+  "data": [
+    {
+      "CBizId": "624004xfd",
+      "CContStatus": "3",
+      "CLoseReason": "02",
+      "CMasterProtocolNo": "TC04gdfg2500000052",
+      "CPersonId": "1232983076R737626112",
+      "CProtocolNo": "C2024042500000320"
+    }
+  ],
+  "message": "OK"
+}
