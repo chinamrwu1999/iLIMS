@@ -1,5 +1,5 @@
 CREATE DATABASE IF NOT EXISTS myLIMS;
-USE myLIMS;
+USE iLIMS;
 
 CREATE TABLE IF NOT EXISTS  `biosample`(
     `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',
@@ -49,88 +49,6 @@ CREATE index analyte_process_Index1 on `analyteProcess`(`analyteCode`);
 CREATE index analyte_process_ActionIndex1 on `analyteProcess`(`action`);
 CREATE INDEX index_analyteProcessTime ON analyteProcess(`createTime`);
 
-CREATE TABLE IF NOT EXISTS `patient`(
-     `patientId` int unsigned not null auto_increment primary key COMMENT '自增列主键',
-     `barCode` varchar(80) not null comment '病人检测绑定的试管码',
-     `name` varchar(60) not null COMMENT '病人姓名',
-     `gender` char(1) not null COMMENT '性别:F表示女,M表示男',
-     `age` tinyint unsigned COMMENT '年龄',
-     `IDType` varchar(12) COMMENT '证件类型',
-     `IDNumber` varchar(60) COMMENT '证件号码',
-     `email` varchar(80) COMMENT 'email',
-     `phone` varchar(15) COMMENT '电话',
-     `livingPlace` varchar(80) COMMENT '长期生活地区编码',
-     `nativeId` varchar(60) COMMENT '籍贯的地区编码',
-     `src` varchar(12) COMMENT '本条记录来源:api 表示通过api从第三方拉取;mobile表示终端用户通过微信小程序绑定,hand表示工作人员手工录入',
-     `createTime` datetime not null default now()
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '病人（受检者或生物样本捐者)的基本信息';
-
-
-CREATE TABLE  IF NOT EXISTS `member` (
-  `id` int unsigned NOT NULL  AUTO_INCREMENT primary key  COMMENT '主键',
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '姓名',
-  `gender` char(1) DEFAULT NULL COMMENT '性别:F: 女， M: 男',
-  `IDNumber` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '身份证号',
-  `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '电话号码',
-  `region` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '地区',
-  `openid` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '用户微信openId',
-  `username` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '微信用户名',
-  `createTime` datetime DEFAULT now() COMMENT '创建时间'
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='微信成员信息';
-
-CREATE TABLE IF NOT EXISTS `memberRelation`(
-     `id` int unsigned not null  AUTO_INCREMENT primary key  COMMENT '主键',
-     `fromMember` int not null,
-     `toMember` int not null,
-     `relationType` varchar(10) COMMENT '成员关系类型:P 表示fromMember 是toMember的父母;C子女、F朋友、FA 亲属、Other其他、unknown未知',
-    `createTime` datetime default now(),
-     unique(fromMember,toMember)
- ) ENGINE=InnoDB  COMMENT='微信成员之间的关系';
-
-
-  CREATE TABLE IF NOT EXISTS `company` (
-    `id` int unsigned not null AUTO_INCREMENT primary key COMMENT '自增列主键',
-    `code` varchar(20) not null unique COMMENT 'partner代码, 类如PAJK等',
-    `fullName` varchar(80) not null comment '',
-    `shortName` varchar(20),
-    `reportName` varchar(40) comment '报告上送检单位位置展示的名称',
-    `createTime` datetime default now()
- ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='公司基本信息';
-
- 
-
- CREATE TABLE IF NOT EXISTS `companyRelation`(
-     `fromId` int not null AUTO_INCREMENT COMMENT '主公司',
-     `toId` int not null COMMENT 'partner 子公司',
-     `relationType` varchar(20) comment '公司关系',
-     primary key (`fromId`,`toId`)
- ) ENGINE=InnoDB  COMMENT='公司之间关系';
-
-CREATE TABLE  IF NOT EXISTS `person` (
-  `id` int unsigned NOT NULL  AUTO_INCREMENT primary key  COMMENT '主键',
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '姓名',
-  `gender`char(1) DEFAULT NULL COMMENT '性别:F: 女， M: 男',
-  `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '电话号码',
-  `region` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '地区',
-  `email` varchar(80) ,
-  `openid` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '用户微信openId',
-  `username` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '系统用户名',
-  `password` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '密码',
-  `createTime` datetime DEFAULT now() COMMENT '创建时间'
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='人员信息：包含艾米森员工、partner人员';
-
-
-CREATE TABLE  IF NOT EXISTS `companyPerson` (
-   `companyId` int not null,
-   `personId`  int not null,
-   `relationType` varchar(12) not null,
-   `personRole` varchar(20) comment '人员在组织中的角色:总裁、总经理、总监、销售总监、销售员等',
-   `alive` char(1) default 'Y' comment '关系当前是否有效',
-   `createTime` datetime DEFAULT now() COMMENT '创建时间',
-   primary key (`companyId`,`personId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='企业与人员关系:员工';
-
-
 CREATE TABLE IF NOT EXISTS DataUpload (
     `id` int unsigned not null AUTO_INCREMENT primary key comment '自增列主键',
     `instrument` varchar(20) comment '仪器类型',
@@ -144,9 +62,9 @@ CREATE TABLE IF NOT EXISTS DataUpload (
 ) ENGINE=InnoDB AUTO_INCREMENT=10000 comment '实验数据上传信息';
 CREATE INDEX index_DataUploadTime ON DataUpload(`uploadTime`);
 
-CREATE TABLE IF NOT EXISTS PCRData(
+CREATE TABLE IF NOT EXISTS `PCRData`(
   `id` int unsigned not null AUTO_INCREMENT primary key comment '自增列主键',
-  `uploadId` int unsigned not null foreign key references `DataUpload`(`id`) on delete cascade,
+  `uploadId` int unsigned not null ,
   `analyteCode` varchar(20) not null ,
   `well` varchar(4) not null comment '孔洞编号:PCR仪器板子上有96空或48空用于放测试样本, 不同样本不能混在同一个well',
   `target` varchar(40) not null comment '基因标记物的代码',
@@ -163,15 +81,6 @@ CREATE TABLE IF NOT EXISTS TargetCurve(
     constraint fk_curve foreign key(`id`) references `PCRData`(`id`)
 ) ENGINE=InnoDB comment '标记物的扩展曲线值';
 
-
-CREATE TABLE IF NOT EXISTS analytePredict(
-    `analyteCode` varchar(20) not null primary key ,
-    `predict` varchar(8) not null,
-    `createTime` DATETIME not null default now(),
-    constraint `fk_analyte_predict` foreign key (`analyteCode`) references `PCRData`(`analyteCode`) on delete cascade
-) comment '单个分析物的判定预测';
-
-CREATE INDEX index_analytePredictTime ON analytePredict(`createtime`);
  
 
 

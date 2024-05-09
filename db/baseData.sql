@@ -1,4 +1,4 @@
-use myLIMS;
+use iLIMS;
 
 CREATE TABLE IF NOT EXISTS `disease`(
   `code` varchar(8) not null primary key comment '疾病代码',

@@ -76,7 +76,7 @@
 			<artifactId>iescp-web-sign-sdk</artifactId>
 			<version>1.0.1</version>
 			<scope>system</scope>
-			<systemPath>E:/LIS1.0/libs/iescp-web-sign-sdk-1.0.1.jar</systemPath>
+			<systemPath>E:/localJars/RH-sign-sdk-1.0.1.jar</systemPath>
 		</dependency>
 
 
