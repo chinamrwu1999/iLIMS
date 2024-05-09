@@ -8,3 +8,9 @@
  ;
  #查询所有客户信息
   select id,name,createDate,createTime,lastupdateddate,lastupdatedtime from crm_customerInfo;
+
+
+ select  id, sqr 申请人, ywy 业务员, ddbh 订单编号, khmc 客户名称 , xsms 销售模式, xdrq  申请日期, fhrq  发货日期
+ from formtable_main_20 WHERE xsms IS NOT NULL AND ddbh !='' AND ddbh='202008002XD' ;
+
+  202008002XD
