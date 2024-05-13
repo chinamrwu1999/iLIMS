@@ -19,27 +19,6 @@ import java.util.Map;
 @Mapper
 public interface OAMapper {
 
-    /**业务说明：
-     * 查询OA上最新的正常订单（艾米森销售订单）
-     * @param updateTime
-     * @return
-     */
-    @Select(" select  id, sqr 申请人, ywy 业务员, ddbh 订单编号, khmc 客户名称 , xsms 销售模式, xdrq  申请日期, fhrq  发货日期\n" +
-            " from formtable_main_20 WHERE xsms IS NOT NULL AND ddbh !='' AND DATE(xdrq)> date(#{updateTime})")
-    public List<Map<String,Object>> queryLatestNormalOrder(String updateTime);
-
-
-    /**
-     * 根据订单编号查询艾米森销售订单的明细
-     * @param orderId
-     * @return
-     */
-    @Select("SELECT   cphh productCode, cpmc productName, gg specification, sl3 quantity,xmmc projectName FROM formtable_main_20_dt1  A "+
-            "LEFT JOIN formtable_main_20 main ON A.mainId=main.Id "+
-            "WHERE hjje >0 AND main.ddbh=#{mainId} ")
-    public List<Map<String,Object>> queryNormalOrderDetail(String orderId);
-
-
     /**
      * 查询OA上最新的客户名单，用于同步到本地LIS系统
      * @return
@@ -49,6 +28,45 @@ public interface OAMapper {
     public List<Map<String,String>> queryLatestOACustomerInfo(String lastDate);
 
 
+
+    /**************************************************************************************/
+    @Select("SELECT id,cpmc,xmmc,xmbh FROM uf_cpxx")
+    public List<Map<String,Object>> getOAProductList();
+
+    /**
+     * 根据订单号查询艾米森销售订单
+     * @param orderNo
+     * @return
+     */
+    @Select(" select  id, sqr applicant, ywy empId, ddbh orderNo, khmc customerId , xsms saleType, xdrq  applyDate, fhrq  deliverDate" +
+            " from formtable_main_20 WHERE ddbh =#{orderNo}")
+    public List<Map<String,Object>> queryOrderByNo(String orderNo);
+
+
+    /**
+     * 查询艾米森销售订单包含的产品信息
+     * @param orderNo
+     * @return
+     */
+
+    @Select("SELECT  item.cpmc productName, item.gg spec, item.sl3 数量3 quanty,"+
+            "P.xmmc projectName,P.xmbh projectNo " +
+            "FROM formtable_main_20_dt1 item " +
+            "LEFT JOIN  formtable_main_20 main ON main.id=item.mainId "+
+            "LEFT JOIN  uf_cpxx P ON item.cphh=P.id " +
+            "WHERE item.hjje >0   AND main.ddbh=#{orderNo}")
+    public List<Map<String,Object>> queryOrderItems(String orderNo);
+
+
+    /**
+     * 根据艾米森订单号查询客户名称
+     * @param orderNo
+     * @return
+     */
+    @Select("SELECT id, name customerName " +
+            "FROM formtable_main_20 T1 left join crm_customerInfo T2 ON T1.khmc=T2.id "+
+            "WHERE T1.ddbh =#{orderNo}")
+    public List<Map<String,Object>> queryCustomerByOrderNo(String orderNo);
 
 
 }

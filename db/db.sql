@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `PCRData`(
 
 CREATE index index_PCRData_analyteId on `PCRData`( `analyteCode`);
 
-CREATE TABLE IF NOT EXISTS TargetCurve(
+CREATE TABLE IF NOT EXISTS PCRCurve(
     `id` int unsigned not null primary key,
     `dltRN` varchar(800) not null,
     constraint fk_curve foreign key(`id`) references `PCRData`(`id`)

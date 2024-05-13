@@ -33,7 +33,6 @@ public  class MapUtil {
                  if(field!=null) {
                      field.setAccessible(true);
                      Object val= convertToFieldType(field.getType(), value);
-                     System.out.println(field.getName()+":"+val.toString());
                      field.set(targetObject,val);
                  }
             } catch (Exception e) {
@@ -46,17 +45,17 @@ public  class MapUtil {
     /************************************************************/
     private static Object convertToFieldType(Class<?> fieldType, Object value) {
         Class<?> valueType=value.getClass();
-        System.out.println(valueType);
         if (fieldType==valueType) return value;
         if (fieldType == int.class || fieldType == Integer.class) {
             return Integer.parseInt((String) value);
         } else if (fieldType == double.class || fieldType == Double.class) {
-            if(valueType==Double.class ||  valueType==Integer.class){
+            if(valueType==Double.class){
                 return  value;
-            }else if (valueType==String.class) {
+            }else if (valueType==Integer.class || valueType==String.class){
                 return Double.parseDouble(value.toString());
-            }else
-                return ((int)value*1.0d);
+            }else {
+                 return ((int) value * 1.0d);
+            }
 
         } else if(fieldType==java.time.LocalDateTime.class){
               String str=value.toString();
