@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `product`(
   `projectCode` varchar(20) comment '产品所属项目的代码project(code)'
 ) COMMENT '产品或服务：产品或服务是研发项目的成果';
 
+
 CREATE TABLE IF NOT EXISTS `enums`(
   `id` int not null primary key AUTO_INCREMENT,
   `code` varchar(10) not null comment '枚举代码',
@@ -35,7 +36,3 @@ CREATE TABLE IF NOT EXISTS `enums`(
   `type` varchar(10) comment '枚举类型',
   `index` smallint  comment '显示顺序'
 ) COMMENT '枚举类型表';
-
-
-
-
