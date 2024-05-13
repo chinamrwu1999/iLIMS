@@ -1,5 +1,6 @@
-CREATE DATABASE IF NOT EXISTS myLIMS;
+CREATE DATABASE IF NOT EXISTS iLIMS;
 USE iLIMS;
+
 
 CREATE TABLE IF NOT EXISTS  `biosample`(
     `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',
@@ -80,6 +81,25 @@ CREATE TABLE IF NOT EXISTS TargetCurve(
     `dltRN` varchar(800) not null,
     constraint fk_curve foreign key(`id`) references `PCRData`(`id`)
 ) ENGINE=InnoDB comment '标记物的扩展曲线值';
+
+
+CREATE TABLE IF NOT EXISTS Bar(
+    `id` int unsigned not null AUTO_INCREMENT primary key,
+    `barCode` varchar(20) not null comment '贴在采样管或采样盒上的条形码',
+    `udi` varchar(48) comment 'udi码',
+    `productCode` varchar(12) comment '条码对应的产品或服务,引用product表的code字段',
+    `createTime` DATETIME NOT NULl default now()
+) ENGINE=InnoDB comment AUTO_INCREMENT=1 '用于存储艾米森生成的所有条码';
+
+
+CREATE TABLE IF NOT EXISTS partyBar(
+    `id` int unsigned not null primary key,
+    `barCode` varchar(20) not null comment '贴在采样管或采样盒上的条形码',
+    `partyId` int unsigned not null comment '病人对应的partyId',
+    `bindWay` varchar(12) comment '绑定方式:wechat微信小程序扫码,api 通过api从partner处拉取;hand手工录入',
+    `partnerId` int unsigned not null comment '样本来自哪位合作partner的partyId'
+    `createTime` DATETIME NOT NULl default now()
+) ENGINE=InnoDB comment '病人与样本条码关联';
 
  
 
