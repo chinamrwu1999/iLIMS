@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.amswh</groupId>
-	<artifactId>MYLIMS</artifactId>
+	<artifactId>iLIMS</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>MYLIMS</name>
+	<name>iLIMS</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
@@ -76,7 +76,7 @@
 			<artifactId>iescp-web-sign-sdk</artifactId>
 			<version>1.0.1</version>
 			<scope>system</scope>
-			<systemPath>E:/localJars/RH-sign-sdk-1.0.1.jar</systemPath>
+			<systemPath>../../../../../../../../../localJars/RH-sign-sdk-1.0.1.jar</systemPath>
 		</dependency>
 
 
