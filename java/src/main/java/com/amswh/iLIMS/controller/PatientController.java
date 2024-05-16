@@ -4,21 +4,25 @@ package com.amswh.iLIMS.controller;
  */
 
 
+import com.amswh.iLIMS.domain.Partybar;
 import com.amswh.iLIMS.domain.Person;
-import com.amswh.iLIMS.service.PersonService;
+import com.amswh.iLIMS.service.PartyService;
+import com.amswh.iLIMS.utils.MapUtil;
 import jakarta.annotation.Resource;
-import jakarta.validation.Valid;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/patient")
 public class PatientController {
 
     @Resource
-    PersonService patientService;
+    PartyService partyService;
 
 
     /*
@@ -35,9 +39,12 @@ public class PatientController {
      */
     @PostMapping("/bindBox")
     @Transactional
-    public void bindBoxByScan(@Valid Person patient){
-        //patient.setSrc("mobile");
-        this.patientService.save(patient);
+    public void bindBoxByScan(@RequestBody Map<String,Object> inputMap) throws  Exception{
+        if(inputMap.get("barCode")==null || inputMap.get("partyId")==null)
+            throw new Exception("条码号和绑定对象不能缺");
+        Partybar pb=new Partybar();
+        pb.setBindWay("wechat");
+        MapUtil.copyFromMap(inputMap,pb);
 
 
     }
