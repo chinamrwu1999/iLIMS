@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS Bar(
     `id` int unsigned not null AUTO_INCREMENT primary key,
     `barCode` varchar(20) not null comment '贴在采样管或采样盒上的条形码',
     `productCode` varchar(12) comment '条码对应的产品或服务,引用product表的code字段',
+    `batchNo` varchar(20)  comment '批次号',
     `createTime` DATETIME NOT NULl default now()
 ) ENGINE=InnoDB  AUTO_INCREMENT=1 COMMENT '用于存储艾米森生成的所有条码';
 
