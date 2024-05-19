@@ -2,6 +2,7 @@ package com.amswh.iLIMS.utils;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,6 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 public  class MapUtil {
+
+    private static PrintStream out;
 
     public static void copyFromMap(Map<String,Object> sourceMap, Object targetObject) throws IllegalAccessException, InstantiationException {
 //        System.out.println("==========================");
@@ -47,7 +50,8 @@ public  class MapUtil {
         Class<?> valueType=value.getClass();
         if (fieldType==valueType) return value;
         if (fieldType == int.class || fieldType == Integer.class) {
-            return Integer.parseInt((String) value);
+
+            return Integer.parseInt(value.toString());
         } else if (fieldType == double.class || fieldType == Double.class) {
             if(valueType==Double.class){
                 return  value;

@@ -46,4 +46,7 @@ public class Person{
 	@TableField("weight")
 	private Double weight;
 
+	@TableField("age")
+	private Integer age;
+
 }
