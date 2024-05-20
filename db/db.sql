@@ -92,12 +92,12 @@ CREATE TABLE IF NOT EXISTS Bar(
 ) ENGINE=InnoDB  AUTO_INCREMENT=1 COMMENT '用于存储艾米森生成的所有条码';
 
 
-CREATE TABLE IF NOT EXISTS partyBar(
+CREATE TABLE IF NOT EXISTS PartyBar(
     `id` int unsigned not null primary key,
-    `barCode` varchar(20) not null comment '贴在采样管或采样盒上的条形码',
     `partyId` int unsigned not null comment '病人对应的partyId',
+    `barCode` varchar(20) not null comment '贴在采样管或采样盒上的条形码',
     `bindWay` varchar(12) comment '绑定方式:wechat微信小程序扫码,api 通过api从partner处拉取;hand手工录入',
-    `partnerId` int unsigned not null comment '样本来自哪位合作partner的partyId',
+    `partnerId` int unsigned  comment '样本来自哪位合作partner的partyId',
     `createTime` DATETIME NOT NULl default now()
 ) ENGINE=InnoDB comment '病人与样本条码关联';
 

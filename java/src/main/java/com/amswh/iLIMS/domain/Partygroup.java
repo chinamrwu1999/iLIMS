@@ -27,6 +27,12 @@ public class Partygroup{
 	@TableField("shortName")
 	private String shortName;
 
+	@TableField("country")
+	private String country;
+
+	@TableField("geoId")
+	private String geoId;
+
 	@TableField("createTime")
 	private LocalDateTime createTime;
 

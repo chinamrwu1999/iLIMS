@@ -4,4 +4,6 @@ import com.amswh.iLIMS.domain.Party;
 
 
 public interface IParty extends BaseMapper<Party> {
+
+
 }

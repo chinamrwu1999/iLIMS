@@ -24,11 +24,11 @@ public class Bar{
 	@TableField("barCode")
 	private String barCode;
 
-	@TableField("udi")
-	private String udi;
-
 	@TableField("productCode")
 	private String productCode;
+
+	@TableField("batchNo")
+	private String batchNo;
 
 	@TableField("createTime")
 	private LocalDateTime createTime;

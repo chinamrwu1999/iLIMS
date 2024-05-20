@@ -2,6 +2,7 @@ package com.amswh.iLIMS.service;
 import com.amswh.iLIMS.domain.Partygroup;
 import com.amswh.iLIMS.domain.Partyrelationship;
 import com.amswh.iLIMS.domain.Person;
+import com.amswh.iLIMS.mapper.lims.IPartygroup;
 import com.amswh.iLIMS.utils.MapUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.amswh.iLIMS.domain.Party;
@@ -27,6 +28,9 @@ public class PartyService extends ServiceImpl<IParty, Party> {
 
     @Resource
     PartybarService partybarService;
+
+    @Resource
+    IPartygroup partyGroupMapper;
 
     /**
      * 根据采样管条码获取病人信息
@@ -114,6 +118,11 @@ public class PartyService extends ServiceImpl<IParty, Party> {
 
     public int batchAddRelationships(List<Map<String,Object>> objs){
         return this.relationService.batchAddPartyRelationships(objs);
+    }
+
+    public int getRootPartyId(){
+        Map<String,Object> map=this.partyGroupMapper.getRootParty();
+        return (Integer) map.get("partyId");
     }
 
 }
