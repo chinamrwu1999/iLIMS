@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 public class OADataSourceConfig {
 
 
-    @Bean(name = "oa")
+    @Bean(name = "oaDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.oa")
     @Primary
     public DataSource dataSource() {
@@ -39,7 +39,7 @@ public class OADataSourceConfig {
 
     @Bean(name = "OATransactionManager")
     @Primary
-    public DataSourceTransactionManager transactionManager(@Qualifier("oa") DataSource dataSource) {
+    public DataSourceTransactionManager transactionManager(@Qualifier("oaDataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 

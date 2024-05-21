@@ -1,10 +1,10 @@
 package com.amswh.iLIMS.service;
+import com.amswh.iLIMS.domain.OrderAddress;
+import com.amswh.iLIMS.mapper.lims.IOrderAddress;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.amswh.iLIMS.domain.Orderaddress;
-import com.amswh.iLIMS.mapper.lims.IOrderaddress;
 import org.springframework.stereotype.Service;
 
 
 @Service
-public class OrderaddressService extends ServiceImpl<IOrderaddress, Orderaddress> {
+public class OrderaddressService extends ServiceImpl<IOrderAddress, OrderAddress> {
 	}

@@ -20,11 +20,11 @@ CREATE TABLE IF NOT EXISTS `projectDisease`(
 
 CREATE TABLE IF NOT EXISTS `product`(
   `id` int unsigned not null AUTO_INCREMENT primary key ,
-  `externalId` varchar(20) comment '产品外部码,专用于系统对接'
-  `code` varchar(10) not null primary key comment '产品代码',
+  `externalId` varchar(20) comment '产品外部码,专用于系统对接',
+  `code` varchar(10) not null unique comment '产品代码',
   `name` varchar(80) not null comment '产品名称',
   `spec` varchar(80) comment '产品规格',
-  `parentCode` varchar(10) comment '当服务类产品包含有不同的服务项时,此处指向服务型所属大服务的code'
+  `parentCode` varchar(10) comment '当服务类产品包含有不同的服务项时,此处指向服务型所属大服务的code',
   `projectCode` varchar(20) comment '产品所属项目的代码project(code)'
 ) COMMENT '产品或服务：产品或服务是研发项目的成果';
 

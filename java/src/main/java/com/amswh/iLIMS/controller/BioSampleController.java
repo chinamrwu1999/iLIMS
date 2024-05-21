@@ -1,11 +1,10 @@
 package com.amswh.iLIMS.controller;
 
 
-import com.amswh.iLIMS.domain.Biosample;
-import com.amswh.iLIMS.domain.Person;
+import com.amswh.iLIMS.domain.BioSample;
 import com.amswh.iLIMS.service.AnalyteService;
 import com.amswh.iLIMS.service.AnalyteprocessService;
-import com.amswh.iLIMS.service.BiosampleService;
+import com.amswh.iLIMS.service.BioSampleService;
 import com.amswh.iLIMS.service.PersonService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BioSampleController {
 
     @Resource
-    BiosampleService sampleService;
+    BioSampleService sampleService;
 
 //    @Resource
 //    Patientervice patientService;
@@ -41,7 +40,7 @@ public class BioSampleController {
      */
     @Transactional
     @PostMapping("/receive")
-    public void receiveSample(@Valid Biosample sample){
+    public void receiveSample(@Valid BioSample sample){
         // patientService.getMap(new HashMap<String,String>("barCode:"))
        // Person patient =personService.;
        // if(patient==null) {//未找到对应的病人信息，需要从Partner处获取病人信息

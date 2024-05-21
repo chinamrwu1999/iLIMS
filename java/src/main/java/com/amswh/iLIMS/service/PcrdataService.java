@@ -1,10 +1,10 @@
 package com.amswh.iLIMS.service;
+import com.amswh.iLIMS.domain.PcrData;
+import com.amswh.iLIMS.mapper.lims.IPcrData;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.amswh.iLIMS.domain.Pcrdata;
-import com.amswh.iLIMS.mapper.lims.IPcrdata;
 import org.springframework.stereotype.Service;
 
 
 @Service
-public class PcrdataService extends ServiceImpl<IPcrdata, Pcrdata> {
+public class PcrdataService extends ServiceImpl<IPcrData, PcrData> {
 	}

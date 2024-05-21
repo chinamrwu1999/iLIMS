@@ -150,23 +150,23 @@ for tb in tabNames:
         fo.writelines("\n".join(codes))
         print(f"writing mapper interface file :{mapperDir}/I{className}Mapper.java")
 
-    serviceDir=f"{target}/service"  #######################开始service代码生成
+    # serviceDir=f"{target}/service"  #######################开始service代码生成
 
-    codes=[f"package {packageName}.service;"]
-    codes.append("import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;")
-    codes.append(f"import {packageName}.domain.{className};")
-    codes.append(f"import {packageName}.mapper.lims.I{className};")
-    codes.append("import org.springframework.stereotype.Service;\n\n")
+    # codes=[f"package {packageName}.service;"]
+    # codes.append("import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;")
+    # codes.append(f"import {packageName}.domain.{className};")
+    # codes.append(f"import {packageName}.mapper.lims.I{className};")
+    # codes.append("import org.springframework.stereotype.Service;\n\n")
 
-    codes.append("@Service")
-    codes.append("public class %sService extends ServiceImpl<I%s, %s> {\n\t}" % (className,className,className))
+    # codes.append("@Service")
+    # codes.append("public class %sService extends ServiceImpl<I%s, %s> {\n\t}" % (className,className,className))
   
 
-    if not os.path.exists(serviceDir):
-        os.makedirs(serviceDir)
+    # if not os.path.exists(serviceDir):
+    #     os.makedirs(serviceDir)
 
-    with open(f"{serviceDir}/{className}Service.java",'w') as fo:  #
-        fo.writelines("\n".join(codes))
-        print(f"writing service class file :{serviceDir}/I{className}Service.java")
+    # with open(f"{serviceDir}/{className}Service.java",'w') as fo:  #
+    #     fo.writelines("\n".join(codes))
+    #     print(f"writing service class file :{serviceDir}/I{className}Service.java")
         
 

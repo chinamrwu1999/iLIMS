@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 @Configuration
 @MapperScan(basePackages = {"com.amswh.iLIMS.mapper.lims"}, sqlSessionFactoryRef = "limsSqlSessionFactory")
 public class LIMSDataSourceConfig {
-    @Bean(name = "lims")
+    @Bean(name = "limsDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.lims")
     @Primary
     public DataSource dataSource() {
@@ -39,9 +39,10 @@ public class LIMSDataSourceConfig {
 
     @Bean(name = "limsTransactionManager")
     @Primary
-    public DataSourceTransactionManager transactionManager(@Qualifier("lims") DataSource dataSource) {
+    public DataSourceTransactionManager transactionManager(@Qualifier("limsDataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
+
 
     @Bean(name = "limsSqlSessionTemplate")
     @Primary

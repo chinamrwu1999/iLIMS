@@ -1,11 +1,12 @@
 package com.amswh.iLIMS.service;
-import com.amswh.iLIMS.domain.Partygroup;
-import com.amswh.iLIMS.domain.Partyrelationship;
+import com.amswh.iLIMS.domain.Party;
+import com.amswh.iLIMS.domain.PartyGroup;
+import com.amswh.iLIMS.domain.PartyRelationship;
 import com.amswh.iLIMS.domain.Person;
+import com.amswh.iLIMS.mapper.lims.IParty;
+import com.amswh.iLIMS.mapper.lims.IPartyGroup;
 import com.amswh.iLIMS.utils.MapUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.amswh.iLIMS.domain.Party;
-import com.amswh.iLIMS.mapper.lims.IParty;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,9 @@ public class PartyService extends ServiceImpl<IParty, Party> {
 
     @Resource
     PartybarService partybarService;
+
+    @Resource
+    IPartyGroup partyGroupMapper;
 
     /**
      * 根据采样管条码获取病人信息
@@ -81,14 +85,14 @@ public class PartyService extends ServiceImpl<IParty, Party> {
      * @throws Exception
      */
     @Transactional("limsTransactionManager")
-    public Partygroup addOrganization(Map<String,Object> inputMap) throws  Exception{
+    public PartyGroup addOrganization(Map<String,Object> inputMap) throws  Exception{
         if(inputMap.get("partyType")==null){
             inputMap.put("partyType","ORG");
         }
         Party party = new Party();
         MapUtil.copyFromMap(inputMap, party);
         int partyId=addParty(party);
-        Partygroup group=new Partygroup();
+        PartyGroup group=new PartyGroup();
         MapUtil.copyFromMap(inputMap, group);
         group.setPartyId(partyId);
 
@@ -104,7 +108,7 @@ public class PartyService extends ServiceImpl<IParty, Party> {
      */
 
     public boolean setPartyRelationShip(Map<String,Object> inputMap ){
-        Partyrelationship obj=new Partyrelationship();
+        PartyRelationship obj=new PartyRelationship();
         obj.setFromId((Integer) inputMap.get("fromId"));
         obj.setToId((Integer) inputMap.get("toId"));
         obj.setTypeId((Integer) inputMap.get("typeId"));
@@ -113,7 +117,14 @@ public class PartyService extends ServiceImpl<IParty, Party> {
     }
 
     public int batchAddRelationships(List<Map<String,Object>> objs){
-        return this.relationService.batchAddPartyRelationships(objs);
+
+      //  return this.relationService.batchAddPartyRelationships(objs);
+        return -1;
+    }
+
+    public int getRootPartyId(){
+        Map<String,Object> map=this.partyGroupMapper.getRootParty();
+        return (Integer) map.get("partyId");
     }
 
 }
