@@ -27,7 +27,7 @@ public class PartyService extends ServiceImpl<IParty, Party> {
     PartyrelationshipService relationService;
 
     @Resource
-    PartybarService partybarService;
+    PartyBarService partybarService;
 
     @Resource
     IPartyGroup partyGroupMapper;

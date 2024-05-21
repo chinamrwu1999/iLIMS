@@ -23,14 +23,12 @@ public class OADataSourceConfig {
 
     @Bean(name = "oaDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.oa")
-    @Primary
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
 
     @Bean(name = "OASqlSessionFactory")
-    @Primary
-    public SqlSessionFactory sqlSessionFactory(@Qualifier("oa") DataSource dataSource) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(@Qualifier("oaDataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         // bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
@@ -38,13 +36,11 @@ public class OADataSourceConfig {
     }
 
     @Bean(name = "OATransactionManager")
-    @Primary
     public DataSourceTransactionManager transactionManager(@Qualifier("oaDataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
     @Bean(name = "OASqlSessionTemplate")
-    @Primary
     public SqlSessionTemplate sqlSessionTemplate(@Qualifier("OASqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }

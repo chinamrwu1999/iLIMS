@@ -46,17 +46,8 @@ public class TestController {
 
        // partyService.addPerson(input);
         //partyService.addOrganization(input);
-        double rd=Math.random()*1000;
-        int randomInt=(int)rd;
-        List<Bar> bars=new ArrayList<>();
-        for(int i=0;i<10;i++){
-            Bar bar=new Bar();
-            bar.setBatchNo("20250520");
-            bar.setProductCode("LDT01");
-            bar.setBarCode(String.format("0120240520%3d%6d",randomInt,i));
-            bars.add(bar);
-        }
-        this.barService.saveBatch(bars);
+        barService.generateBarCodes("20240521","LDT12",3,"",50);
+
     }catch (Exception err){
         err.printStackTrace();
     }

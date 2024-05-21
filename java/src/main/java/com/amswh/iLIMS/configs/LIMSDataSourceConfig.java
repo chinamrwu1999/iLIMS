@@ -29,7 +29,7 @@ public class LIMSDataSourceConfig {
 
     @Bean(name = "limsSqlSessionFactory")
     @Primary
-    public SqlSessionFactory sqlSessionFactory(@Qualifier("lims") DataSource dataSource) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(@Qualifier("limsDataSource") DataSource dataSource) throws Exception {
         //SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         MybatisSqlSessionFactoryBean bean = new MybatisSqlSessionFactoryBean();
         bean.setDataSource(dataSource);
