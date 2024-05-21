@@ -79,7 +79,6 @@ CREATE TABLE IF NOT EXISTS  `order`(
     `typeId` int not null    comment '订单类型Id',
     `createTime` datetime not  null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单信息';
-
 CREATE TABLE IF NOT EXISTS  `orderItem`( 
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
     `orderNo` varchar(20) not null unique comment '订单编号',
@@ -87,7 +86,6 @@ CREATE TABLE IF NOT EXISTS  `orderItem`(
     `quantity` int not null  comment '数量',
     `createTime` datetime not  null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单购买产品清单';
-
 CREATE TABLE IF NOT EXISTS  `orderAddress`( 
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
     `orderNo` varchar(20) not null unique comment '订单编号',
@@ -98,20 +96,17 @@ CREATE TABLE IF NOT EXISTS  `orderAddress`(
     `deadline` date  comment '最迟应发货日期',
     `createTime` datetime not  null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单发货信息';
-
 CREATE TABLE IF NOT EXISTS  `orderShip`(
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
     `orderNo` varchar(20) NOT NULL comment '订单编号',
     `partyId` int unsigned NOT NULl comment '经办人',
     `expressNo` varchar(50) comment '快递单号',
-    `expId`   varchar(8) comment '快递公司代码:顺丰SF、京东JD、圆通YT、申通ST、中通ZT、韵达YT、中铁快运ZTKY',
+    `expressId`   varchar(8) comment '快递公司代码:顺丰SF、京东JD、圆通YT、申通ST、中通ZT、韵达YT、中铁快运ZTKY',
     `createTime` DATETIME NOT NULL default now() comment '实际发货日期'
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单发货信息';
-
-
 CREATE TABLE IF NOT EXISTS  `shipItem`(
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
     `shipId` int unsigned NOT NULL comment 'orderShip表自增主键',
-    `UDI` varchar(60) comment 'UDI码',
+    `barCode` varchar(60) comment 'UDI码或者条码',
     `createTime` DATETIME NOT NULL default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '发货明细';

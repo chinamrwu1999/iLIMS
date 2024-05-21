@@ -7,6 +7,7 @@ package com.amswh.iLIMS.controller;
 
 import com.amswh.iLIMS.domain.PartyBar;
 import com.amswh.iLIMS.domain.Person;
+import com.amswh.iLIMS.service.PartyBarService;
 import com.amswh.iLIMS.service.PartyService;
 import com.amswh.iLIMS.service.PersonService;
 import com.amswh.iLIMS.utils.MapUtil;
@@ -25,6 +26,9 @@ public class PatientController {
 
     @Resource
     PartyService partyService;
+
+    @Resource
+    PartyBarService partyBarService;
 
 
     /*
@@ -52,6 +56,15 @@ public class PatientController {
         if(inputMap.get("partyId")==null){
             Person person=this.partyService.addPerson(inputMap);
             pb.setPartyId(person.getPartyId());
+        }
+
+        Map<String,Object> mp=partyBarService.getBaseMapper().findPartner(pb.getBarCode());
+        Integer partnerId=null;
+        String productNo=null;
+        if( !(mp==null || mp.isEmpty())){
+            partnerId=(Integer)mp.get("partyId");
+        }else{ // 销售发货记录中未找到条码的客户信息,表面条码不是出自艾米森，而是partner自己的条码。需要轮询调用各partner的api来朔源
+
         }
 
 
