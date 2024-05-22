@@ -18,18 +18,26 @@
   "requestId": ""
 }
 {
-  "STATE": 1,
-  "DATA": [
-    {
-      "CHECKTIME": "2024-04-27T07:52:10",
-      "PERNAME": "向静",
-      "BIRTHDAY": "1983-01-23T00:00:00",
-      "ITEMID": "LDT06",
-      "AGE": "41",
-      "TEL": "13708070386",
-      "GENDER": "女",
-      "ITEMNAME": "肠癌甲基化检测",
-      "CARDNUMBER": "510113198301231122"
-    }
-  ]
+  "message":"未匹配到人员信息",
+  "result":null,
+  "resultCode":0
+}
+
+{
+  "message":"success",
+  "result":{
+          "age":50,
+          "birthday":"1974-01-19",
+          "education":"",
+          "genderCode":"女",
+          "homeAddress":"some place in a city",
+          "idCardNum":"51102********",
+          "maritalStatus":"married",
+          "name":"Li ZheKai",
+          "nation":null,
+          "num":"20240428042",
+          "projectCode":"AD06",
+          "tel":"1311800"
+  },
+  "resultCode":1
 }

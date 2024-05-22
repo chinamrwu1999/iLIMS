@@ -3,6 +3,7 @@ package com.amswh.iLIMS.controller;
 
 import com.amswh.iLIMS.partner.service.HYService;
 
+import com.amswh.iLIMS.partner.service.XNYTService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,7 @@ public class TestController {
     AnalyteprocessService processService;
 
     @Resource
-    HYService partnerService;
+    XNYTService partnerService;
 
     @Resource
     PartyService partyService;
@@ -46,7 +47,7 @@ public class TestController {
         //partyService.addOrganization(input);
       //  barService.generateBarCodes("20240521","LDT12",3,"",50);
       //  YQ.fetchPatientInfo("10791014221");
-      Map<String,Object> mp=  partnerService.fetchPatientInfo("240427001746");
+      Map<String,Object> mp=  partnerService.fetchPatientInfo("2024042804251");
       if(mp!=null) {
           for (String key : mp.keySet()) {
               System.out.println(key + ":" + mp.get(key));
