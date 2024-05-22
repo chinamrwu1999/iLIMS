@@ -1,18 +1,20 @@
 package com.amswh.iLIMS.controller;
 
 
+import com.amswh.iLIMS.domain.Bar;
 import com.amswh.iLIMS.domain.BioSample;
-import com.amswh.iLIMS.service.AnalyteService;
-import com.amswh.iLIMS.service.AnalyteprocessService;
-import com.amswh.iLIMS.service.BioSampleService;
-import com.amswh.iLIMS.service.PersonService;
+import com.amswh.iLIMS.service.*;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/sample")
@@ -33,33 +35,47 @@ public class BioSampleController {
     @Resource
     PersonService personService;
 
+    @Resource
+    PartyBarService partyBarService;
+
+    @Resource
+    BarService barService;
+
 
     /**
      * 医检所前端收样人员收到样本
-     * @param sample 样本信息描述
+     * @param barCode 样本信息描述
      */
     @Transactional
-    @PostMapping("/receive")
-    public void receiveSample(@Valid BioSample sample){
-        // patientService.getMap(new HashMap<String,String>("barCode:"))
-       // Person patient =personService.;
-       // if(patient==null) {//未找到对应的病人信息，需要从Partner处获取病人信息
-            //下面读取OA订单信息，获取Partner的ID
-            String sampleSrc=null;
+    @PostMapping("/receive/{barCode}")
+    public Map<String,Object> receiveSample(@PathVariable String barCode){
+
+        Map<String,Object> result=new HashMap<>();
+        String partner=null;
+        String productCode=null;
 
 
+        Bar bar=this.barService.getGeneratedBar(barCode);
+        if(bar!=null){
+            productCode=bar.getProductCode();
+        }
 
-            if(sampleSrc==null){ //下面轮询调用第三方API拉取病人信息
-
-          //  }
-
-
-       // }else{
+        Map<String,Object> mp=this.partyBarService.findPartner(barCode);
+        if(!(mp==null || mp.isEmpty())) { //根据barCode追溯艾米森的订单信息
+              if(mp.get("productCode")!=null){
+                  productCode=mp.get("productCode").toString();
+                  result.put("productName",mp.get("productName"));
+              }
+              if(mp.get("partnerId")!=null){
+                  partner="NORMAL";
+                  result.put("partyId",mp.get("partyId"));
+                  result.put("sender",mp.get("fullName"));
+              }
+        }else{
 
         }
 
-
-
+        return result;
     }
 
 

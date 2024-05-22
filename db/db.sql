@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS iLIMS;
 USE iLIMS;
 
 
-CREATE TABLE IF NOT EXISTS  `biosample`(
+CREATE TABLE IF NOT EXISTS  `BioSample`(
     `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',
     `barCode` varchar(80) not null COMMENT '唯一标识生物样本的条形码号',
     `type` varchar(12) not null COMMENT '类型：F粪便、B血液、C细胞、T组织',
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS  `biosample`(
     `sampleTime` datetime COMMENT '样本在病人身上的采样时间',
     `partnerCode` varchar(12) COMMENT '样本来源：来自哪个合作伙伴',
     `sender` varchar(100) COMMENT '送检单位',
-    `status` char(1) not null default 'S' COMMENT '样本状态:S 表示合格(Succeed),F 表示不合格(Fail)',
+    `status` char(1) not null default 'S' COMMENT '样本物理状态:S 表示合格(Succeed),F 表示不合格(Fail)',
     `sampleImage` varchar(200) COMMENT '样本照片',
     `formImage` varchar(200) COMMENT '个人信息表格图片',
     `surveyImage` varchar(200) COMMENT '如有纸质问卷，则拍照保存',
@@ -97,7 +97,6 @@ CREATE TABLE IF NOT EXISTS PartyBar(
     `partyId` int unsigned not null comment '病人对应的partyId',
     `barCode` varchar(20) not null comment '贴在采样管或采样盒上的条形码',
     `bindWay` varchar(12) comment '绑定方式:wechat微信小程序扫码,api 通过api从partner处拉取;hand手工录入',
-    `partnerId` int unsigned  comment '样本来自哪位合作partner的partyId',
     `createTime` DATETIME NOT NULl default now()
 ) ENGINE=InnoDB comment '病人与样本条码关联';
 

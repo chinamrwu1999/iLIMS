@@ -1,8 +1,7 @@
 package com.amswh.iLIMS.controller;
 
 
-import com.amswh.iLIMS.domain.Bar;
-import com.amswh.iLIMS.partner.rh.RHService;
+import com.amswh.iLIMS.partner.service.RHService;
 
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.amswh.iLIMS.service.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @RestController

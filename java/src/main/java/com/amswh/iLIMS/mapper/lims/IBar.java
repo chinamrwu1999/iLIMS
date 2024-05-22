@@ -2,6 +2,7 @@ package com.amswh.iLIMS.mapper.lims;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.amswh.iLIMS.domain.Bar;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -19,5 +20,9 @@ public interface IBar extends BaseMapper<Bar> {
             "</script>"
     })
     public int generateBarCodes(List<Bar> entities);
+
+
+    @Select("SELECT * FROM Bar where barCode=#{barCode}")
+    public Bar getGeneratedBar(String barCode);
 
 }

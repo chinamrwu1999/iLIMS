@@ -1,4 +1,4 @@
-package com.amswh.iLIMS.partner.rh;
+package com.amswh.iLIMS.partner.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -16,7 +16,7 @@ public interface IPartyBar extends BaseMapper<PartyBar> {
      */
     @Select("SELECT A.barCode," +
             "B.orderNo," +
-            "C.productId," +
+            "C.productId,product.code productCode,product.name productName" +
             "O.customer," +
             "PG.fullName,PG.shortName," +
             "P.partyId,"+
@@ -25,10 +25,11 @@ public interface IPartyBar extends BaseMapper<PartyBar> {
             "O.createTime orderTime "+
             "FROM shipItem A" +
             "LEFT JOIN orderShip B   ON A.shipId=B.id" +
-            "LEFT JOIN orderItem C   ON B.orderNo=C.orderNo" +
-            "LEFT JOIN `order` O     ON O.orderNo=C.orderNo" +
-            "LEFT JOIN partyGroup PG ON PG.partyId=O.customer" +
-            "LEFT JOIN party P ON P.partyId=PG.partyId" +
+            "LEFT JOIN orderItem C   ON B.orderNo=C.orderNo " +
+            "LEFT JOIN `order` O     ON O.orderNo=C.orderNo " +
+            "LEFT JOIN partyGroup PG ON PG.partyId=O.customer " +
+            "LEFT JOIN party P ON P.partyId=PG.partyId " +
+            "LEFT JOIN product  ON C.productId=product.id "+
             "WHERE A.barCode=#{barCode} ")
     public Map<String,Object> findPartner(String barCode);
 

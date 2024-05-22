@@ -35,10 +35,19 @@ public class BarService extends ServiceImpl<IBar, Bar> {
 			 bar.setBarCode(String.format(prefix+batchNo+"%03d%06d",randomInt,i));
 			 bars.add(bar);
 		 }
-		 this.getBaseMapper().generateBarCodes(bars);
+		 this.baseMapper.generateBarCodes(bars);
 
 
 	 }
 
+	/**
+	 *  根据barCode查询条码是否是艾米森生成的,如果是则返回
+	 * @param barCode
+	 * @return Bar
+	 */
+	 public Bar getGeneratedBar(String barCode){
+          return  this.baseMapper.getGeneratedBar(barCode);
+	 }
 
-	}
+
+}
