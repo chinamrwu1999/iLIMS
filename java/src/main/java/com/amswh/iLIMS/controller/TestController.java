@@ -1,7 +1,7 @@
 package com.amswh.iLIMS.controller;
 
 
-import com.amswh.iLIMS.partner.service.RHService;
+import com.amswh.iLIMS.partner.service.HYService;
 
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class TestController {
     AnalyteprocessService processService;
 
     @Resource
-    RHService rhService;
+    HYService partnerService;
 
     @Resource
     PartyService partyService;
@@ -36,14 +36,22 @@ public class TestController {
     BarService barService;
 
 
-    @PostMapping("/service")
+   // @PostMapping("/service")
+    @GetMapping("/service")
     @Transactional(transactionManager="limsTransactionManager")
-    public void TestMe(@RequestBody Map<String,Object> input){
+    public void TestMe(){
     try {
 
        // partyService.addPerson(input);
         //partyService.addOrganization(input);
-        barService.generateBarCodes("20240521","LDT12",3,"",50);
+      //  barService.generateBarCodes("20240521","LDT12",3,"",50);
+      //  YQ.fetchPatientInfo("10791014221");
+      Map<String,Object> mp=  partnerService.fetchPatientInfo("240427001746");
+      if(mp!=null) {
+          for (String key : mp.keySet()) {
+              System.out.println(key + ":" + mp.get(key));
+          }
+      }
 
     }catch (Exception err){
         err.printStackTrace();

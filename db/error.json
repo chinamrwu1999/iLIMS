@@ -1,14 +1,35 @@
 {
-  "code": "0000",
-  "data": [
+  "data": {
+    "hospital": "云鹊医",
+    "hospitalId": 475838,
+    "detectName": "艾米森12癌联检（男9项，女12项）【2管/份】",
+    "productNo": "LDT13",
+    "name": "陈美兰",
+    "mobile": "13709345835",
+    "idNo": "350623195609244823",
+    "gender": 2,
+    "birthDay": "1956-09-24",
+    "age": 67,
+    "sampleCode": "10791014221",
+    "sampleTime": "2024-05-17 16:50:51"
+  },
+  "code": "000000",
+  "message": "成功",
+  "requestId": ""
+}
+{
+  "STATE": 1,
+  "DATA": [
     {
-      "CBizId": "624004xfd",
-      "CContStatus": "3",
-      "CLoseReason": "02",
-      "CMasterProtocolNo": "TC04gdfg2500000052",
-      "CPersonId": "1232983076R737626112",
-      "CProtocolNo": "C2024042500000320"
+      "CHECKTIME": "2024-04-27T07:52:10",
+      "PERNAME": "向静",
+      "BIRTHDAY": "1983-01-23T00:00:00",
+      "ITEMID": "LDT06",
+      "AGE": "41",
+      "TEL": "13708070386",
+      "GENDER": "女",
+      "ITEMNAME": "肠癌甲基化检测",
+      "CARDNUMBER": "510113198301231122"
     }
-  ],
-  "message": "OK"
+  ]
 }

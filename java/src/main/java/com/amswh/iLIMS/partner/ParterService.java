@@ -26,7 +26,11 @@ public class ParterService {
             partner=this.parters.get("NORMAL");
         }
         if(partner!=null){
-            return partner.fetchPatientInfo(barCode);
+            try {
+                return partner.fetchPatientInfo(barCode);
+            }catch (Exception err){
+                err.printStackTrace();
+            }
         }
         return null;
     }
