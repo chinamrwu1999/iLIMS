@@ -30,6 +30,7 @@ public class XNYTService implements IPartner {
         根据条码号从对方获取受检者信息
         http方法：GET
         参数：barCode 条码号
+        返回:Map
      */
     @Override
     public Map<String, Object> fetchPatientInfo(String barCode) throws Exception {
@@ -50,9 +51,10 @@ public class XNYTService implements IPartner {
                     String json = new String(response.getBody().toString().getBytes("ISO-8859-1"), "UTF-8");
                     ObjectMapper objectMapper = new ObjectMapper();
                     Map<String, Object> jsonMap = objectMapper.readValue(json, Map.class);
-                    Map<String, Object> src = (Map<String, Object>) jsonMap.get("result");
-                   int state=(int)src.get("resultCode");
+
+                   int state=(int)jsonMap.get("resultCode");
                    if(state==1){
+                            Map<String, Object> src = (Map<String, Object>) jsonMap.get("result");
                             if(!(src==null || src.isEmpty())){
                                 Map<String, Object> target = new HashMap<>();
                                 target.put("name", String.valueOf(src.get("name")));
