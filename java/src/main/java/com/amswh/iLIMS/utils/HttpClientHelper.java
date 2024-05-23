@@ -93,6 +93,7 @@ public class HttpClientHelper {
      */
     private static ResponseHandler<String> responseHandler = response -> {
         //状态码200时返回响应值
+
         int status = response.getStatusLine().getStatusCode();
         if (status == 200) {
             HttpEntity entity = response.getEntity();

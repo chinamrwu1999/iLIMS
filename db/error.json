@@ -18,26 +18,56 @@
   "requestId": ""
 }
 {
-  "message":"未匹配到人员信息",
-  "result":null,
-  "resultCode":0
+  "message": "未匹配到人员信息",
+  "result": null,
+  "resultCode": 0
 }
 
 {
-  "message":"success",
-  "result":{
-          "age":50,
-          "birthday":"1974-01-19",
-          "education":"",
-          "genderCode":"女",
-          "homeAddress":"some place in a city",
-          "idCardNum":"51102********",
-          "maritalStatus":"married",
-          "name":"Li ZheKai",
-          "nation":null,
-          "num":"20240428042",
-          "projectCode":"AD06",
-          "tel":"1311800"
+  "message": "success",
+  "result": {
+    "age": 50,
+    "birthday": "1974-01-19",
+    "education": "",
+    "genderCode": "女",
+    "homeAddress": "some place in a city",
+    "idCardNum": "51102********",
+    "maritalStatus": "married",
+    "name": "Li ZheKai",
+    "nation": null,
+    "num": "20240428042",
+    "projectCode": "AD06",
+    "tel": "1311800"
   },
-  "resultCode":1
+  "resultCode": 1
+}
+
+
+{
+  "success": true,
+  "code": 0,
+  "msg": null,
+  "data": [
+    {
+      "sampleNo": null,
+      "barCode": "T802085",
+      "applySampleItem": [
+        {
+          "applyItemCode": "UN220843",
+          "barcodeSub": "8020857"
+        }
+      ]
+    },
+    {
+      "sampleNo": null,
+      "barCode": "T0857862",
+      "applySampleItem": [
+        {
+          "applyItemCode": "UN220843",
+          "barcodeSub": "0857862"
+        }
+      ]
+    }
+  ],
+  "extend": null
 }

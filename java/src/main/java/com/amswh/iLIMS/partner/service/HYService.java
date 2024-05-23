@@ -26,12 +26,11 @@ public class HYService implements IPartner {
             return null;
         }
         try {
-
             String sign = getHySign();
             RestTemplate restTemplate = new RestTemplate();
             String url = sampleInfoUrl.concat("?sign=".concat(sign.toUpperCase())).concat("&checkNo=").concat(barCode);
-            Long userId = 1L; // Replace with your desired user ID
-            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, userId);
+           // Long userId = 1L; // Replace with your desired user ID
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             if (response.getStatusCode() == HttpStatus.OK) {
 
                 String responseBody = response.getBody();

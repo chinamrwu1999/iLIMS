@@ -57,7 +57,8 @@ public class TestController {
 //              System.out.println(key + ":" + mp.get(key));
 //          }
 //      }
-        pajkService.fetchToken();
+      //  pajkService.fetchToken();
+        pajkService.fetchPatientInfo("8020857862");
 
     }catch (Exception err){
         err.printStackTrace();
