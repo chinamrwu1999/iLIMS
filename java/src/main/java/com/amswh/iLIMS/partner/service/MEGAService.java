@@ -1,17 +1,14 @@
 package com.amswh.iLIMS.partner.service;
 
 import com.amswh.iLIMS.partner.IPartner;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClients;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 
 @Service
@@ -19,6 +16,7 @@ public class MEGAService implements IPartner {
 
     String appKey="AMS3261618032001";
     String secretKey="68880e04a5d7482d980f3d18aec968f4";
+
     String domain="http://mstp.megagenomics.cn";//
     String url4PatientInfo="/api/v1.0/sample/getSample";//获取样本信息1（单个条码）
     String url4PatientInfoAtTime="/api/v1.0/sample/getSampleByTime";//获取样本信息2（指定时间段）
@@ -33,24 +31,47 @@ public class MEGAService implements IPartner {
                 .concat("appid=".concat(appKey))
                 .concat("&sample_code=".concat(barCode))
                 .concat("&sign=".concat(sign));
-//        HttpGet httpGet = new HttpGet(url);
-//        HttpClient httpClient = HttpClients.createDefault();
-
-
         try {
-          //  HttpResponse res = httpClient.execute(httpGet);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("content-type", "application/json;charset=UTF-8");
-//            headers.set("user_token", this.token);
             HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
             if (response.getStatusCode() == HttpStatus.OK) {
-                String json = new String(response.getBody().toString().getBytes("ISO-8859-1"), "UTF-8");
-                System.out.println(json);
+                String json = new String(response.getBody().toString().getBytes(), "UTF-8");
                 ObjectMapper objectMapper = new ObjectMapper();
-               // Map<String, Object> jsonMap = objectMapper.readValue(json, Map.class);
+                JsonNode root=objectMapper.readValue(json,JsonNode.class);
+                String code=root.get("code").asText();
+                if("SUCCESS".equals(code)){
+                    JsonNode array=root.get("data");
+                    if(array!=null && !array.isEmpty()){
+                        JsonNode data=array.get(0);
+                        String dataJson=objectMapper.writeValueAsString(data);
+                        Map<String,Object> tmpMap=objectMapper.readValue(dataJson,Map.class);
+                        if(tmpMap!=null && !tmpMap.isEmpty()){
+                            Map<String,Object> result=new HashMap<>();
+                            result.put("agentId",tmpMap.get("agent_num"));//门店代码
+                            result.put("name",tmpMap.get("username"));
+                            result.put("gender","男".equals(tmpMap.get("gender").toString())?"M":"F");
+                           // result.put("package",tmpMap.get("package_num"));
+                            result.put("birthday",tmpMap.get("birthdate"));
+                            result.put("samplingTime",tmpMap.get("date_sampling"));
+                            result.put("phone",tmpMap.get("phone"));
+                            result.put("barCode",tmpMap.get("barcode"));
+                            if(tmpMap.get("birthdate")!=null){
+                                LocalDate birthday = LocalDate.parse(tmpMap.get("birthdate").toString());
+                                LocalDate currentDate = LocalDate.now();
+                                Period period = Period.between(birthday, currentDate);
+                                result.put("age",period.getYears());
+                            }
+                            if("CCF001E".equals(tmpMap.get("package_num").toString())){
+                                result.put("productCode","LDT01");
+                            }
+                            return result;
+                        }
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,7 +102,7 @@ public class MEGAService implements IPartner {
                 }
 
             }
-            result = sb.append("key=".concat(appKey)).toString();
+            result = sb.append("key=".concat(this.secretKey)).toString();
             result = DigestUtils.md5Hex(result).toUpperCase();
         } catch (Exception e) {
             return null;

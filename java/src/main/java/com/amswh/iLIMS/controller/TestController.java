@@ -59,7 +59,7 @@ public class TestController {
 //          }
 //      }
       //  pajkService.fetchToken();
-        Map<String,Object> mp=  partnerService.fetchPatientInfo("J6231122008907");
+        Map<String,Object> mp=  partnerService.fetchPatientInfo("BP231129000112");
           if(mp!=null) {
               for (String key : mp.keySet()) {
                   System.out.println(key + ":" + mp.get(key));

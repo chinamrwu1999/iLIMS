@@ -44,30 +44,38 @@
 
 
 {
-  "success": true,
-  "code": 0,
+  "code": "SUCCESS",
   "msg": null,
   "data": [
     {
-      "sampleNo": null,
-      "barCode": "T802085",
-      "applySampleItem": [
-        {
-          "applyItemCode": "UN220843",
-          "barcodeSub": "8020857"
-        }
-      ]
-    },
-    {
-      "sampleNo": null,
-      "barCode": "T0857862",
-      "applySampleItem": [
-        {
-          "applyItemCode": "UN220843",
-          "barcodeSub": "0857862"
-        }
-      ]
+      "agent": "美年青白江分院(10577)",
+      "birthdate": "1969-12-13",
+      "order_serial": null,
+      "gender": "男",
+      "mega_num": null,
+      "pdf_time": "2023-12-07 13:38:51",
+      "sample_type": "外周血",
+      "operator": "",
+      "is_need_examine": "1",
+      "emp_no": null,
+      "delivery_method": null,
+      "barcode": "BP231129000112",
+      "unique_flag": "03b0d2e2915f98e3",
+      "over_time": 0,
+      "com_name": "艾米森",
+      "package": "第二代结直肠癌无创早期筛查(简装电子版)",
+      "date_sampling": "2023-11-29",
+      "dept_name": null,
+      "is_in_database": "1",
+      "sales_man": null,
+      "agent_num": "10577",
+      "phone": "13688312887",
+      "intercept": "1",
+      "save_time": "2023-12-06 08:36:54",
+      "descript": null,
+      "workplace": "（年度）成都市青白江区审计局",
+      "username": "李俊祥",
+      "package_num": "CCF001E"
     }
-  ],
-  "extend": null
+  ]
 }
