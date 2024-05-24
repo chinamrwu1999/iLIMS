@@ -2,6 +2,7 @@ package com.amswh.iLIMS.partner.service;
 
 import com.amswh.iLIMS.partner.IPartner;
 import com.amswh.iLIMS.utils.HttpClientHelper;
+import com.amswh.iLIMS.utils.MyStringUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -10,10 +11,13 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.DataInput;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -25,6 +29,10 @@ public class PAJKService implements IPartner {
     String password="WHAMS@123";
 
     String token=null;
+
+//    static {
+//        productMap.put("UN220843","LDT06");
+//    }
 
 
     private void fetchToken(){
@@ -57,7 +65,6 @@ public class PAJKService implements IPartner {
         node.put("barCode",barCode);
         node.put("hospitalId",hospitalId);
         node.put("labCenterCode","101001");
-        String result = "";
         try {
 
             RestTemplate restTemplate = new RestTemplate();
@@ -70,11 +77,58 @@ public class PAJKService implements IPartner {
             ResponseEntity<String> responseEntity = restTemplate.exchange( url, HttpMethod.POST, requestEntity, String.class);
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
                 try {
-                     System.out.println("\n"+responseEntity.getBody()+"\n");
+                     System.out.println("\n"+responseEntity.getBody()+"\n>>>>");
                      JsonNode jsonNode=objMapper.readTree(responseEntity.getBody());
                      if(jsonNode.get("success").asBoolean()) {
-                        // Map<String, Object> responseBodyMap = objMapper.readValue(jsonNode.get("data"), );
-                        // responseBodyMap.forEach((key, value) -> System.out.println(key + ": " + value));
+                         Map<String,Object> result=new HashMap<>();
+                        JsonNode arrayNode=jsonNode.get("data");
+                        JsonNode data= arrayNode.get(0);
+                        Map<String,Object> tmpMap=objMapper.readValue(objMapper.writeValueAsString(data),Map.class);
+                        if(tmpMap!=null && !tmpMap.isEmpty()) {
+                            if (!MyStringUtils.isEmpty(tmpMap.get("patientName"))) {
+                                result.put("name", tmpMap.get("patientName"));
+                            }
+                            if (!MyStringUtils.isEmpty(tmpMap.get("sexName"))) {
+                                result.put("gender", "女".equals(tmpMap.get("sexName").toString()) ? "F" : "M");
+                            }
+                            if (!MyStringUtils.isEmpty(tmpMap.get("age"))) {
+                                result.put("age", Integer.parseInt(tmpMap.get("age").toString()));
+                            }
+                            if (!MyStringUtils.isEmpty(tmpMap.get("patientPhone"))) {
+                                result.put("phone", tmpMap.get("patientPhone"));
+                            }
+                            if (!MyStringUtils.isEmpty(tmpMap.get("sampleCollectionTime"))) {
+                                result.put("samplingTime", tmpMap.get("sampleCollectionTime"));
+                            }
+
+                            JsonNode node1=data.get("applySampleItem").get(0);
+                            if(node1!=null){
+                               String itemCode= node1.get("applyItemCode").asText();
+                               System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> item is "+itemCode);
+                            }
+
+
+
+                            JsonNode d1 = objMapper.readTree(data.get("pingAnRequestJson").asText());
+                            d1 = d1.get("data").get(0);
+                            tmpMap = objMapper.readValue(objMapper.writeValueAsString(d1), Map.class);
+                            if(tmpMap!=null && !tmpMap.isEmpty()) {
+                                if (!MyStringUtils.isEmpty(tmpMap.get("papersNo"))) {
+                                    result.put("IDNumber", tmpMap.get("papersNo"));
+                                }
+                                if (!MyStringUtils.isEmpty(tmpMap.get("papersType"))) {
+                                    result.put("IDType", tmpMap.get("papersType"));
+                                }
+                                if (!MyStringUtils.isEmpty(tmpMap.get("birthday"))) {
+                                    result.put("birthDay", tmpMap.get("birthday"));
+                                }
+                                if (!MyStringUtils.isEmpty(tmpMap.get("address"))) {
+                                    result.put("address", tmpMap.get("address"));
+                                }
+                            }
+
+                            System.out.println("\nIDNumber:" + d1.get("papersNo"));
+                        }
                      }
                 } catch (Exception e) {
                     e.printStackTrace();
