@@ -42,7 +42,7 @@ public class XNYTService implements IPartner {
                 String url = URLBuilder.toUriString();
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
-                headers.set("content-type", "application/json;charset=UTF-8\"");
+                headers.set("content-type", "application/json;charset=UTF-8");
                 headers.set("user_token", this.token);
                 HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
                 RestTemplate restTemplate = new RestTemplate();

@@ -30,9 +30,7 @@ public class PAJKService implements IPartner {
 
     String token=null;
 
-//    static {
-//        productMap.put("UN220843","LDT06");
-//    }
+
 
 
     private void fetchToken(){
@@ -77,14 +75,14 @@ public class PAJKService implements IPartner {
             ResponseEntity<String> responseEntity = restTemplate.exchange( url, HttpMethod.POST, requestEntity, String.class);
             if (responseEntity.getStatusCode() == HttpStatus.OK) {
                 try {
-                     System.out.println("\n"+responseEntity.getBody()+"\n>>>>");
                      JsonNode jsonNode=objMapper.readTree(responseEntity.getBody());
                      if(jsonNode.get("success").asBoolean()) {
-                         Map<String,Object> result=new HashMap<>();
+
                         JsonNode arrayNode=jsonNode.get("data");
                         JsonNode data= arrayNode.get(0);
                         Map<String,Object> tmpMap=objMapper.readValue(objMapper.writeValueAsString(data),Map.class);
                         if(tmpMap!=null && !tmpMap.isEmpty()) {
+                            Map<String,Object> result=new HashMap<>();
                             if (!MyStringUtils.isEmpty(tmpMap.get("patientName"))) {
                                 result.put("name", tmpMap.get("patientName"));
                             }
@@ -98,17 +96,18 @@ public class PAJKService implements IPartner {
                                 result.put("phone", tmpMap.get("patientPhone"));
                             }
                             if (!MyStringUtils.isEmpty(tmpMap.get("sampleCollectionTime"))) {
-                                result.put("samplingTime", tmpMap.get("sampleCollectionTime"));
+                                result.put("samplingTime", tmpMap.get("sampleCollectionTime").toString().replace("T"," "));
                             }
 
                             JsonNode node1=data.get("applySampleItem").get(0);
                             if(node1!=null){
-                               String itemCode= node1.get("applyItemCode").asText();
-                               System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> item is "+itemCode);
+                                if(node1.get("applyItemCode")!=null){
+                                    String itemCode= node1.get("applyItemCode").asText();
+                                    if("UN220843".equals(itemCode)){
+                                        result.put("productCode", "LDT06");
+                                    }
+                                }
                             }
-
-
-
                             JsonNode d1 = objMapper.readTree(data.get("pingAnRequestJson").asText());
                             d1 = d1.get("data").get(0);
                             tmpMap = objMapper.readValue(objMapper.writeValueAsString(d1), Map.class);
@@ -120,14 +119,17 @@ public class PAJKService implements IPartner {
                                     result.put("IDType", tmpMap.get("papersType"));
                                 }
                                 if (!MyStringUtils.isEmpty(tmpMap.get("birthday"))) {
-                                    result.put("birthDay", tmpMap.get("birthday"));
+                                    String s1=tmpMap.get("birthday").toString();
+                                    if(s1.length()==8){
+                                        s1=s1.substring(0,4).concat("-").concat(s1.substring(4,6)).concat("-").concat(s1.substring(6,8));
+                                    }
+                                    result.put("birthDay",s1);
                                 }
                                 if (!MyStringUtils.isEmpty(tmpMap.get("address"))) {
                                     result.put("address", tmpMap.get("address"));
                                 }
                             }
-
-                            System.out.println("\nIDNumber:" + d1.get("papersNo"));
+                            return result;
                         }
                      }
                 } catch (Exception e) {
@@ -136,9 +138,6 @@ public class PAJKService implements IPartner {
             } else {
                 System.out.println("Request failed with status code: " + responseEntity.getStatusCode());
             }
-
-
-
         } catch (Exception e) {
            e.printStackTrace();
         }

@@ -3,6 +3,7 @@ package com.amswh.iLIMS.controller;
 
 import com.amswh.iLIMS.partner.service.HYService;
 
+import com.amswh.iLIMS.partner.service.MEGAService;
 import com.amswh.iLIMS.partner.service.PAJKService;
 import com.amswh.iLIMS.partner.service.XNYTService;
 import jakarta.annotation.Resource;
@@ -29,7 +30,7 @@ public class TestController {
     AnalyteprocessService processService;
 
     @Resource
-    XNYTService partnerService;
+    MEGAService partnerService;
 
     @Resource
     PartyService partyService;
@@ -58,7 +59,12 @@ public class TestController {
 //          }
 //      }
       //  pajkService.fetchToken();
-        pajkService.fetchPatientInfo("8020857862");
+        Map<String,Object> mp=  partnerService.fetchPatientInfo("J6231122008907");
+          if(mp!=null) {
+              for (String key : mp.keySet()) {
+                  System.out.println(key + ":" + mp.get(key));
+              }
+          }
 
     }catch (Exception err){
         err.printStackTrace();
