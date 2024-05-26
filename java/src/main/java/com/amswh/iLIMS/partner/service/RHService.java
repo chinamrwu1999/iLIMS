@@ -1,14 +1,17 @@
 package com.amswh.iLIMS.partner.service;
 
+import com.amswh.iLIMS.partner.IPartner;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.iss.iescp.web.sign.sdk.client.PcisServiceClient;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 
 @Service
-public class RHService {
+public class RHService implements IPartner {
 
 
 
@@ -127,4 +130,13 @@ public class RHService {
     }
 
 
+    @Override
+    public Map<String, Object> fetchPatientInfo(String barCode) throws Exception {
+        return null;
+    }
+
+    @Override
+    public String whoAmI() {
+        return "RH";
+    }
 }

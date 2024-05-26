@@ -15,4 +15,6 @@ public interface IPartner {
      */
     public Map<String,Object> fetchPatientInfo(String barCode) throws Exception;
 
+    public String whoAmI();
+
 }

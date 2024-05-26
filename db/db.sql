@@ -96,9 +96,20 @@ CREATE TABLE IF NOT EXISTS PartyBar(
     `id` int unsigned not null primary key,
     `partyId` int unsigned not null comment '病人对应的partyId',
     `barCode` varchar(20) not null comment '贴在采样管或采样盒上的条形码',
-    `bindWay` varchar(12) comment '绑定方式:wechat微信小程序扫码,api 通过api从partner处拉取;hand手工录入',
+    `bindWay` varchar(12) comment '绑定方式:wechat微信小程序扫码,api 通过api从partner处拉取;manual手工录入',
     `createTime` DATETIME NOT NULl default now()
 ) ENGINE=InnoDB comment '病人与样本条码关联';
+
+CREATE TABLE IF NOT EXISTS BarExpress(
+    `id` int unsigned not null primary key,
+    `barCode` varchar(60) not null comment '条码号',
+    `udi` varchar(60)  comment 'udi',
+    `productCode` varchar(20) not null,
+    `partnerCode`  varchar(20) not null comment '收到的样本来自哪位partner',
+    `expressNo` varchar(60) comment '快递单号' ,
+    `handleWay` varchar(10) comment '分拣方式:auto自动,manual',
+    `createTime` datetime not null default now()
+) comment '收到快递送来的样本，分拣动作' ;
 
  
 

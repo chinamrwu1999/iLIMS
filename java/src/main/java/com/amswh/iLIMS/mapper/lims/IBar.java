@@ -1,4 +1,5 @@
 package com.amswh.iLIMS.mapper.lims;
+import com.amswh.iLIMS.domain.Product;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.amswh.iLIMS.domain.Bar;
 import org.apache.ibatis.annotations.Insert;
@@ -24,5 +25,9 @@ public interface IBar extends BaseMapper<Bar> {
 
     @Select("SELECT * FROM Bar where barCode=#{barCode}")
     public Bar getGeneratedBar(String barCode);
+
+
+    @Select("SELECT A.* FROM product A left join  Bar ON A.code=Bar.productCode where Bar.barCode=#{barCode}")
+    public Product getProductOfBar(String barCode);
 
 }

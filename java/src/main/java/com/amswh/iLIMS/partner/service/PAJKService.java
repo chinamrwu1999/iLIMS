@@ -144,4 +144,9 @@ public class PAJKService implements IPartner {
         return  null;
 
     }
+
+    @Override
+    public String whoAmI() {
+        return "PAJK";
+    }
 }

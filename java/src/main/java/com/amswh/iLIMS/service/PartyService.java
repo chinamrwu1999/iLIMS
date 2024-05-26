@@ -127,4 +127,9 @@ public class PartyService extends ServiceImpl<IParty, Party> {
         return (Integer) map.get("partyId");
     }
 
+    public Map<String,Object> findPartyByExternalId(String externalId){
+
+        return baseMapper.findPartyByExternalId(externalId);
+    }
+
 }

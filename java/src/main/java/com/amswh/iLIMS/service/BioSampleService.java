@@ -2,10 +2,13 @@ package com.amswh.iLIMS.service;
 import com.amswh.iLIMS.domain.Analyte;
 import com.amswh.iLIMS.domain.AnalyteProcess;
 import com.amswh.iLIMS.mapper.lims.IBioSample;
+import com.amswh.iLIMS.oa.OAQueryService;
+import com.amswh.iLIMS.partner.PartnerService;
 import com.amswh.iLIMS.utils.MapUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.amswh.iLIMS.domain.BioSample;
 import jakarta.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,20 +24,39 @@ public class BioSampleService extends ServiceImpl<IBioSample, BioSample> {
 	   @Resource
 	   AnalyteprocessService analyteprocessService;
 
+	   @Resource
+	   PartnerService partnerService;
+
+	   @Resource
+	   OAQueryService  OA;
+
+	/**
+	 * 样本分拣：在收样之前根据快递单信息、样本外在特征判定样本来源、检测项目等
+	 * @param barCode
+	 */
+	public void categorizeSample(String barCode){
+		  if(StringUtils.isEmpty(barCode)){return;}
+		  Map<String,Object> map=partnerService.fetchPatientInfo(barCode);
+		  if(map==null){
+
+		  }
+
+	  }
+
 
 	/**
 	 *  接收样本
 	 * @param inputMap
 	 */
 	@Transactional
-	   public void receiveBioSample(Map<String,Object> inputMap){
+	public void receiveBioSample(Map<String,Object> inputMap){
            try {
 			   BioSample sample = new BioSample();
 			   MapUtil.copyFromMap(inputMap, sample);
-			   if(this.save(sample)) {
+			   if(this.save(sample)) {//保存样本信息
 				   Analyte analyte = new Analyte();
 				   MapUtil.copyFromMap(inputMap, analyte);
-				   if( analyteService.save(analyte)) {
+				   if( analyteService.save(analyte)) {//保存分析物信息
 					   AnalyteProcess analyteProcess = new AnalyteProcess();
 					   analyteProcess.setAnalyteCode(analyte.getAnalyteCode());
 					   analyteProcess.setAction("RECEIVE");
@@ -46,7 +68,8 @@ public class BioSampleService extends ServiceImpl<IBioSample, BioSample> {
 		   }catch (Exception err){
 			   err.printStackTrace();
 		   }
+	}
 
-	   }
+
 
 }

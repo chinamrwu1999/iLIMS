@@ -77,6 +77,12 @@ public class XNYTService implements IPartner {
         }
         return null;
     }
+
+    @Override
+    public String whoAmI() {
+        return "XNYT";
+    }
+
     /*
          登录西南医投LIS系统，获取token，为后续api交互authentication
      */

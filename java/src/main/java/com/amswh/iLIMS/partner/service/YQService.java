@@ -73,4 +73,9 @@ public class YQService implements IPartner {
         }
         return  null;
     }
+
+    @Override
+    public String whoAmI() {
+        return "YQ";
+    }
 }

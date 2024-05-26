@@ -70,7 +70,12 @@ public class HYService implements IPartner {
          return null;
     }
 
-      public static String getHySign() {
+    @Override
+    public String whoAmI() {
+        return "HY";
+    }
+
+    public static String getHySign() {
         String appId = "Hy2004c41e34489b8a136e1cd09691xx";
         String secret = "Hy20246f5-14b0-40f1-9dcd-f070cf2e3a31";
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");

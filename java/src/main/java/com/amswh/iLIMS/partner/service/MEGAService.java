@@ -80,6 +80,11 @@ public class MEGAService implements IPartner {
         return null;
     }
 
+    @Override
+    public String whoAmI() {
+        return "MEGA";
+    }
+
 
     private String signInput(Map<String, String> map){
         map.put("appid",appKey);

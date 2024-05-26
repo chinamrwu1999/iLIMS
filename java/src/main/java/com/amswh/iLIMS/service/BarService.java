@@ -1,5 +1,6 @@
 package com.amswh.iLIMS.service;
 import com.amswh.iLIMS.domain.Bar;
+import com.amswh.iLIMS.domain.Product;
 import com.amswh.iLIMS.mapper.lims.IBar;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
@@ -12,6 +13,8 @@ import java.util.List;
 
 @Service
 public class BarService extends ServiceImpl<IBar, Bar> {
+
+
 
 
 	/**
@@ -47,6 +50,11 @@ public class BarService extends ServiceImpl<IBar, Bar> {
 	 */
 	 public Bar getGeneratedBar(String barCode){
           return  this.baseMapper.getGeneratedBar(barCode);
+	 }
+
+
+	 public Product getProductOfBar(String barCode){
+		  return baseMapper.getProductOfBar(barCode);
 	 }
 
 

@@ -48,23 +48,6 @@ public class TestController {
     public void TestMe(){
     try {
 
-       // partyService.addPerson(input);
-        //partyService.addOrganization(input);
-      //  barService.generateBarCodes("20240521","LDT12",3,"",50);
-      //  YQ.fetchPatientInfo("10791014221");
-//      Map<String,Object> mp=  partnerService.fetchPatientInfo("2024042804251");
-//      if(mp!=null) {
-//          for (String key : mp.keySet()) {
-//              System.out.println(key + ":" + mp.get(key));
-//          }
-//      }
-      //  pajkService.fetchToken();
-        Map<String,Object> mp=  partnerService.fetchPatientInfo("BP231129000112");
-          if(mp!=null) {
-              for (String key : mp.keySet()) {
-                  System.out.println(key + ":" + mp.get(key));
-              }
-          }
 
     }catch (Exception err){
         err.printStackTrace();

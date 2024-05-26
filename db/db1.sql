@@ -15,12 +15,19 @@ CREATE TABLE IF NOT EXISTS  `person`(
     `gender` char(1) not null comment '性别',
     `birthday` date comment '出生日期',
     `age` smallint unsigned comment '年龄:年龄是变量。此处适用于某人享用服务时候的年龄',
-    `wechat`   varchar(36) comment '微信的openId',
     `IdCardType` char(2) comment '证件类型:Id身份证,PP护照',
     `IDNumber`    varchar(30) comment '证件号码',
     `height`   decimal(4,1) comment '身高',
     `weight`   decimal(3,1) comment '体重'
  ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT '个人基本信息';
+
+
+CREATE TABLE IF NOT EXISTS  `PartySM`(
+  partyId int unsigned not null,
+  SMId varchar(100) not null,
+  createTime datetime not null default now(),
+  primary key (partyId,SMId)
+) comment 'Party的社交网络(Social Media)账号,例如微信号等，某个人可能有多个微信号';
 
 
 CREATE TABLE IF NOT EXISTS  `partyGroup`(
@@ -39,6 +46,7 @@ CREATE TABLE IF NOT EXISTS  `address`(
     `type` varchar(30) comment '地址类别：常驻地址、收货地址',
     `createTime` datetime not null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1  DEFAULT CHARSET=utf8mb4 COMMENT '地址信息';
+
 
 
 CREATE TABLE IF NOT EXISTS  `partyAddress`(
@@ -66,36 +74,26 @@ CREATE TABLE IF NOT EXISTS  `partyRelationship`(
 
 CREATE TABLE IF NOT EXISTS  `orderType`( 
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
-    `name` varchar(20) not null unique comment '订单编号',
-    `parentId` int not null   comment '拉来订单的销售员Id;references party(partyId)',
-    `description` int not null comment '买单者:references party(partyId)'
+    `name` varchar(20) not null unique comment '类型名称',
+    `parentId` int not null   comment '上一级类型',
+    `remark` int not null comment '备注'
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单类型';
 
 CREATE TABLE IF NOT EXISTS  `order`( 
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
     `orderNo` varchar(20) not null unique comment '订单编号',
     `salesPerson` int not null comment '拉来订单的销售员Id: references party(partyId)',
-    `customer` int not null   comment '买单者: references party(partyId)',
+    `customer` int unsigned not null   comment '买单者: references party(partyId)',
     `typeId` int not null    comment '订单类型Id',
     `createTime` datetime not  null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单信息';
 CREATE TABLE IF NOT EXISTS  `orderItem`( 
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
     `orderNo` varchar(20) not null unique comment '订单编号',
-    `productId` int not null  comment '订单产品代码',
+    `productCode` varchar(20) not null  comment '订单产品代码',
     `quantity` int not null  comment '数量',
     `createTime` datetime not  null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单购买产品清单';
-CREATE TABLE IF NOT EXISTS  `orderAddress`( 
-    `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
-    `orderNo` varchar(20) not null unique comment '订单编号',
-    `name` varchar(20) not null comment '收货人姓名',
-    `phone` int not null   comment '买单者: references party(partyId)',
-    `geoCode` varchar(8)   comment '收货人的省市区行政编码',
-    `address` varchar(80) not null    comment '详细收货地址',
-    `deadline` date  comment '最迟应发货日期',
-    `createTime` datetime not  null default now()
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单发货信息';
 CREATE TABLE IF NOT EXISTS  `orderShip`(
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
     `orderNo` varchar(20) NOT NULL comment '订单编号',
@@ -106,7 +104,19 @@ CREATE TABLE IF NOT EXISTS  `orderShip`(
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单发货信息';
 CREATE TABLE IF NOT EXISTS  `shipItem`(
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
+    `itemId` int unsigned NOT NULL comment '外键引用orderItem表的id'
     `shipId` int unsigned NOT NULL comment 'orderShip表自增主键',
     `barCode` varchar(60) comment 'UDI码或者条码',
     `createTime` DATETIME NOT NULL default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '发货明细';
+
+CREATE TABLE IF NOT EXISTS  `orderAddress`( 
+    `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
+    `orderNo` varchar(20) not null unique comment '订单编号',
+    `name` varchar(20) not null comment '收货人姓名',
+    `phone` int not null   comment '买单者: references party(partyId)',
+    `geoCode` varchar(8)   comment '收货人的省市区行政编码',
+    `address` varchar(80) not null    comment '详细收货地址',
+    `deadline` date  comment '最迟应发货日期',
+    `createTime` datetime not  null default now()
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单发货信息';
