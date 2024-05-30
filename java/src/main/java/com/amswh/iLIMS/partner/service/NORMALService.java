@@ -90,7 +90,7 @@ public class NORMALService implements IPartner {
     }
 
     private Map<String,Object> findPatientInfo(String barCode){
-       
+
         return null;
     }
 
