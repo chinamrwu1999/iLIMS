@@ -1,11 +1,8 @@
 package com.amswh.iLIMS.controller;
 
 
-import com.amswh.iLIMS.partner.service.HYService;
+import com.amswh.iLIMS.partner.service.*;
 
-import com.amswh.iLIMS.partner.service.MEGAService;
-import com.amswh.iLIMS.partner.service.PAJKService;
-import com.amswh.iLIMS.partner.service.XNYTService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,36 +15,16 @@ import java.util.Map;
 @RequestMapping("/test")
 public class TestController {
 
-    @Autowired
-    BioSampleService sampleService;
-
-    @Resource
-    AnalyteService analyteService;
-
-
-
-    @Resource
-    AnalyteprocessService processService;
-
-    @Resource
-    MEGAService partnerService;
-
-    @Resource
-    PartyService partyService;
-
-    @Resource
-    BarService barService;
-
-    @Resource
-    PAJKService pajkService;
+   @Resource
+   ADCService service;
 
 
    // @PostMapping("/service")
-    @GetMapping("/service")
+    @GetMapping("/hello")
     @Transactional(transactionManager="limsTransactionManager")
     public void TestMe(){
     try {
-
+          service.fetchPatientInfo("WD2018120529");
 
     }catch (Exception err){
         err.printStackTrace();

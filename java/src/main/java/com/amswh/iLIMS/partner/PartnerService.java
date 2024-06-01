@@ -16,6 +16,7 @@ public class PartnerService implements ApplicationContextAware {
     @PostConstruct
     public void loadServices(){
         Set<String> set1=this.parters.keySet();
+        this.orderedCodes=new ArrayList<>();
         for(String code: Arrays.asList("YQ","HY","MEGA","XNYT","PAJK","RH")){
             if(set1.contains(code)){
                 this.orderedCodes.add(code);

@@ -1,10 +1,10 @@
 package com.amswh.iLIMS.partner.service;
 
-import com.amswh.iLIMS.domain.Bar;
 import com.amswh.iLIMS.domain.BarExpress;
 import com.amswh.iLIMS.domain.Product;
 import com.amswh.iLIMS.oa.OAQueryService;
 import com.amswh.iLIMS.partner.IPartner;
+import com.amswh.iLIMS.partner.PatientInfo;
 import com.amswh.iLIMS.service.BarExpressService;
 import com.amswh.iLIMS.service.BarService;
 import com.amswh.iLIMS.service.OrderService;
@@ -32,7 +32,7 @@ public class NORMALService implements IPartner {
     PartyService partyService;
 
     @Override
-    public Map<String, Object> fetchPatientInfo(String barCode) throws Exception {
+    public PatientInfo fetchPatientInfo(String barCode) throws Exception {
        return null;
     }
 
@@ -89,7 +89,12 @@ public class NORMALService implements IPartner {
         return null;
     }
 
-    private Map<String,Object> findPatientInfo(String barCode){
+    /**
+     * 根据用户手机扫码绑定时候的信息查找
+     * @param barCode
+     * @return
+     */
+    private Map<String,Object> findPatientInfoByScanBindInfo(String barCode){
 
         return null;
     }

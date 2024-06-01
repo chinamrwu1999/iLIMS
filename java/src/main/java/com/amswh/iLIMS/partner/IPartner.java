@@ -13,7 +13,7 @@ public interface IPartner {
      * @param barCode
      * @return
      */
-    public Map<String,Object> fetchPatientInfo(String barCode) throws Exception;
+    public PatientInfo fetchPatientInfo(String barCode) throws Exception;
 
     public String whoAmI();
 

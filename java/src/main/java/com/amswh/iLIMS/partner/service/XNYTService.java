@@ -9,6 +9,8 @@ package com.amswh.iLIMS.partner.service;
 
 
 import com.amswh.iLIMS.partner.IPartner;
+import com.amswh.iLIMS.partner.PatientInfo;
+import com.amswh.iLIMS.utils.MyStringUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
@@ -33,7 +35,7 @@ public class XNYTService implements IPartner {
         返回:Map
      */
     @Override
-    public Map<String, Object> fetchPatientInfo(String barCode) throws Exception {
+    public PatientInfo fetchPatientInfo(String barCode) throws Exception {
         try {
             this.updateToken();
             if (this.isValidToken()) {
@@ -56,17 +58,29 @@ public class XNYTService implements IPartner {
                    if(state==1){
                             Map<String, Object> src = (Map<String, Object>) jsonMap.get("result");
                             if(!(src==null || src.isEmpty())){
-                                Map<String, Object> target = new HashMap<>();
-                                target.put("name", String.valueOf(src.get("name")));
-                                target.put("gender", "男".equals(String.valueOf("genderCode") )? "M" : "F");
-                                target.put("age", (int)src.get("age"));
-                                target.put("phone", String.valueOf(src.get("tel")));
-                                target.put("birthDay", String.valueOf(src.get("birthday")));
-                                target.put("IdNumber", String.valueOf(src.get("idCardNum")));
-                                target.put("productCode", String.valueOf(src.get("projectCode")));
-                                target.put("barCode", String.valueOf(src.get("num")));
-                                target.put("address", String.valueOf(src.get("homeAddress")));
-                                return target;
+                                PatientInfo patient=new PatientInfo(barCode,src.get("name").toString());
+                                patient.setGender("男".equals(src.get("genderCode"))? "M" : "F");
+                                if(src.get("age")!=null){
+                                    patient.setAge((Integer) src.get("age"));
+                                }
+                                if(src.get("tel")!=null){
+                                    patient.setPhone(src.get("tel").toString());
+                                }
+                                if(src.get("birthday")!=null){
+                                    patient.setBirthDate(src.get("birthday").toString());
+                                }
+                                if(!MyStringUtils.isEmpty(src.get("idCardNum"))){
+                                    patient.setIDNumber(src.get("idCardNum").toString());
+                                }
+                                if(!MyStringUtils.isEmpty(src.get("projectCode"))){  // 注意这里返回的是AD06
+                                    patient.setProductCode(src.get("projectCode").toString());
+                                }else{
+                                    patient.setProductCode("LDT06");
+                                }
+                                if(!MyStringUtils.isEmpty(src.get("homeAddress")!=null)){
+                                    patient.setOtherFieldInfo("address",src.get("homeAddress"));
+                                }
+                                return patient;
                             }
                         }
                     }

@@ -1,6 +1,7 @@
 package com.amswh.iLIMS.partner.service;
 
 import com.amswh.iLIMS.partner.IPartner;
+import com.amswh.iLIMS.partner.PatientInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -23,7 +24,7 @@ public class MEGAService implements IPartner {
     String url4UpdateStatus="/api/v1.0/sample/sampleStatus";//更新样本状态接口
     String url4PushPDF="/api/v1.0/sample/sampleURLResult";//推送PDF报告URL
     @Override
-    public Map<String, Object> fetchPatientInfo(String barCode) throws Exception {
+    public PatientInfo fetchPatientInfo(String barCode) throws Exception {
         Map<String,String> map = new HashMap<>();
         map.put("sample_code",barCode);
         String sign = this.signInput(map);
@@ -50,25 +51,19 @@ public class MEGAService implements IPartner {
                         String dataJson=objectMapper.writeValueAsString(data);
                         Map<String,Object> tmpMap=objectMapper.readValue(dataJson,Map.class);
                         if(tmpMap!=null && !tmpMap.isEmpty()){
-                            Map<String,Object> result=new HashMap<>();
-                            result.put("agentId",tmpMap.get("agent_num"));//门店代码
-                            result.put("name",tmpMap.get("username"));
-                            result.put("gender","男".equals(tmpMap.get("gender").toString())?"M":"F");
+                           // Map<String,Object> result=new HashMap<>();
+                            PatientInfo patient=new PatientInfo(barCode,String.valueOf(tmpMap.get("username")));
+                            patient.setOtherFieldInfo("agentId",String.valueOf(tmpMap.get("agent_num")));
+                            patient.setGender("男".equals(tmpMap.get("gender").toString())?"M":"F");
+                            patient.setOtherFieldInfo("package",String.valueOf(tmpMap.get("package_num")));
                            // result.put("package",tmpMap.get("package_num"));
-                            result.put("birthday",tmpMap.get("birthdate"));
-                            result.put("samplingTime",tmpMap.get("date_sampling"));
-                            result.put("phone",tmpMap.get("phone"));
-                            result.put("barCode",tmpMap.get("barcode"));
-                            if(tmpMap.get("birthdate")!=null){
-                                LocalDate birthday = LocalDate.parse(tmpMap.get("birthdate").toString());
-                                LocalDate currentDate = LocalDate.now();
-                                Period period = Period.between(birthday, currentDate);
-                                result.put("age",period.getYears());
+                            patient.setBirthDate(String.valueOf(tmpMap.get("birthdate")));
+                            patient.setSamplingTime(String.valueOf(tmpMap.get("date_sampling")));
+                            patient.setPhone(String.valueOf(tmpMap.get("phone")));
+                            if(tmpMap.get("package_num")!=null && "CCF001E".equals(tmpMap.get("package_num").toString())) {
+                                patient.setProductCode("LDT01");
                             }
-                            if("CCF001E".equals(tmpMap.get("package_num").toString())){
-                                result.put("productCode","LDT01");
-                            }
-                            return result;
+                            return patient;
                         }
                     }
                 }

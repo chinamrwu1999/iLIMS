@@ -2,8 +2,8 @@ package com.amswh.iLIMS.partner.service;
 
 
 import com.amswh.iLIMS.partner.IPartner;
+import com.amswh.iLIMS.partner.PatientInfo;
 import com.amswh.iLIMS.utils.MD5Utils;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class HYService implements IPartner {
     private  String sampleInfoUrl = "https://www.huanyatijianzx.com/PlugNew/huanYaAiMiShengAction/getPersonalInfoByCheckNoOrDate.action";
     @Override
-    public Map<String, Object> fetchPatientInfo(String barCode) throws Exception {
+    public PatientInfo fetchPatientInfo(String barCode) throws Exception {
         if(StringUtils.isEmpty(barCode)){
             return null;
         }
@@ -41,18 +41,19 @@ public class HYService implements IPartner {
                     List<Map<String, Object>> dataList = (List<Map<String, Object>>) resultMap.get("MSG");
                     if (dataList != null && !dataList.isEmpty()) {
                         Map<String, Object> src = dataList.get(0);
-                        Map<String, Object> target = new HashMap<>();
-                        target.put("name", String.valueOf(src.get("PERNAME")));
-                        target.put("gender", String.valueOf(src.get("GENDER")));
+                       // Map<String, Object> target = new HashMap<>();
+                        PatientInfo patient=new PatientInfo(barCode);
+                        patient.setName(String.valueOf(src.get("PERNAME")));
+                        patient.setGender(String.valueOf(src.get("GENDER")));
                         if(src.get("AGE")!=null) {
-                            target.put("age", Integer.parseInt(src.get("AGE").toString()));
+                            patient.setAge(Integer.parseInt(src.get("AGE").toString()));
                         }
-                        target.put("phone", String.valueOf(src.get("TEL")));
-                        target.put("birthDay", String.valueOf(src.get("BIRTHDAY")));
-                        target.put("IdNumber", String.valueOf(src.get("CARDNUMBER")));
-                        target.put("productCode", String.valueOf(src.get("ITEMID")));
-                        target.put("samplingTime", String.valueOf(src.get("CHECKTIME")));
-                        return target;
+                        patient.setPhone(String.valueOf(src.get("TEL")));
+                        patient.setBirthDate(String.valueOf(src.get("BIRTHDAY")));
+                        patient.setIDNumber(String.valueOf(src.get("CARDNUMBER")));
+                        patient.setProductCode(String.valueOf(src.get("ITEMID")));
+                        patient.setSamplingTime(String.valueOf(src.get("CHECKTIME")));
+                        return patient;
                     }
                 } else if (state == 0) {
                     System.out.println("环亚体检:身份验证失败");

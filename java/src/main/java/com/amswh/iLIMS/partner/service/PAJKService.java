@@ -1,22 +1,16 @@
 package com.amswh.iLIMS.partner.service;
 
 import com.amswh.iLIMS.partner.IPartner;
+import com.amswh.iLIMS.partner.PatientInfo;
 import com.amswh.iLIMS.utils.HttpClientHelper;
 import com.amswh.iLIMS.utils.MyStringUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.DataInput;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,7 +48,7 @@ public class PAJKService implements IPartner {
 
 
     @Override
-    public Map<String, Object> fetchPatientInfo(String barCode) throws Exception {
+    public PatientInfo fetchPatientInfo(String barCode) throws Exception {
         if(this.token==null) {
             this.fetchToken();
         }
@@ -82,21 +76,21 @@ public class PAJKService implements IPartner {
                         JsonNode data= arrayNode.get(0);
                         Map<String,Object> tmpMap=objMapper.readValue(objMapper.writeValueAsString(data),Map.class);
                         if(tmpMap!=null && !tmpMap.isEmpty()) {
-                            Map<String,Object> result=new HashMap<>();
-                            if (!MyStringUtils.isEmpty(tmpMap.get("patientName"))) {
-                                result.put("name", tmpMap.get("patientName"));
-                            }
+                            //Map<String,Object> result=new HashMap<>();
+                            PatientInfo patient=new PatientInfo(barCode,String.valueOf(tmpMap.get("patientName")));
+
                             if (!MyStringUtils.isEmpty(tmpMap.get("sexName"))) {
-                                result.put("gender", "女".equals(tmpMap.get("sexName").toString()) ? "F" : "M");
+                                patient.setGender("女".equals(tmpMap.get("sexName").toString()) ? "F" : "M");
                             }
                             if (!MyStringUtils.isEmpty(tmpMap.get("age"))) {
-                                result.put("age", Integer.parseInt(tmpMap.get("age").toString()));
+                                patient.setAge(Integer.parseInt(tmpMap.get("age").toString()));
                             }
                             if (!MyStringUtils.isEmpty(tmpMap.get("patientPhone"))) {
-                                result.put("phone", tmpMap.get("patientPhone"));
+                                patient.setPhone(tmpMap.get("patientPhone").toString());
                             }
                             if (!MyStringUtils.isEmpty(tmpMap.get("sampleCollectionTime"))) {
-                                result.put("samplingTime", tmpMap.get("sampleCollectionTime").toString().replace("T"," "));
+                                patient.setSamplingTime( tmpMap.get("sampleCollectionTime").toString().replace("T"," "));
+
                             }
 
                             JsonNode node1=data.get("applySampleItem").get(0);
@@ -104,7 +98,8 @@ public class PAJKService implements IPartner {
                                 if(node1.get("applyItemCode")!=null){
                                     String itemCode= node1.get("applyItemCode").asText();
                                     if("UN220843".equals(itemCode)){
-                                        result.put("productCode", "LDT06");
+                                        patient.setProductCode("LDT06");
+
                                     }
                                 }
                             }
@@ -113,23 +108,25 @@ public class PAJKService implements IPartner {
                             tmpMap = objMapper.readValue(objMapper.writeValueAsString(d1), Map.class);
                             if(tmpMap!=null && !tmpMap.isEmpty()) {
                                 if (!MyStringUtils.isEmpty(tmpMap.get("papersNo"))) {
-                                    result.put("IDNumber", tmpMap.get("papersNo"));
+                                    patient.setIDNumber(tmpMap.get("papersNo").toString());
+
                                 }
                                 if (!MyStringUtils.isEmpty(tmpMap.get("papersType"))) {
-                                    result.put("IDType", tmpMap.get("papersType"));
+                                    patient.setIDType(tmpMap.get("papersType").toString());
                                 }
                                 if (!MyStringUtils.isEmpty(tmpMap.get("birthday"))) {
                                     String s1=tmpMap.get("birthday").toString();
                                     if(s1.length()==8){
                                         s1=s1.substring(0,4).concat("-").concat(s1.substring(4,6)).concat("-").concat(s1.substring(6,8));
                                     }
-                                    result.put("birthDay",s1);
+                                    patient.setBirthDate(s1);
+                                   // result.put("birthDay",s1);
                                 }
                                 if (!MyStringUtils.isEmpty(tmpMap.get("address"))) {
-                                    result.put("address", tmpMap.get("address"));
+                                    patient.setOtherFieldInfo("address",tmpMap.get("address"));
                                 }
                             }
-                            return result;
+                            return patient;
                         }
                      }
                 } catch (Exception e) {

@@ -4,7 +4,9 @@ import com.alibaba.cloudapi.sdk.constant.SdkConstant;
 import com.alibaba.cloudapi.sdk.model.ApiResponse;
 import com.alibaba.cloudapi.sdk.model.HttpClientBuilderParams;
 import com.amswh.iLIMS.partner.IPartner;
+import com.amswh.iLIMS.partner.PatientInfo;
 import com.amswh.iLIMS.partner.YQAPIClient;
+import com.amswh.iLIMS.utils.MyStringUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
@@ -30,19 +32,17 @@ public class YQService implements IPartner {
         // dev
         //httpsParam.setAppKey("204218020");
         //httpsParam.setAppSecret("RuAxVVYkf8dWXitr28SA10EZ6e5JxWr0");
-
         // prod
         httpsParam.setAppKey("204220644");
         httpsParam.setAppSecret("uYmYgrNZRSWfhVTAB7zQkzWAkCXnwOKm");
         YQAPIClient.getInstance().init(httpsParam);
     }
     @Override
-    public Map<String, Object> fetchPatientInfo(String barCode) throws Exception {
+    public PatientInfo fetchPatientInfo(String barCode) throws Exception {
         if(StringUtils.isEmpty(barCode)){
             return null;
         }
        try {
-
             ApiResponse response =  YQAPIClient.getInstance().getSampleInfoSyncMode(barCode , businessCategoryId);
             String json = new String(response.getBody(), SdkConstant.CLOUDAPI_ENCODING);
             ObjectMapper objectMapper=new ObjectMapper();
@@ -52,16 +52,36 @@ public class YQService implements IPartner {
             String message=root.get("message").asText();
             if("000000".equals(code)){
                 JsonNode data=root.get("data");//开始解析获取的数据
-                Map<String,Object> result=new HashMap<>();
-                result.put("name",data.get("name").asText());
-                result.put("gender",data.get("gender").asInt()==1?"M":"F");
-                result.put("age",data.get("age").asInt());
-                result.put("phone",data.get("mobile").asText());
-                result.put("IdNumber",data.get("idNo").asText());
-                result.put("samplingTime",data.get("sampleTime").asText());
-                result.put("productCode",data.get("productNo").asText());
-                result.put("birthDay",data.get("birthDay").asText());
-                return result;
+                //Map<String,Object> result=new HashMap<>();
+                PatientInfo patient=new PatientInfo(barCode,data.get("name").asText());
+
+                if(!MyStringUtils.isEmpty(data.get("gender"))){
+                    patient.setGender(data.get("gender").asInt()==1?"M":"F");
+                }
+
+                if(!MyStringUtils.isEmpty(data.get("age"))){
+                    patient.setAge(data.get("age").asInt());
+                }
+
+                if(!MyStringUtils.isEmpty(data.get("mobile"))){
+                    patient.setPhone(data.get("mobile").asText());
+                }
+
+                if(!MyStringUtils.isEmpty(data.get("idNo"))){
+                    patient.setIDNumber(data.get("idNo").asText());
+                }
+                if(!MyStringUtils.isEmpty(data.get("sampleTime"))){
+                    patient.setSamplingTime(data.get("sampleTime").asText());
+                }
+
+                if(!MyStringUtils.isEmpty(data.get("productNo"))){
+                    patient.setProductCode(data.get("productNo").asText());
+                }
+
+                if(!MyStringUtils.isEmpty(data.get("birthDay"))){
+                    patient.setBirthDate(data.get("birthDay").asText());
+                }
+                return patient;
 
             }else if("400004".equals(code)){
                 System.out.println("云鹊医:fetchPatientInf  barCode="+barCode+" "+message);
