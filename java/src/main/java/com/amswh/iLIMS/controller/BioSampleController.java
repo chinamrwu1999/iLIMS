@@ -8,10 +8,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +37,29 @@ public class BioSampleController {
 
     @Resource
     BarService barService;
+
+    /**
+     *  样本分拣
+     * @param inputMap
+     */
+
+    public void categorizeSample(@RequestBody Map<String,String> inputMap){
+
+        if(inputMap.get("barCode")==null && inputMap.get("udi")==null){
+            System.out.println("条码号与udi至少提供一样");
+            return;
+        }
+        String barCode=null;
+        if(inputMap.get("barCode")!=null){
+            barCode=inputMap.get("barCode");
+        } else if(inputMap.get("udi")!=null){
+
+        }
+       // if()
+
+
+    }
+
 
 
     /**

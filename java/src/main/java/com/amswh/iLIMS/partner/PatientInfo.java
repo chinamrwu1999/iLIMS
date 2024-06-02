@@ -29,6 +29,7 @@ public class PatientInfo {
     private String IDNumber;
     private String IDType;
     private String phone;
+    private String partnerCode;
     private Map<String,Object> otherInfo;
     public Object getOtherInfo(String fieldName){
          return this.otherInfo.get(fieldName);

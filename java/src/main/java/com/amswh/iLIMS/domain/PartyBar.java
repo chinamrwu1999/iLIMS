@@ -29,9 +29,6 @@ public class PartyBar {
 	@TableField("bindWay")
 	private String bindWay;
 
-	@TableField("partnerId")
-	private Integer partnerId;
-
 	@TableField("createTime")
 	private LocalDateTime createTime;
 

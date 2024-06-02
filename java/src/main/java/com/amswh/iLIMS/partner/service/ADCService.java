@@ -143,7 +143,7 @@ public class ADCService implements IPartner {
                   httpPost.setEntity(new StringEntity( objectMapper.writeValueAsString(paramNode), ContentType.APPLICATION_JSON));
                   httpPost.setHeader("Authorization","Bearer ".concat(token));
                   String  response = getHttpsClient().execute(httpPost,responseHandler);
-                  System.out.println("\n>>>>\n"+response);
+
                   JsonNode responseNode=objectMapper.readTree(response);
                   if(responseNode!=null && responseNode.get("code").asInt()==200){
                          JsonNode src=responseNode.get("data");

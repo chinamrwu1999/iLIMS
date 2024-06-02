@@ -106,7 +106,8 @@ CREATE TABLE IF NOT EXISTS  `shipItem`(
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
     `itemId` int unsigned NOT NULL comment '外键引用orderItem表的id'
     `shipId` int unsigned NOT NULL comment 'orderShip表自增主键',
-    `barCode` varchar(60) comment 'UDI码或者条码',
+    `barCode` varchar(60) comment '或者条码',
+    `udi` varchar(60) comment 
     `createTime` DATETIME NOT NULL default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '发货明细';
 

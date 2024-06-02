@@ -32,7 +32,7 @@ public class PartnerService implements ApplicationContextAware {
          }
     }
 
-    public Map<String,Object> fetchPatientInfo(String partnerCode,String barCode){
+    public PatientInfo fetchPatientInfo(String partnerCode,String barCode){
         IPartner partner=this.parters.get(partnerCode);
         if(partner==null){
             partner=this.parters.get("NORMAL");
@@ -46,13 +46,14 @@ public class PartnerService implements ApplicationContextAware {
         return null;
     }
 
-    public Map<String,Object> fetchPatientInfo(String barCode){
+    public PatientInfo fetchPatientInfo(String barCode){
 
          for(String partnerCode:orderedCodes){
              try {
-                 Map<String, Object> result = this.fetchPatientInfo(partnerCode, barCode);
-                 if (result != null) {
-                     return result;
+                 PatientInfo patient = this.fetchPatientInfo(partnerCode, barCode);
+                 if (patient != null) {
+                     patient.setPartnerCode(partnerCode);
+                     return patient;
                  }
              } catch(Exception err){
                  System.out.println("\n调用第三方API异常:partner="+partnerCode+" barCode="+barCode);

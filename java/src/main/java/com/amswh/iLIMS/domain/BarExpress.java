@@ -26,8 +26,8 @@ public class BarExpress {
     @TableField("expressNo")
     private String expressNo;
 
-    @TableField("partnerId")
-    private String partnerId;
+    @TableField("partyId")
+    private Integer partnerId;
 
     @TableField("handleWay")
     private String handleWay;//处理方式：自动分拣还是公手工分拣

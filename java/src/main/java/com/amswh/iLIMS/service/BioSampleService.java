@@ -4,6 +4,7 @@ import com.amswh.iLIMS.domain.AnalyteProcess;
 import com.amswh.iLIMS.mapper.lims.IBioSample;
 import com.amswh.iLIMS.oa.OAQueryService;
 import com.amswh.iLIMS.partner.PartnerService;
+import com.amswh.iLIMS.partner.PatientInfo;
 import com.amswh.iLIMS.utils.MapUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.amswh.iLIMS.domain.BioSample;
@@ -31,17 +32,12 @@ public class BioSampleService extends ServiceImpl<IBioSample, BioSample> {
 	   OAQueryService  OA;
 
 	/**
-	 * 样本分拣：在收样之前根据快递单信息、样本外在特征判定样本来源、检测项目等
+	 * 自动样本分拣：在收样之前根据快递单信息、样本外在特征判定样本来源、检测项目等
 	 * @param barCode
 	 */
-	public void categorizeSample(String barCode){
-		  if(StringUtils.isEmpty(barCode)){return;}
-		  Map<String,Object> map=partnerService.fetchPatientInfo(barCode);
-		  if(map==null){
-
-		  }
-
-	  }
+	public PatientInfo automaticallyCategorizeSample(String barCode){
+		  return  partnerService.fetchPatientInfo(barCode); //通过第三方API接口获取信息
+	}
 
 
 	/**
