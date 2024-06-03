@@ -11,6 +11,9 @@ import java.util.Map;
 public class PatientInfo {
 
 
+    public PatientInfo(){
+        this.otherInfo=new HashMap<>();
+    }
     public PatientInfo(String barCode){
           this.barCode=barCode;
           this.otherInfo=new HashMap<>();

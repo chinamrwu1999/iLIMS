@@ -32,12 +32,25 @@ public class BioSampleService extends ServiceImpl<IBioSample, BioSample> {
 	   OAQueryService  OA;
 
 	/**
-	 * 自动样本分拣：在收样之前根据快递单信息、样本外在特征判定样本来源、检测项目等
+	 * 自动样本分拣：根据条码从Partner处获取样本信息：报告病人信息、检测项目、partner本身
 	 * @param barCode
 	 */
-	public PatientInfo automaticallyCategorizeSample(String barCode){
+	public PatientInfo fetchSampleInfoFromPartners(String barCode){
 		  return  partnerService.fetchPatientInfo(barCode); //通过第三方API接口获取信息
 	}
+
+	/**
+	 *  手动分拣
+	 */
+	  public PatientInfo categorizeSampleManually(Map<String,Object> inputMap){
+		   PatientInfo patientInfo=new PatientInfo();
+		   patientInfo.setBarCode(inputMap.get("barCode").toString());
+		   patientInfo.setPartnerCode(inputMap.get("partnerCode").toString());
+		   patientInfo.setProductCode(inputMap.get("productCode").toString());
+		   return patientInfo;
+	  }
+
+
 
 
 	/**
