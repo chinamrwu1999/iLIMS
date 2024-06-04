@@ -3,7 +3,7 @@ use iLIMS ;
 CREATE TABLE IF NOT EXISTS  `party`(
     `partyId`   int unsigned NOT NULL AUTO_INCREMENT primary key comment 'partyId 唯一标识一个人或组织机构的字符串',
     `externalId` varchar(20) comment '与外部数据交互时,本party在外部系统的Id',
-    `partyType` char(4)  NOT NULL comment 'part类别代码,用于标识是个人(PSON)、公司(COMP)、医院(HSPT)、政府机构(GOVM),其中有一个特殊的表示root表示本系统的所有者',
+    `partyType` varchar(10)  NOT NULL comment 'part类别代码,用于标识是个人(PSON)、公司(COMP)、医院(HSPT)、政府机构(GOVM),其中有一个特殊的表示root表示本系统的所有者',
     `phone`     varchar(20) comment'电话',
     `email`    varchar(30) comment '电子邮箱',
     `createTime` datetime not null default now()
@@ -33,9 +33,7 @@ CREATE TABLE IF NOT EXISTS  `PartySM`(
 CREATE TABLE IF NOT EXISTS  `partyGroup`(
     `partyId`   int unsigned NOT NULL primary key comment 'partyId 唯一标识一个人或组织机构的字符串',
     `fullName` varchar(60)  NOT NULL comment '全称',
-    `shortName` varchar(20)  comment '简称',
-    `country`   varchar(3) comment '国家代码,例如中国CHN、日本JPN、应该UK' ,
-    `geoId`   varchar(10)  comment '行政区划代码'
+    `shortName` varchar(20)  comment '简称'
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT '组织机构party';
 
 CREATE TABLE IF NOT EXISTS  `address`(
