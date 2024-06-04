@@ -56,7 +56,7 @@ public class ConstantsService {
          List<Map<String,String>> projectDiseases=this.projectService.listProjectDiseases();
 
          for(Map<String,String> mp: projectDiseases){
-             this.project2DiseaseMap.put(mp.get("projectCode"),mp.get("diseaseCode"));
+             this.project2DiseaseMap.put(mp.get("projectCode"),mp.get("diseaseCode"));g
          }
 
 
