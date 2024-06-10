@@ -1,4 +1,5 @@
 package com.amswh.iLIMS.mapper.lims;
+import com.amswh.iLIMS.domain.Person;
 import com.amswh.iLIMS.domain.Product;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.amswh.iLIMS.domain.Bar;
@@ -24,10 +25,20 @@ public interface IBar extends BaseMapper<Bar> {
 
 
     @Select("SELECT * FROM Bar where barCode=#{barCode}")
-    public Bar getGeneratedBar(String barCode);
+    public Bar getBar(String barCode);
 
 
     @Select("SELECT A.* FROM product A left join  Bar ON A.code=Bar.productCode where Bar.barCode=#{barCode}")
     public Product getProductOfBar(String barCode);
+
+    /**
+     * 根据扫码绑定信息获取Patient和age
+     * @param barCode
+     * @return
+     */
+    @Select("SELECT P.partyId,P.name,P.gender,,date_format(P.birthday,'%Y-%m-%d') birthday,"+
+            "P.IDCardType,P.IDNumber,PB.age FROM PartyBar PB,Person P "+
+            "WHERE PB.partyId=P.partyId AND PB.barCode=#{barCode}")
+    public Map<String,Object> getPatient(String barCode);
 
 }

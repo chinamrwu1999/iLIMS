@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `analyte`(
     `id` int unsigned NOT NULL AUTO_INCREMENT primary key COMMENT '',
     `barCode` varchar(60) NOT NULL COMMENT '分析物对应的样本条码号',
     `analyteCode` varchar(20) NOT NULL COMMENT '分析物编号，用于实验室内部编排实验用，类如 ACK23000018等',
-    `productCode` varchar(20) NOT NULL COMMENT '改分析物所做检测对应的产品或服务ID',
+    `productCode` varchar(20) NOT NULL COMMENT '分析物所做检测对应的产品或服务ID',
     `createTime` datetime not null default now(),
     unique(`barCode`,`analyteCode`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '分析物:一份生物样本BioSample 可能会被多次检测,每一次检测用到的只是BioSample的一部分,称为analyte，不同analyte可以做不同检测';
@@ -94,8 +94,9 @@ CREATE TABLE IF NOT EXISTS Bar(
 
 CREATE TABLE IF NOT EXISTS PartyBar(
     `id` int unsigned not null primary key,
-    `partyId` int unsigned not null comment '病人对应的partyId',
+    `partyId`  varchar(12) not null comment '病人对应的partyId',
     `barCode` varchar(20) not null comment '贴在采样管或采样盒上的条形码',
+    `age` smallint comment '病人使用检测服务时候的年龄',
     `bindWay` varchar(12) comment '绑定方式:wechat微信小程序扫码,api 通过api从partner处拉取;manual手工录入',
     `createTime` DATETIME NOT NULl default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 comment '病人与样本条码关联';
@@ -105,7 +106,6 @@ CREATE TABLE IF NOT EXISTS BarExpress(
     `barCode` varchar(60) not null comment '条码号',
     `udi` varchar(60)  comment 'udi',
     `productCode` varchar(20) not null,
-    `partyId`  int unsigned not null comment '收到的样本来自哪位party,引用party表partyId',
     `expressNo` varchar(60) comment '快递单号' ,
     `handleWay` varchar(10) comment '分拣方式:auto自动,manual',
     `createTime` datetime not null default now()

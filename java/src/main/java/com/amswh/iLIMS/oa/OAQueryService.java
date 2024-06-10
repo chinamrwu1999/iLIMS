@@ -14,16 +14,12 @@ public class OAQueryService {
     @Resource
     OAMapper oaMapper;
 
-    public String queryOACustomer(String orderNo){
-          return this.oaMapper.queryOACustomer(orderNo);
+    public Map<String,Object> queryOrderInfo(String orderNo){
+        return oaMapper.querySaleOrder(orderNo);
     }
 
-    public Map<String,Object> queryOAOrder(String orderNo){
-        return  this.oaMapper.queryOAOrder(orderNo);
-    }
-
-    public List<Map<String,Object>> queryOAOrderItems(String orderNo){
-         return this.oaMapper.queryOAOrderItems(orderNo);
+    public List<Map<String,Object>> queryOrderItems(String orderNo){
+         return oaMapper.queryOrderItems(orderNo);
     }
 
 

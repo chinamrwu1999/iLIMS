@@ -3,6 +3,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.amswh.iLIMS.domain.Person;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -12,4 +13,6 @@ public interface IPerson extends BaseMapper<Person> {
             "AND PB.barCode=#{barCode}"
     )
     public Map<String,Object> getPatientByBarCode(String barCode);
+
+
 }

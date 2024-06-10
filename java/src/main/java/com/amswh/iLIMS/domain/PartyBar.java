@@ -20,11 +20,14 @@ public class PartyBar {
 	private Integer id;
 
 	@TableField("partyId")
-	private Integer partyId;
+	private String partyId;
 
 	@NotBlank(message = "barCode 不能为空")
 	@TableField("barCode")
 	private String barCode;
+
+	@TableField("age")
+	private Integer age;
 
 	@TableField("bindWay")
 	private String bindWay;

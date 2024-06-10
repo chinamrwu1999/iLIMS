@@ -1,16 +1,18 @@
 package com.amswh.iLIMS.service;
-import com.amswh.iLIMS.domain.Party;
-import com.amswh.iLIMS.domain.PartyGroup;
-import com.amswh.iLIMS.domain.PartyRelationship;
-import com.amswh.iLIMS.domain.Person;
+import com.amswh.iLIMS.domain.*;
 import com.amswh.iLIMS.mapper.lims.IParty;
 import com.amswh.iLIMS.mapper.lims.IPartyGroup;
+import com.amswh.iLIMS.partner.PatientInfo;
 import com.amswh.iLIMS.utils.MapUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +32,13 @@ public class PartyService extends ServiceImpl<IParty, Party> {
     PartyBarService partybarService;
 
     @Resource
+    SeqService seqService;
+
+    @Resource
     IPartyGroup partyGroupMapper;
+
+    @Resource
+    PartyContactService contactService;
 
     /**
      * 根据采样管条码获取病人信息
@@ -42,14 +50,89 @@ public class PartyService extends ServiceImpl<IParty, Party> {
         //return null;
     }
 
-    private  int addParty(Party party){
-        if(party==null ) return -1;
-        int result=-1;
-        if(this.save(party)){
-            result=party.getPartyId();
-            System.out.println(result);
+    public  String addParty(Party party){
+        if(party==null ) return null;
+        String partyId=party.getPartyId();
+        if(partyId==null){
+            partyId=String.format("08d%",seqService.getNextSeqId("party",1l));
+            party.setPartyId(partyId);
         }
-        return result;
+        if(this.save(party)){
+            partyId=party.getPartyId();
+
+        }
+        return partyId;
+    }
+
+
+    public boolean addPartyContact(Map<String,Object> inputMap){
+        String partyId=inputMap.get("partyId").toString();
+        if(partyId==null) return false;
+        List<PartyContact> existedContacts=this.contactService.listContacts(partyId);//查找现有的联系方式
+
+        String contactType="phone";
+        Object obj=inputMap.get(contactType);
+        if(obj!=null){
+           String strContact=obj.toString().trim();
+
+            List<PartyContact> contacts=existedContacts.stream().filter(x -> x.getContactType().equalsIgnoreCase("phone")
+             && strContact.equalsIgnoreCase(x.getContact())).toList();
+            if(contacts.isEmpty()){
+                PartyContact contact=new PartyContact();
+                contact.setPartyId(partyId);
+                contact.setContactType(contactType);
+                contact.setContact(obj.toString().trim());
+                this.contactService.save(contact);
+            }
+        }
+
+        contactType="mobile";
+        obj=inputMap.get(contactType);
+        if(obj==null){ obj=inputMap.get("mobilePhone");}
+        if(obj!=null){
+            String strContact=obj.toString().trim();
+            List<PartyContact> contacts=existedContacts.stream().filter(x -> x.getContactType().equalsIgnoreCase("mobile")
+                    && strContact.equalsIgnoreCase(x.getContact())).toList();
+            if(contacts.isEmpty()){
+                PartyContact contact=new PartyContact();
+                contact.setPartyId(partyId);
+                contact.setContactType(contactType);
+                contact.setContact(obj.toString().trim());
+                this.contactService.save(contact);
+            }
+        }
+            contactType="wechat";
+            obj=inputMap.get(contactType);
+            if(obj==null){ obj=inputMap.get("openId");}
+            if(obj!=null){
+                String strContact=obj.toString().trim();
+                List<PartyContact> contacts=existedContacts.stream().filter(x -> x.getContactType().equalsIgnoreCase("wechat")
+                        && x.getContact().equalsIgnoreCase(strContact)).toList();
+                if(contacts.isEmpty()){
+                    PartyContact contact=new PartyContact();
+                    contact.setPartyId(partyId);
+                    contact.setContactType(contactType);
+                    contact.setContact(obj.toString().trim());
+                    this.contactService.save(contact);
+                }
+            }
+            ////////////
+            contactType="email";
+            obj=inputMap.get(contactType);
+            if(obj==null){ obj=inputMap.get("e-mail");}
+            if(obj!=null){
+                String strContact=obj.toString().trim();
+                List<PartyContact> mobiles=existedContacts.stream().filter(x -> x.getContactType().equalsIgnoreCase("email")
+                        && x.getContact().equalsIgnoreCase(strContact)).toList();
+                if(mobiles.isEmpty()){
+                    PartyContact contact=new PartyContact();
+                    contact.setPartyId(partyId);
+                    contact.setContactType(contactType);
+                    contact.setContact(obj.toString().trim());
+                    this.contactService.save(contact);
+                }
+            }
+            return  true;
     }
 
     /**
@@ -60,20 +143,21 @@ public class PartyService extends ServiceImpl<IParty, Party> {
      */
     @Transactional("limsTransactionManager")
     public Person addPerson(Map<String,Object> inputMap) throws  Exception{
-        for(String key:inputMap.keySet()){
-            System.out.println(key+":"+inputMap.get(key));
-        }
 
+        List<Person> existeds=existPerson(inputMap); //检查是否存在该人员信息，如果有则不加
+        if(existeds!=null && !existeds.isEmpty()){
+            this.addPartyContact(inputMap);//添加联系人信息
+            return existeds.get(0);
+        }
         inputMap.put("partyType","PSON");
         Party party = new Party();
         MapUtil.copyFromMap(inputMap, party);
-
-        int partyId=addParty(party);
+        String partyId=addParty(party);
         Person person=new Person();
         MapUtil.copyFromMap(inputMap, person);
         person.setPartyId(partyId);
-        System.out.println("partyId:"+person.getPartyId()+" name:"+person.getName()+" height is "+person.getHeight());
         this.personService.save(person);
+        this.addPartyContact(inputMap);
         return person;
     }
 
@@ -85,18 +169,17 @@ public class PartyService extends ServiceImpl<IParty, Party> {
      * @throws Exception
      */
     @Transactional("limsTransactionManager")
-    public PartyGroup addOrganization(Map<String,Object> inputMap) throws  Exception{
-        if(inputMap.get("partyType")==null){
-            inputMap.put("partyType","ORG");
-        }
+    public PartyGroup addPartyGroup(Map<String,Object> inputMap) throws  Exception{
+        inputMap.putIfAbsent("partyType", "ORG");
         Party party = new Party();
         MapUtil.copyFromMap(inputMap, party);
-        int partyId=addParty(party);
+        String partyId=addParty(party);
         PartyGroup group=new PartyGroup();
         MapUtil.copyFromMap(inputMap, group);
         group.setPartyId(partyId);
 
         this.orgService.save(group);
+        this.addPartyContact(inputMap);
         return group;
     }
 
@@ -108,18 +191,19 @@ public class PartyService extends ServiceImpl<IParty, Party> {
      */
 
     public boolean setPartyRelationShip(Map<String,Object> inputMap ){
+        if(inputMap.get("fromId") == null || inputMap.get("toId")==null) return false;
         PartyRelationship obj=new PartyRelationship();
-        obj.setFromId((Integer) inputMap.get("fromId"));
-        obj.setToId((Integer) inputMap.get("toId"));
-        obj.setTypeId((Integer) inputMap.get("typeId"));
-        obj.setTypeId((Integer) inputMap.get("throughDate"));
+        try {
+            MapUtil.copyFromMap(inputMap, obj);
+        }catch (Exception err){
+            err.printStackTrace();
+        }
+
         return  this.relationService.save(obj);
     }
 
-    public int batchAddRelationships(List<Map<String,Object>> objs){
-
-      //  return this.relationService.batchAddPartyRelationships(objs);
-        return -1;
+    public int batchAddRelationships(List<PartyRelationship> objs){
+       return this.baseMapper.insertPartyRelationships(objs);
     }
 
     public int getRootPartyId(){
@@ -131,5 +215,43 @@ public class PartyService extends ServiceImpl<IParty, Party> {
 
         return baseMapper.findPartyByExternalId(externalId);
     }
+
+    public List<Person> existPerson(Map<String,Object> inputMap){
+        List<Map<String,Object>> maps=this.baseMapper.existPerson(inputMap);
+        List<Person> persons=new ArrayList<>();
+        for(Map<String,Object> mp:maps){
+            Person person=new Person();
+            try {
+                MapUtil.copyFromMap(mp, person);
+                persons.add(person);
+            }catch (Exception err){
+                err.printStackTrace();
+            }
+
+        }
+        return  persons;
+    }
+
+    public Person savePatient(PatientInfo patient){
+        if(patient==null || patient.getName()==null) return null;
+        Map<String,Object> mp=new HashMap<>();
+        if(patient.getName()!=null){mp.put("name",patient.getName());}
+        if(patient.getGender()!=null){mp.put("gender",patient.getGender());  }
+        if(patient.getAge()!=null){mp.put("age",patient.getAge());}
+        if(patient.getIDNumber()!=null){mp.put("IDNumber",patient.getIDNumber());}
+        if(patient.getBirthDate()!=null){mp.put("birthday",patient.getBirthDate());}
+        if(patient.getIDType()!=null){mp.put("IDCardType",patient.getIDType());}
+        if(patient.getPhone()!=null){mp.put("phone",patient.getPhone());}
+        mp.putAll(patient.getOtherInfo());
+        try {
+          Person person=  this.addPerson(mp);
+          return person;
+        }catch (Exception err){
+            err.printStackTrace();
+        }
+        return null;
+
+    }
+
 
 }

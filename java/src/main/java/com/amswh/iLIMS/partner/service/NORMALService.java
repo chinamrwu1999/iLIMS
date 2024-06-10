@@ -9,6 +9,7 @@ import com.amswh.iLIMS.service.BarExpressService;
 import com.amswh.iLIMS.service.BarService;
 import com.amswh.iLIMS.service.OrderService;
 import com.amswh.iLIMS.service.PartyService;
+import com.amswh.iLIMS.utils.MapUtil;
 import jakarta.annotation.Resource;
 
 import java.util.HashMap;
@@ -31,8 +32,24 @@ public class NORMALService implements IPartner {
     @Resource
     PartyService partyService;
 
+
+    /**
+     * 当partner的API无法获取patient信息，还有2个渠道可能会获取病人信息
+     * 1. 用户扫码绑定barCode时候
+     *
+     * @param barCode
+     * @return
+     * @throws Exception
+     */
     @Override
     public PatientInfo fetchPatientInfo(String barCode) throws Exception {
+       Map<String,Object> mp=barService.getPatient(barCode);
+       if(mp==null || mp.isEmpty()) return null;
+       PatientInfo patient=new PatientInfo();
+       MapUtil.copyFromMap(mp,patient);
+       patient.setBirthDate(mp.get("birthday").toString());
+       String partyId=mp.get("partyId").toString();
+
        return null;
     }
 
@@ -60,18 +77,7 @@ public class NORMALService implements IPartner {
      * @return
      */
     private Map<String,Object> findPartnerInfo(String barCode){
-
-        BarExpress express =barExpressService.getBarExpressByBarCode(barCode); //根据分拣数据找
-        if(express !=null &&express.getPartnerId()!=null){
-             Map<String,Object> mp=partyService.findPartyByExternalId(express.getPartnerId());
-             if(mp!=null){
-                 Map<String,Object> result=new HashMap<>();
-                 result.put("sampleSrc",express.getPartnerId());
-                 result.put("partner",mp.get("shortName"));
-                 return result;
-             }
-        }
-        Map<String,Object> order=orderService.getOrderInfo(barCode);// 根据订单查找客户
+       Map<String,Object> order=orderService.getOrderInfo(barCode);// 根据订单发货查找客户
         if(order !=null){
            if(order.get("externalId")!=null){
                Map<String,Object> result=new HashMap<>();

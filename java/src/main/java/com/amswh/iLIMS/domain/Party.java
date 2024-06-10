@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 @TableName("party")
 public class Party{
 
-	@TableId(value="partyId",type = IdType.AUTO)
-	private Integer partyId;
+	@TableId(value="partyId")
+	private String partyId;
 
 	@TableField("externalId")
 	private String externalId;
@@ -25,12 +25,6 @@ public class Party{
 	@NotBlank(message = "partyType 不能为空")
 	@TableField("partyType")
 	private String partyType;
-
-	@TableField("phone")
-	private String phone;
-
-	@TableField("email")
-	private String email;
 
 	@TableField("createTime")
 	private LocalDateTime createTime;

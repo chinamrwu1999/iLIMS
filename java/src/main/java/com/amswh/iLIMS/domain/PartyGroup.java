@@ -15,8 +15,8 @@ import lombok.Data;
 @TableName("partygroup")
 public class PartyGroup {
 
-	@TableId(value="partyId",type = IdType.AUTO)
-	private Integer partyId;
+	@TableId(value="partyId")
+	private String partyId;
 
 	@NotBlank(message = "fullName 不能为空")
 	@TableField("fullName")
@@ -25,10 +25,10 @@ public class PartyGroup {
 	@TableField("shortName")
 	private String shortName;
 
-	@TableField("country")
-	private String country;
-
-	@TableField("geoId")
-	private String geoId;
+//	@TableField("country")
+//	private String country;
+//
+//	@TableField("geoId")
+//	private String geoId;
 
 }

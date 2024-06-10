@@ -20,13 +20,13 @@ public class PartyRelationship {
 	private Integer id;
 
 	@TableField("fromId")
-	private Integer fromId;
+	private String fromId;
 
 	@TableField("toId")
-	private Integer toId;
+	private String toId;
 
-	@TableField("typeId")
-	private Integer typeId;
+	@TableField("relationType")
+	private String relationType;
 
 	@TableField("throughDate")
 	private LocalDate throughDate;

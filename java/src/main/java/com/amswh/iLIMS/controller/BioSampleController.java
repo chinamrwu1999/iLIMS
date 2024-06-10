@@ -3,6 +3,9 @@ package com.amswh.iLIMS.controller;
 
 import com.amswh.iLIMS.domain.Bar;
 import com.amswh.iLIMS.domain.BioSample;
+import com.amswh.iLIMS.domain.Person;
+import com.amswh.iLIMS.partner.PartnerService;
+import com.amswh.iLIMS.partner.PatientInfo;
 import com.amswh.iLIMS.service.*;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -30,7 +33,7 @@ public class BioSampleController {
     AnalyteprocessService analyteProcessService;
 
     @Resource
-    PersonService personService;
+    PartyService partyService;
 
     @Resource
     PartyBarService partyBarService;
@@ -38,11 +41,15 @@ public class BioSampleController {
     @Resource
     BarService barService;
 
+    @Resource
+    PartnerService partnerService;
+
     /**
      *  样本分拣
      * @param inputMap
      */
 
+    @PostMapping("/categorize")
     public void categorizeSample(@RequestBody Map<String,String> inputMap){
 
         if(inputMap.get("barCode")==null && inputMap.get("udi")==null){
@@ -53,9 +60,13 @@ public class BioSampleController {
         if(inputMap.get("barCode")!=null){
             barCode=inputMap.get("barCode");
         } else if(inputMap.get("udi")!=null){
+           barCode=inputMap.get("udi");
+        }
+        PatientInfo patientInfo=partnerService.fetchPatientInfo(barCode);
+        if(patientInfo!=null){
+               Person patient=partyService.savePatient(patientInfo);
 
         }
-       // if()
 
 
     }
@@ -75,7 +86,7 @@ public class BioSampleController {
         String productCode=null;
 
 
-        Bar bar=this.barService.getGeneratedBar(barCode);
+        Bar bar=this.barService.getBar(barCode);
         if(bar!=null){
             productCode=bar.getProductCode();
         }

@@ -82,3 +82,9 @@ CREATE TABLE IF NOT EXISTS `enums`(
   `type` varchar(10) comment '枚举类型',
   `index` smallint  comment '显示顺序'
 ) COMMENT '枚举类型表';
+
+CREATE TABLE IF NOT EXISTS `sequence` (
+   seqName   varchar(20) not null primary key,
+   seqId   int unsigned default null,
+   updateTime datetime default now()
+)  COMMENT '序列号生成器用表';

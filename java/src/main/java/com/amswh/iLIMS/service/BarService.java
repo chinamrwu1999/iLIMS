@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -48,13 +49,17 @@ public class BarService extends ServiceImpl<IBar, Bar> {
 	 * @param barCode
 	 * @return Bar
 	 */
-	 public Bar getGeneratedBar(String barCode){
-          return  this.baseMapper.getGeneratedBar(barCode);
+	 public Bar getBar(String barCode){
+          return  this.baseMapper.getBar(barCode);
 	 }
 
 
 	 public Product getProductOfBar(String barCode){
 		  return baseMapper.getProductOfBar(barCode);
+	 }
+
+	 public Map<String,Object> getPatient(String barcode){
+		 return baseMapper.getPatient(barcode);
 	 }
 
 

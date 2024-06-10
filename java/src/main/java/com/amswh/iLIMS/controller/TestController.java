@@ -16,7 +16,8 @@ import java.util.Map;
 public class TestController {
 
    @Resource
-   ADCService service;
+//   ADCService service;
+   SeqService service;
 
 
    // @PostMapping("/service")
@@ -24,7 +25,11 @@ public class TestController {
     @Transactional(transactionManager="limsTransactionManager")
     public void TestMe(){
     try {
-          service.fetchPatientInfo("WD2018120529");
+         // service.fetchPatientInfo("WD2018120529");
+        long seq=service.getNextSeqId("party",1);
+        System.out.println("party:"+seq);
+        long seq1=service.getNextSeqId("sample",1);
+        System.out.println("sample:"+seq1);
 
     }catch (Exception err){
         err.printStackTrace();

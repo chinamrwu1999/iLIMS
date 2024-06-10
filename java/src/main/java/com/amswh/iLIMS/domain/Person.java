@@ -16,8 +16,8 @@ import java.time.LocalDate;
 @TableName("person")
 public class Person{
 
-	@TableId(value="partyId",type = IdType.AUTO)
-	private Integer partyId;
+	@TableId(value="partyId")
+	private String partyId;
 
 	@NotBlank(message = "name 不能为空")
 	@TableField("name")

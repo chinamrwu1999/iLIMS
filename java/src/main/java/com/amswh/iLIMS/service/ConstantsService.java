@@ -56,7 +56,7 @@ public class ConstantsService {
          List<Map<String,String>> projectDiseases=this.projectService.listProjectDiseases();
 
          for(Map<String,String> mp: projectDiseases){
-             this.project2DiseaseMap.put(mp.get("projectCode"),mp.get("diseaseCode"));g
+             this.project2DiseaseMap.put(mp.get("projectCode"),mp.get("diseaseCode"));
          }
 
 
@@ -77,7 +77,7 @@ public class ConstantsService {
 
    public String getDiseaseByProductCode(String productCode){
          String  projectCode=this.product2Project.get(productCode);
-         return this.diseaseMap.get()
+         return this.diseaseMap.get(projectCode);
    }
 
 }
