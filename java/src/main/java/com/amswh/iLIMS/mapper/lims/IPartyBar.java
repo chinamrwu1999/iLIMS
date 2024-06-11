@@ -3,6 +3,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.amswh.iLIMS.domain.PartyBar;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -32,6 +33,21 @@ public interface IPartyBar extends BaseMapper<PartyBar> {
             "LEFT JOIN product  ON C.productId=product.id "+
             "WHERE A.barCode=#{barCode} ")
     public Map<String,Object> findPartner(String barCode);
+
+    /**
+     * 根据partyId获取绑定的检测条码信息
+     * @param partyIds
+     */
+
+    @Select({"<script>",
+            "SELECT PB.*,P.* FROM PartyBar PB,",
+            "(SELECT analyteCode,productCode FROM analyte WHERE barCode in ",
+            "    <foreach item='partyId' collection='partyIds' open='(' separator=',' close=')'>",
+            "      #{partyId}",
+            "    </foreach>",
+            " order by createTime desc limit 1) AS A1 "
+    "</script>" })
+    public Map<String,Object> getBinded(List<String> partyIds);
 
 
 }

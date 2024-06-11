@@ -109,5 +109,11 @@ public class BioSampleController {
         return result;
     }
 
+    /**
+     *  查看检测进度检测
+     */
+
+    public void querySampleStatus(String )
+
 
 }
