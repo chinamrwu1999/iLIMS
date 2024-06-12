@@ -31,24 +31,8 @@ public class BioSampleService extends ServiceImpl<IBioSample, BioSample> {
 	   @Resource
 	   OAQueryService  OA;
 
-	/**
-	 * 自动样本分拣：根据条码从Partner处获取样本信息：报告病人信息、检测项目、partner本身
-	 * @param barCode
-	 */
-	public PatientInfo fetchSampleInfoFromPartners(String barCode){
-		  return  partnerService.fetchPatientInfo(barCode); //通过第三方API接口获取信息
-	}
 
-	/**
-	 *  手动分拣
-	 */
-	  public PatientInfo categorizeSampleManually(Map<String,Object> inputMap){
-		   PatientInfo patientInfo=new PatientInfo();
-		   patientInfo.setBarCode(inputMap.get("barCode").toString());
-		   patientInfo.setPartnerCode(inputMap.get("partnerCode").toString());
-		   patientInfo.setProductCode(inputMap.get("productCode").toString());
-		   return patientInfo;
-	  }
+
 
 
 
@@ -58,7 +42,7 @@ public class BioSampleService extends ServiceImpl<IBioSample, BioSample> {
 	 * @param inputMap
 	 */
 	@Transactional
-	public void receiveBioSample(Map<String,Object> inputMap){
+	private void receiveBioSample(Map<String,Object> inputMap){
            try {
 			   BioSample sample = new BioSample();
 			   MapUtil.copyFromMap(inputMap, sample);
@@ -75,9 +59,15 @@ public class BioSampleService extends ServiceImpl<IBioSample, BioSample> {
 			   }
 
 		   }catch (Exception err){
-			   err.printStackTrace();
+			  err.printStackTrace();
 		   }
 	}
+
+
+	public PatientInfo getSampleInfo(String barCode){
+
+	}
+
 
 
 

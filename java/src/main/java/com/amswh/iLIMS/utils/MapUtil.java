@@ -1,24 +1,38 @@
 package com.amswh.iLIMS.utils;
 
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.beans.PropertyDescriptor;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Map;
 
 public  class MapUtil {
 
     private static PrintStream out;
 
-    public static void copyFromMap(Map<String,Object> sourceMap, Object targetObject) throws IllegalAccessException, InstantiationException {
-//        System.out.println("==========================");
-//        for(String key:sourceMap.keySet()){
-//            System.out.println(key+":"+sourceMap.get(key));
-//        }
 
+    public static void copy2Map(Object sourceObject,Map<String,Object> mp) {
+        Map<String, Object> map = new HashMap<>();
+        BeanWrapperImpl wrapper = new BeanWrapperImpl(sourceObject);
+        for (PropertyDescriptor propertyDescriptor : wrapper.getPropertyDescriptors()) {
+            String propertyName = propertyDescriptor.getName();
+            if (!propertyName.equals("class")) { // Exclude the "class" property
+                Object propertyValue = wrapper.getPropertyValue(propertyName);
+                if(propertyValue!=null) {
+                    mp.put(propertyName, propertyValue);
+                }
+            }
+        }
+    }
+
+
+    public static void copyFromMap(Map<String,Object> sourceMap, Object targetObject) throws IllegalAccessException, InstantiationException {
        Class<?> targetClass = targetObject.getClass();
        Field[] fields = targetClass.getDeclaredFields();
 
@@ -36,7 +50,9 @@ public  class MapUtil {
                  if(field!=null) {
                      field.setAccessible(true);
                      Object val= convertToFieldType(field.getType(), value);
-                     field.set(targetObject,val);
+                     if(val!=null) {
+                         field.set(targetObject, val);
+                     }
                  }
             } catch (Exception e) {
                 continue;

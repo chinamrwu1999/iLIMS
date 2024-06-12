@@ -1,14 +1,17 @@
 package com.amswh.iLIMS.controller;
 
 
+import com.amswh.framework.model.AjaxResult;
 import com.amswh.iLIMS.domain.Bar;
 import com.amswh.iLIMS.domain.BioSample;
+import com.amswh.iLIMS.domain.PartnerBar;
 import com.amswh.iLIMS.domain.Person;
 import com.amswh.iLIMS.partner.PartnerService;
 import com.amswh.iLIMS.partner.PatientInfo;
 import com.amswh.iLIMS.service.*;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -44,17 +47,19 @@ public class BioSampleController {
     @Resource
     PartnerService partnerService;
 
+    @Resource
+    PartnerBarService partnerBarService;
+
     /**
      *  样本分拣
      * @param inputMap
      */
 
     @PostMapping("/categorize")
-    public void categorizeSample(@RequestBody Map<String,String> inputMap){
+    public AjaxResult categorizeSample(@RequestBody Map<String,String> inputMap){
 
         if(inputMap.get("barCode")==null && inputMap.get("udi")==null){
-            System.out.println("条码号与udi至少提供一样");
-            return;
+            return AjaxResult.error("条码号与udi至少提供一样");
         }
         String barCode=null;
         if(inputMap.get("barCode")!=null){
@@ -63,13 +68,16 @@ public class BioSampleController {
            barCode=inputMap.get("udi");
         }
         PatientInfo patientInfo=partnerService.fetchPatientInfo(barCode);
-        if(patientInfo!=null){
-               Person patient=partyService.savePatient(patientInfo);
-
+        if(this.saveBarParties(patientInfo)) {//保存受检者、partner信息
+            return AjaxResult.success(patientInfo);
+        }else{
+            AjaxResult result=new AjaxResult();
+            result.put("code","200");
+            result.put("msg","未找到该条码的足够信息,请手工分拣");
+            result.put("data",patientInfo);
+            return result;
         }
-
-
-    }
+  }
 
 
 
@@ -77,43 +85,34 @@ public class BioSampleController {
      * 医检所前端收样人员收到样本
      * @param barCode 样本信息描述
      */
-    @Transactional
-    @PostMapping("/receive/{barCode}")
-    public Map<String,Object> receiveSample(@PathVariable String barCode){
-
-        Map<String,Object> result=new HashMap<>();
-        String partner=null;
-        String productCode=null;
+    @GetMapping("/receive/{barCode}")
+    public AjaxResult receiveSample(@PathVariable String barCode){
 
 
-        Bar bar=this.barService.getBar(barCode);
-        if(bar!=null){
-            productCode=bar.getProductCode();
-        }
 
-        Map<String,Object> mp=this.partyBarService.findPartner(barCode);
-        if(!(mp==null || mp.isEmpty())) { //根据barCode追溯艾米森的订单信息
-              if(mp.get("productCode")!=null){
-                  productCode=mp.get("productCode").toString();
-                  result.put("productName",mp.get("productName"));
-              }
-              if(mp.get("partnerId")!=null){
-                  partner="NORMAL";
-                  result.put("partyId",mp.get("partyId"));
-                  result.put("sender",mp.get("fullName"));
-              }
-        }else{
-
-        }
-
-        return result;
+        return null;
     }
 
     /**
      *  查看检测进度检测
      */
 
-    public void querySampleStatus(String )
+    public void querySampleStatus(String barCode ){
+
+    }
+
+    @Transactional
+    private boolean saveBarParties(PatientInfo patientInfo){
+        if(patientInfo!=null){
+            Person patient=partyService.savePatient(patientInfo);
+            PartnerBar pb=new PartnerBar();
+            BeanUtils.copyProperties(patient,pb);
+            pb.setPartnerId(patientInfo.getPartnerCode());
+            partnerBarService.save(pb);
+            return true;
+        }
+        return false;
+    }
 
 
 }

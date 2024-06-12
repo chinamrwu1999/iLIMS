@@ -41,4 +41,18 @@ public class GlobalExceptionHandler {
          return AjaxResult.error(e.getMessage());
     }
 
+    @ExceptionHandler(IllegalAccessException.class)
+    public AjaxResult handleIllegalAccessException(IllegalAccessException e, HttpServletRequest request)
+    {
+        return AjaxResult.error("非法访问错误:"+e.getMessage());
+    }
+
+    @ExceptionHandler(InstantiationException.class)
+    public AjaxResult handleInstantiationException(InstantiationException e, HttpServletRequest request)
+    {
+        return AjaxResult.error("实例化对象错误："+e.getMessage());
+    }
+
+
+
 }

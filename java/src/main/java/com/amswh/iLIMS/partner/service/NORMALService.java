@@ -43,14 +43,15 @@ public class NORMALService implements IPartner {
      */
     @Override
     public PatientInfo fetchPatientInfo(String barCode) throws Exception {
-       Map<String,Object> mp=barService.getPatient(barCode);
-       if(mp==null || mp.isEmpty()) return null;
+       Map<String,Object> mp=barService.getPatient(barCode); //根据样本绑定信息获取
        PatientInfo patient=new PatientInfo();
-       MapUtil.copyFromMap(mp,patient);
-       patient.setBirthDate(mp.get("birthday").toString());
-       String partyId=mp.get("partyId").toString();
-
-       return null;
+       if(!(mp==null || mp.isEmpty())) { //扫码绑定信息
+           MapUtil.copyFromMap(mp, patient);
+           if(mp.get("birthday")!=null) {
+               patient.setBirthDate(mp.get("birthday").toString());
+           }
+       }
+        return  patient;
     }
 
 

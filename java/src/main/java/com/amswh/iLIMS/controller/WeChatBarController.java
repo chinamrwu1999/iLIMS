@@ -12,6 +12,7 @@ import jakarta.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -144,7 +145,7 @@ public class WeChatBarController extends BaseController {
 
     }
 
-    /**
+    /** 根据手机号，查看关联的样本检测进度
      *
      */
     @PostMapping("/querySampleStatus")
@@ -160,14 +161,12 @@ public class WeChatBarController extends BaseController {
            partyIds=mp.stream().map(x -> x.get("partyId").toString()).toList();
        }
        if(partyIds!=null && ! partyIds.isEmpty()){
-
-
-       }else{
+           List<Map<String,Object>> analytes=this.partyBarService.getBarStatus(partyIds);
+           return AjaxResult.success(analytes);
+        }else{
            return AjaxResult.error("未找到该手机关联的信息");
        }
-       return null;
-
-    }
+     }
 
 
 }

@@ -40,14 +40,27 @@ public interface IPartyBar extends BaseMapper<PartyBar> {
      */
 
     @Select({"<script>",
-            "SELECT PB.*,P.* FROM PartyBar PB,",
-            "(SELECT analyteCode,productCode FROM analyte WHERE barCode in ",
-            "    <foreach item='partyId' collection='partyIds' open='(' separator=',' close=')'>",
-            "      #{partyId}",
-            "    </foreach>",
-            " order by createTime desc limit 1) AS A1 "
+    "select PB.partyId,PB.barCode,age,A.analyteCode,productCode,A.createTime,P.name productName,AP.action,AP.status,",
+    "PS.name,PS.gender,PC.contact phone ",
+    "FROM partyBar PB ",
+    "LEFT JOIN PartnerBar PB1 ON PB1.barCode=PB.barCode ",
+    "INNER JOIN analyte A ON A.barCode=PB.barCode ",
+    "LEFT JOIN analyteProcess AP ON AP.analyteCode=A.analyteCode",
+    "LEFT JOIN product P ON P.code=PB1.productCode ",
+    "LEFT JOIN PERSON PS ON PS.partyId=PB.partyID",
+    "LEFT JOIN PartyContact PC ON PC.partyId=PS.partyId",
+    "WHERE partyId IN ",
+    "<foreach item='partyId' collection='partyIds' open='(' separator=',' close=')'>",
+    " #{partyId}",
+    " </foreach>",
+    "AND A.createTime IN ",
+      "SELECT MAX(createTime) FROM analyte WHERE barCode IN (SELECT barCode FROM partyBar WHERE partyId IN",
+    "<foreach item='partyId' collection='partyIds' open='(' separator=',' close=')'>",
+    " #{partyId}",
+    " </foreach>",
+    ")GROUP BY barCode)) and PC.contactType='mobile'",
     "</script>" })
-    public Map<String,Object> getBinded(List<String> partyIds);
+    public List<Map<String,Object>> getBarStatus(List<String> partyIds);
 
 
 }

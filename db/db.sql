@@ -26,7 +26,6 @@ CREATE TABLE IF NOT EXISTS `analyte`(
     `id` int unsigned NOT NULL AUTO_INCREMENT primary key COMMENT '',
     `barCode` varchar(60) NOT NULL COMMENT '分析物对应的样本条码号',
     `analyteCode` varchar(20) NOT NULL COMMENT '分析物编号，用于实验室内部编排实验用，类如 ACK23000018等',
-    `productCode` varchar(20) NOT NULL COMMENT '分析物所做检测对应的产品或服务ID',
     `createTime` datetime not null default now(),
     unique(`barCode`,`analyteCode`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '分析物:一份生物样本BioSample 可能会被多次检测,每一次检测用到的只是BioSample的一部分,称为analyte，不同analyte可以做不同检测';
@@ -92,8 +91,18 @@ CREATE TABLE IF NOT EXISTS Bar(
 ) ENGINE=InnoDB  AUTO_INCREMENT=1 COMMENT '用于存储艾米森生成的所有条码';
 
 
+CREATE TABLE IF NOT EXISTS PartnerBar(
+      `id` int unsigned not null AUTO_INCREMENT primary key,
+      `barCode` varchar(60) not null comment '贴在采样管或采样盒上的条形码',
+      `partnerId` varchar(10) not null comment 'Partner的partyId',
+      `productCode` varchar(20) NOT NULL COMMENT '产品或服务code',
+      `createTime` datetime not null default now(),
+      unique(`partnerId`,`barCode`)
+) ENGINE=InnoDB  AUTO_INCREMENT=1 COMMENT '条码与Partner、product的关联信息';
+
+
 CREATE TABLE IF NOT EXISTS PartyBar(
-    `id` int unsigned not null primary key,
+    `id` int unsigned not null  AUTO_INCREMENT primary key,
     `partyId`  varchar(12) not null comment '病人对应的partyId',
     `barCode` varchar(20) not null comment '贴在采样管或采样盒上的条形码',
     `age` smallint comment '病人使用检测服务时候的年龄',
