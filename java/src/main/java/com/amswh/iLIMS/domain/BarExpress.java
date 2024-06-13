@@ -20,8 +20,8 @@ public class BarExpress {
     @TableField("udi")
     private String udi;
 
-    @TableField("productCode")
-    private String productCode;
+//    @TableField("productCode")
+//    private String productCode;
 
     @TableField("expressNo")
     private String expressNo;

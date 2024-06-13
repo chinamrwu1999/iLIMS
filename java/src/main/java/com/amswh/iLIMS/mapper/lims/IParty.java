@@ -28,10 +28,10 @@ public interface IParty extends BaseMapper<Party> {
 
      @Select({"<script>",
              "SELECT P.*,PS.*,PC.* FROM party P inner join Person PS  ON P.partyId=PS.partyId ",
-             "LEFT JOIN PartContact PC ON PC.partyId=PS.partyId ",
+             "LEFT JOIN PartyContact PC ON PC.partyId=PS.partyId ",
              "WHERE name=#{name} ",
              "<if test='phone !=null'>",
-             "AND phone=#{phone}",
+             "AND PC.contactType='phone' AND PC.contact=#{phone}",
              "</if>",
              "<if test='gender !=null'>",
              "AND gender=#{gender}",
@@ -40,7 +40,10 @@ public interface IParty extends BaseMapper<Party> {
              "AND IDNumber=#{IDNumber}",
              "</if>",
              "<if test='email !=null'>",
-             "AND email=#{email}",
+             "AND PC.contactType='email' AND PC.contact=#{email}",
+             "</if>",
+             "<if test='mobile !=null'>",
+             "AND PC.contactType='mobile' AND PC.contact=#{mobile}",
              "</if>",
              "<if test='openId !=null'>",
              "AND PC.contact=#{openId}",
@@ -51,7 +54,7 @@ public interface IParty extends BaseMapper<Party> {
 
      @Select({"<script>",
       "SELECT PS.*,PC.*  FROM Person P LEFT JOIN PartyContact PC ON PS.partyId=PC.partyId ",
-             "WHERE PC.contactType=#{} and PC.contact=#{contact}",
+             "WHERE PC.contactType=#{contactType} and PC.contact=#{contact}",
       "</script>"
      })
      public List<Map<String,Object>> getPersonInfByContact(String contactType,String contact);

@@ -2,13 +2,11 @@ package com.amswh.iLIMS.controller;
 
 import com.amswh.framework.model.AjaxResult;
 import com.amswh.framework.utils.BaseController;
-import com.amswh.iLIMS.domain.Bar;
-import com.amswh.iLIMS.domain.PartyBar;
-import com.amswh.iLIMS.domain.PartyRelationship;
-import com.amswh.iLIMS.domain.Person;
+import com.amswh.iLIMS.domain.*;
 import com.amswh.iLIMS.service.*;
 import com.amswh.iLIMS.utils.MapUtil;
 import jakarta.annotation.Resource;
+import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +34,10 @@ public class WeChatBarController extends BaseController {
 
     @Resource
     PersonService personService;
+
+    @Resource
+    PartnerBarService partnerBarService;
+
     /*
          业务：通过微信小程序扫码进入绑定界面
          输入（前端校验）：
@@ -75,7 +77,7 @@ public class WeChatBarController extends BaseController {
     @PostMapping("/bindBar")
     @Transactional
     public AjaxResult bindBox(@RequestHeader("openId")String openId, @RequestBody Map<String,Object> inputMap) throws  Exception{
-        Bar bar=barService.getBar(inputMap.get("barCode").toString());
+        Bar bar=barService.getBar(inputMap.get("barCode").toString());  //确保用艾米森微信小程序扫的是艾米森的条码
         if(bar==null){
             return AjaxResult.error("您扫的码不是有效的产品条码！");
         }
@@ -90,6 +92,11 @@ public class WeChatBarController extends BaseController {
             pb.setPartyId(inputMap.get("partyId").toString());
         }
         partyBarService.save(pb);
+        PartnerBar partnerBar=new PartnerBar();
+        partnerBar.setBarCode(bar.getBarCode());
+        partnerBar.setPartnerId("root");
+        partnerBar.setProductCode(bar.getProductCode());
+        partnerBarService.save(partnerBar);
         return AjaxResult.success("绑定成功");
     }
 

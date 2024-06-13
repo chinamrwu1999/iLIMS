@@ -63,4 +63,9 @@ public class BarService extends ServiceImpl<IBar, Bar> {
 	 }
 
 
+	public Map<String,Object>  getBarProgress(String barCode){
+		return  this.baseMapper.getBarProgress(barCode);
+	}
+
+
 }

@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS  `partyAddress`(
     `createTime` datetime not null default now()
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT '关系类型'; */
 
-INSERT INTO relationshipType(`name`,`parentId`)
+
 
 
 
@@ -72,6 +72,8 @@ CREATE TABLE IF NOT EXISTS  `partyRelationship`(
     `throughDate` date comment '关系的有效截至日期,null表示无期',
     `createTime` datetime not null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT 'party之间的关系';
+
+
 
 CREATE TABLE IF NOT EXISTS  `orderType`( 
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
@@ -88,6 +90,7 @@ CREATE TABLE IF NOT EXISTS  `order`(
     `typeId` int not null    comment '订单类型Id',
     `createTime` datetime not  null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单信息';
+
 CREATE TABLE IF NOT EXISTS  `orderItem`( 
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
     `orderNo` varchar(20) not null unique comment '订单编号',
@@ -95,6 +98,8 @@ CREATE TABLE IF NOT EXISTS  `orderItem`(
     `quantity` int not null  comment '数量',
     `createTime` datetime not  null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单购买产品清单';
+
+
 CREATE TABLE IF NOT EXISTS  `orderShip`(
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
     `orderNo` varchar(20) NOT NULL comment '订单编号',
@@ -103,12 +108,14 @@ CREATE TABLE IF NOT EXISTS  `orderShip`(
     `expressId`   varchar(8) comment '快递公司代码:顺丰SF、京东JD、圆通YT、申通ST、中通ZT、韵达YT、中铁快运ZTKY',
     `createTime` DATETIME NOT NULL default now() comment '实际发货日期'
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单发货信息';
+
+
 CREATE TABLE IF NOT EXISTS  `shipItem`(
     `id` int unsigned NOT NULL primary key AUTO_INCREMENT comment '自增主键',
-    `itemId` int unsigned NOT NULL comment '外键引用orderItem表的id'
+    `itemId` int unsigned NOT NULL comment '外键引用orderItem表的id',
     `shipId` int unsigned NOT NULL comment 'orderShip表自增主键',
-    `barCode` varchar(60) comment '或者条码',
-    `udi` varchar(60) comment 
+    `barCode` varchar(60) comment '条码',
+    `udi` varchar(60) ,
     `createTime` DATETIME NOT NULL default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '发货明细';
 

@@ -63,4 +63,23 @@ public interface IPartyBar extends BaseMapper<PartyBar> {
     public List<Map<String,Object>> getBarStatus(List<String> partyIds);
 
 
+    /**
+     * 查询barCode 绑定的patient、partner、product信息
+     * @param barCode
+     * @return
+     */
+
+    @Select({"<script>",
+            "SELECT PB1.partyId,PB1.barCode,PB1.age,PB2.partnerId partnerCode,PB2.productCode,",
+            "PS.name,PS.gender,PS.birthday,PC.contact phone,P.name productName,PG.fullName partnerName",
+            "FROM PartyBar PB1 LEFT JOIN PartnerBar PB2 ON PB1.barCode=PB2.barCode",
+            "LEFT JOIN Person PS ON PS.partyId=PB1.partyId ",
+            "LEFT JOIN PartyContact PC ON PC.partyId=PS.partyId",
+            "LEFT JOIN PartyGroup PG ON PG.partyId=PB2.partnerId",
+            "LEFT JOIN Product P ON P.code=PB2.productCode",
+            "WHERE PB1.barCode=#{barCode} and PC.contactType='mobile' ",
+            "</script>" })
+    public Map<String,Object> getBindedInfo(String barCode);
+
+
 }

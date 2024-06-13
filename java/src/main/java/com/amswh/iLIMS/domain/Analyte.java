@@ -27,9 +27,9 @@ public class Analyte{
 	@TableField("analyteCode")
 	private String analyteCode;
 
-	@NotBlank(message = "productCode 不能为空")
-	@TableField("productCode")
-	private String productCode;
+//	@NotBlank(message = "productCode 不能为空")
+//	@TableField("productCode")
+//	private String productCode;
 
 	@TableField("createTime")
 	private LocalDateTime createTime;

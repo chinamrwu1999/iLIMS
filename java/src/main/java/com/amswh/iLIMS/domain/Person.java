@@ -30,9 +30,6 @@ public class Person{
 	@TableField("birthday")
 	private LocalDate birthday;
 
-	@TableField("age")
-	private Integer age;
-
 	@TableField("wechat")
 	private String wechat;
 

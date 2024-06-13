@@ -1,7 +1,14 @@
 package com.amswh.iLIMS.partner;
 
 
+import com.amswh.framework.Constants;
+import com.amswh.iLIMS.domain.PartyGroup;
+import com.amswh.iLIMS.service.ConstantsService;
+import com.amswh.iLIMS.service.PartyService;
+import com.amswh.iLIMS.service.PartygroupService;
+import com.amswh.iLIMS.utils.MyStringUtils;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -13,6 +20,12 @@ import java.util.*;
 public class PartnerService implements ApplicationContextAware {
     private List<String> orderedCodes;// 根据partner的重要程度排序，可以确定哪个服务先调用
     Map<String,IPartner> parters=new HashMap<>(); // 用于存放各个Partner实现类
+    @Resource
+    ConstantsService constantsService;
+
+    @Resource
+    PartygroupService partygroupService;
+
     @PostConstruct
     public void loadServices(){
         Set<String> set1=this.parters.keySet();
@@ -50,9 +63,19 @@ public class PartnerService implements ApplicationContextAware {
 
          for(String partnerCode:orderedCodes){
              try {
+                 System.out.println(">>>>>>>>>>>>>>>>>>>"+partnerCode);
                  PatientInfo patient = this.fetchPatientInfo(partnerCode, barCode);
                  if (patient != null) {
                      patient.setPartnerCode(partnerCode);
+                     if(!MyStringUtils.isEmpty(patient.getProductCode())){
+                         patient.setProductName(constantsService.getProductName(patient.getProductCode()));
+                     }
+                     if(!MyStringUtils.isEmpty(patient.getPartnerCode())){
+                          PartyGroup company=partygroupService.getById(patient.getPartnerCode());
+                          if(company!=null) {
+                              patient.setPartnerName(company.getFullName());
+                          }
+                     }
                      return patient;
                  }
              } catch(Exception err){
@@ -78,4 +101,6 @@ public class PartnerService implements ApplicationContextAware {
             parters.put(value.whoAmI(), value);
         }
     }
+
+
 }

@@ -42,9 +42,6 @@ public class BioSample {
 	@TableField("sampleTime")
 	private LocalDateTime sampleTime;
 
-	@TableField("partnerCode")
-	private String partnerCode;
-
 	@TableField("sender")
 	private String sender;
 
@@ -60,10 +57,6 @@ public class BioSample {
 
 	@TableField("surveyImage")
 	private String surveyImage;
-
-	@TableField("isVIP")
-	private Integer isVIP;
-
 	@TableField("createTime")
 	private LocalDateTime createTime;
 

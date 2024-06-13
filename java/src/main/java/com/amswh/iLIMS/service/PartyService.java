@@ -4,6 +4,7 @@ import com.amswh.iLIMS.mapper.lims.IParty;
 import com.amswh.iLIMS.mapper.lims.IPartyGroup;
 import com.amswh.iLIMS.partner.PatientInfo;
 import com.amswh.iLIMS.utils.MapUtil;
+import com.amswh.iLIMS.utils.MyStringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -27,10 +28,6 @@ public class PartyService extends ServiceImpl<IParty, Party> {
 
     @Resource
     PartyrelationshipService relationService;
-
-    @Resource
-    PartyBarService partybarService;
-
     @Resource
     SeqService seqService;
 
@@ -54,7 +51,7 @@ public class PartyService extends ServiceImpl<IParty, Party> {
         if(party==null ) return null;
         String partyId=party.getPartyId();
         if(partyId==null){
-            partyId=String.format("08d%",seqService.getNextSeqId("party",1l));
+            partyId=String.format("%08d",seqService.getNextSeqId("party",1l));
             party.setPartyId(partyId);
         }
         if(this.save(party)){
@@ -66,8 +63,8 @@ public class PartyService extends ServiceImpl<IParty, Party> {
 
 
     public boolean addPartyContact(Map<String,Object> inputMap){
+        if(inputMap.get("partyId")==null) return false;
         String partyId=inputMap.get("partyId").toString();
-        if(partyId==null) return false;
         List<PartyContact> existedContacts=this.contactService.listContacts(partyId);//查找现有的联系方式
 
         String contactType="phone";
@@ -146,8 +143,12 @@ public class PartyService extends ServiceImpl<IParty, Party> {
 
         List<Person> existeds=existPerson(inputMap); //检查是否存在该人员信息，如果有则不加
         if(existeds!=null && !existeds.isEmpty()){
-            this.addPartyContact(inputMap);//添加联系人信息
-            return existeds.get(0);
+            Person person=existeds.get(0);
+            if(!MyStringUtils.isEmpty(person.getPartyId())) {
+                inputMap.put("partyId", person.getPartyId());
+                this.addPartyContact(inputMap);//添加联系人信息
+                return existeds.get(0);
+            }
         }
         inputMap.put("partyType","PSON");
         Party party = new Party();
@@ -244,8 +245,7 @@ public class PartyService extends ServiceImpl<IParty, Party> {
         if(patient.getPhone()!=null){mp.put("phone",patient.getPhone());}
         mp.putAll(patient.getOtherInfo());
         try {
-          Person person=  this.addPerson(mp);
-          return person;
+            return this.addPerson(mp);
         }catch (Exception err){
             err.printStackTrace();
         }

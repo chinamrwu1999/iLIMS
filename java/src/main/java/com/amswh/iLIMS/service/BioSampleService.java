@@ -18,57 +18,12 @@ import java.util.Map;
 
 @Service
 public class BioSampleService extends ServiceImpl<IBioSample, BioSample> {
-
 	   @Resource
 	   AnalyteService analyteService;
-
 	   @Resource
 	   AnalyteprocessService analyteprocessService;
-
 	   @Resource
 	   PartnerService partnerService;
-
 	   @Resource
 	   OAQueryService  OA;
-
-
-
-
-
-
-
-	/**
-	 *  接收样本
-	 * @param inputMap
-	 */
-	@Transactional
-	private void receiveBioSample(Map<String,Object> inputMap){
-           try {
-			   BioSample sample = new BioSample();
-			   MapUtil.copyFromMap(inputMap, sample);
-			   if(this.save(sample)) {//保存样本信息
-				   Analyte analyte = new Analyte();
-				   MapUtil.copyFromMap(inputMap, analyte);
-				   if( analyteService.save(analyte)) {//保存分析物信息
-					   AnalyteProcess analyteProcess = new AnalyteProcess();
-					   analyteProcess.setAnalyteCode(analyte.getAnalyteCode());
-					   analyteProcess.setAction("RECEIVE");
-					   analyteProcess.setStatus("SUCCESS");
-					   analyteprocessService.save(analyteProcess);
-				   }
-			   }
-
-		   }catch (Exception err){
-			  err.printStackTrace();
-		   }
-	}
-
-
-	public PatientInfo getSampleInfo(String barCode){
-
-	}
-
-
-
-
 }

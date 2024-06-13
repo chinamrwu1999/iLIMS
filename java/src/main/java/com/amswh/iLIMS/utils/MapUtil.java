@@ -32,7 +32,7 @@ public  class MapUtil {
     }
 
 
-    public static void copyFromMap(Map<String,Object> sourceMap, Object targetObject) throws IllegalAccessException, InstantiationException {
+    public static void copyFromMap(Map<String,Object> sourceMap, Object targetObject)  {
        Class<?> targetClass = targetObject.getClass();
        Field[] fields = targetClass.getDeclaredFields();
 
@@ -55,6 +55,7 @@ public  class MapUtil {
                      }
                  }
             } catch (Exception e) {
+
                 continue;
             }
 

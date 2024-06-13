@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -51,6 +53,12 @@ public class GlobalExceptionHandler {
     public AjaxResult handleInstantiationException(InstantiationException e, HttpServletRequest request)
     {
         return AjaxResult.error("实例化对象错误："+e.getMessage());
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public AjaxResult handleDuplicatedInsert(SQLIntegrityConstraintViolationException e, HttpServletRequest request)
+    {
+        return AjaxResult.error("重复添加："+e.getMessage());
     }
 
 

@@ -41,4 +41,22 @@ public interface IBar extends BaseMapper<Bar> {
             "WHERE PB.partyId=P.partyId AND PB.barCode=#{barCode}")
     public Map<String,Object> getPatient(String barCode);
 
+
+    @Select({"<script>",
+            "select A.barCode,A.analyteCode," ,
+            "PS.name,PS.gender,",
+            "productCode,P.name productName",
+            "AP.createTime,AP.action,AP.status",
+            "FROM PartyBar PB ",
+            "LEFT JOIN PartnerBar PB1 ON PB1.barCode=PB.barCode ",
+            "LEFT JOIN analyte A ON A.barCode=PB.barCode ",
+            "LEFT JOIN analyteProcess AP ON AP.analyteCode=A.analyteCode",
+            "LEFT JOIN product P ON P.code=PB1.productCode ",
+            "LEFT JOIN PERSON PS ON PS.partyId=PB.partyID",
+            "WHERE PB.barCode=#{barCode} ",
+            "AND A.createTime IN (SELECT MAX(createTime) FROM analyte WHERE barCode=#{barCode})",
+            "ORDER BY AP.createTime desc limit 1",
+            "</script>" })
+    public Map<String,Object> getBarProgress(String barCode);
+
 }
