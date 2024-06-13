@@ -122,6 +122,19 @@ CREATE TABLE IF NOT EXISTS  `BioSample`(
 
 
 
+CREATE TABLE IF NOT EXISTS `ReagentType`(
+
+);
+
+CREATE TABLE IF NOT EXISTS `ExpPlan`(
+    `id` int unsigned not null AUTO_INCREMENT primary key,
+    `productCode` varchar(12) not null,
+    `employeeId` varchar(12) not null,
+    `createTime` datetime default now()
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '生物样本基本信息表'; ;
+
+CREATE TABLE IF NOT EXISTS `AnalyteTest`(
+
 
  
 
