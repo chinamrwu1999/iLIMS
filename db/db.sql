@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `PartyBar`(
 
 CREATE index partyBarIndex ON `PartyBar`(`barCode`);
 
-CREATE TABLE IF NOT EXISTS PartnerBar(
+CREATE TABLE IF NOT EXISTS `PartnerBar`(
       `id` int unsigned not null AUTO_INCREMENT primary key,
       `barCode` varchar(60) not null comment '贴在采样管或采样盒上的条形码',
       `partnerId` varchar(10) not null comment 'Partner的partyId',
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `analyte`(
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '分析物:一份生物样本BioSample 可能会被多次检测,每一次检测用到的只是BioSample的一部分,称为analyte，不同analyte可以做不同检测';
 CREATE index analyteIndex on `analyte`(`analyteCode`);
 
-CREATE TABLE IF NOT EXISTS BarExpress(
+CREATE TABLE IF NOT EXISTS `BarExpress`(
     `id` int unsigned not null AUTO_INCREMENT primary key,
     `barCode` varchar(60) not null comment '条码号',
     `udi` varchar(60)  comment 'udi',
@@ -50,8 +50,6 @@ CREATE TABLE IF NOT EXISTS BarExpress(
     `createTime` datetime not null default now(),
     unique(`barCode`,`expressNo`)
 ) comment '收到快递送来的样本，分拣动作' ;
-
-
 
 CREATE TABLE IF NOT EXISTS `analyteProcess` (
     `id` int unsigned NOT NULL AUTO_INCREMENT primary key COMMENT '自增列主键',
@@ -69,7 +67,7 @@ CREATE index analyte_process_Index1 on `analyteProcess`(`analyteCode`);
 CREATE index analyte_process_ActionIndex1 on `analyteProcess`(`action`);
 CREATE INDEX index_analyteProcessTime ON analyteProcess(`createTime`);
 
-CREATE TABLE IF NOT EXISTS DataUpload (
+CREATE TABLE IF NOT EXISTS `DataUpload` (
     `id` int unsigned not null AUTO_INCREMENT primary key comment '自增列主键',
     `instrument` varchar(20) comment '仪器类型',
     `testTime` datetime not null comment '检测时间',    
@@ -80,7 +78,7 @@ CREATE TABLE IF NOT EXISTS DataUpload (
     `productCode` varchar(12) not null comment '本次实验检测产品的代码',
     `uploadTime` DATETIME not null default now() comment '实验数据上传时间'
 ) ENGINE=InnoDB AUTO_INCREMENT=10000 comment '实验数据上传信息';
-CREATE INDEX index_DataUploadTime ON DataUpload(`uploadTime`);
+CREATE INDEX index_DataUploadTime ON `DataUpload`(`uploadTime`);
 
 CREATE TABLE IF NOT EXISTS `PCRData`(
   `id` int unsigned not null AUTO_INCREMENT primary key comment '自增列主键',
@@ -105,7 +103,7 @@ CREATE TABLE IF NOT EXISTS PCRCurve(
 CREATE TABLE IF NOT EXISTS  `BioSample`(
     `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',
     `barCode` varchar(80) not null COMMENT '唯一标识生物样本的条形码号',
-    `type` varchar(12) not null COMMENT '类型：F粪便、B血液、C细胞、T组织',
+    `type` varchar(12) not null COMMENT '类型:F粪便、B血液、C细胞、T组织',
     `weight` decimal(5,3) COMMENT '重量',
     `volume` decimal(5,3) COMMENT '体积',
     `color` varchar(30) COMMENT '样本颜色',
@@ -127,13 +125,20 @@ CREATE TABLE IF NOT EXISTS `ReagentType`(
 );
 
 CREATE TABLE IF NOT EXISTS `ExpPlan`(
-    `id` int unsigned not null AUTO_INCREMENT primary key,
-    `productCode` varchar(12) not null,
-    `employeeId` varchar(12) not null,
+    `id` char(9) not null primary key COMMENT '9位字符的序列号:例如240304001,前6位为当天日期,后3位为当天流水顺序号',
+    `employeeId` varchar(12) not null  COMMENT '员工工号',
     `createTime` datetime default now()
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '生物样本基本信息表'; ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '实验计划信息'; 
 
-CREATE TABLE IF NOT EXISTS `AnalyteTest`(
+CREATE TABLE IF NOT EXISTS `ExpAnalyte`(
+    `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',
+    `expPlanId` char(9) not null ,
+    `analyteCode` VARCHAR(12) not null COMMENT '分析物品代码',
+    foreign key(`expPlanId`) references ExpPlan(`id`),
+    unique(`expPlanId`,`analyteCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '一次检测实验包含的分析物代码'; 
+
+
 
 
  

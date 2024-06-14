@@ -13,7 +13,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -26,8 +28,7 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
     private  String nameColName="seqName";
     private  String idColName="seqId";
     private final ConcurrentMap<String, SequenceBank> sequences = new ConcurrentHashMap<>();
-
-
+    private  final DateTimeFormatter date6Formatter = DateTimeFormatter.ofPattern("yyMMdd");
     public Long getNextSeqId(String seqName, long staggerMax) {
         SequenceBank bank = this.getBank(seqName);
         return bank.getNextSeqId(staggerMax);
@@ -187,7 +188,15 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
         }
     }
 
+    /**
+     * 实验计划序列号
+     * @return
+     */
+    public String nextExpPlainSeq(){
+        long seqId=this.getNextSeqId("expPlain",1L);
+         return String.format("%s%03d",LocalDateTime.now().format(date6Formatter),seqId);
 
+    }
 
 
 }
