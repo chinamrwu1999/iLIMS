@@ -3,6 +3,7 @@ package com.amswh.iLIMS.controller;
 
 import com.amswh.framework.model.AjaxResult;
 import com.amswh.iLIMS.domain.ExpPlan;
+import com.amswh.iLIMS.service.DataUploadService;
 import com.amswh.iLIMS.service.ExpAnalyteService;
 import com.amswh.iLIMS.service.SeqService;
 import jakarta.annotation.Resource;
@@ -29,6 +30,9 @@ public class ExpAnalyteController {
     @Resource
     SeqService seqService;
 
+    @Resource
+    DataUploadService uploadService;
+
     @PostMapping("/exp/saveExpPlan")
     @Transactional
     public AjaxResult saveExpPlan(@RequestBody List<String> analyteCodes){
@@ -44,4 +48,16 @@ public class ExpAnalyteController {
         }
         return AjaxResult.error("保存实验计划数据失败");
     }
+
+    /**
+     * 列出代查看的实验列表
+     * @return
+     */
+
+    @PostMapping("/exp/listExperiment")
+    public AjaxResult listExperiment(@RequestBody Map<String,Object> input){
+        return AjaxResult.success(this.uploadService.listExperiment(input));
+    }
+
+
 }

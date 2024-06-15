@@ -75,7 +75,6 @@ CREATE TABLE IF NOT EXISTS `DataUpload` (
     `machineFile` varchar(100) not null comment '实验仪器生成的原始数据文件名称',
     `testName` varchar(60)  comment '实验名称',
     `employeeId` varchar(12) not null comment '数据上传人的工号',
-    `productCode` varchar(12) not null comment '本次实验检测产品的代码',
     `uploadTime` DATETIME not null default now() comment '实验数据上传时间'
 ) ENGINE=InnoDB AUTO_INCREMENT=10000 comment '实验数据上传信息';
 CREATE INDEX index_DataUploadTime ON `DataUpload`(`uploadTime`);
@@ -86,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `PCRData`(
   `analyteCode` varchar(20) not null ,
   `well` varchar(4) not null comment '孔洞编号:PCR仪器板子上有96空或48空用于放测试样本, 不同样本不能混在同一个well',
   `target` varchar(40) not null comment '基因标记物的代码',
-  `CT` decimal(6,4) DEFAULT NULL COMMENT '检测到的CT值，如果是undetermined，则存储-1',
+  `CT` decimal(6,4) DEFAULT NULL COMMENT '检测到的CT值,如果是undetermined，则存储-1',
   `predict` varchar(12) not null comment '该标记的检测结果判定：阴性、阳性、不合格（内参)等',
   `choose` boolean not null default 1 
 ) ENGINE=InnoDB AUTO_INCREMENT=2000000 comment 'PCR检测数据';
