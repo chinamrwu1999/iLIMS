@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `PCRData`(
   `id` int unsigned not null AUTO_INCREMENT primary key comment '自增列主键',
   `uploadId` int unsigned not null ,
   `analyteCode` varchar(20) not null ,
-  `well` varchar(4) not null comment '孔洞编号:PCR仪器板子上有96空或48空用于放测试样本, 不同样本不能混在同一个well',
+  `well` varchar(4) not null comment '孔洞编号:PCR仪器板子上有96孔或48孔用于放测试样本, 不同样本不能混在同一个well',
   `target` varchar(40) not null comment '基因标记物的代码',
   `CT` decimal(6,4) DEFAULT NULL COMMENT '检测到的CT值,如果是undetermined，则存储-1',
   `predict` varchar(12) not null comment '该标记的检测结果判定：阴性、阳性、不合格（内参)等',
@@ -136,6 +136,15 @@ CREATE TABLE IF NOT EXISTS `ExpAnalyte`(
     foreign key(`expPlanId`) references ExpPlan(`id`),
     unique(`expPlanId`,`analyteCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '一次检测实验包含的分析物代码'; 
+
+
+CREATE TABLE IF NOT EXISTS `Diagnose`(
+    `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',
+    `barCode` varchar(60) not null ,
+    `diseaseCode` VARCHAR(12) not null COMMENT '分析物品代码',
+    `predict` varchar(8) not null comment '判定状态:阳性或弱阳性',
+    unique(`barCode`,`diseaseCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '记录多癌检测中阳性或弱阳性的癌症代码'; 
 
 
 

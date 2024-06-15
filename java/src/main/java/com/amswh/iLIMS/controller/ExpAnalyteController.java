@@ -5,15 +5,15 @@ import com.amswh.framework.model.AjaxResult;
 import com.amswh.iLIMS.domain.ExpPlan;
 import com.amswh.iLIMS.service.DataUploadService;
 import com.amswh.iLIMS.service.ExpAnalyteService;
+import com.amswh.iLIMS.service.PcrdataService;
 import com.amswh.iLIMS.service.SeqService;
 import jakarta.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  *  本controller处理PCR实验相关API接口，主要包括:
@@ -23,17 +23,16 @@ import java.util.Map;
  */
 @RestController
 public class ExpAnalyteController {
-
     @Resource
     ExpAnalyteService expAnalyteService;
-
     @Resource
     SeqService seqService;
-
     @Resource
     DataUploadService uploadService;
+    @Resource
+    PcrdataService pcrService;
 
-    @PostMapping("/exp/saveExpPlan")
+    @PostMapping("/pcr/saveExpPlan")
     @Transactional
     public AjaxResult saveExpPlan(@RequestBody List<String> analyteCodes){
         String employee="15010040"; //需要从session获取
@@ -54,10 +53,21 @@ public class ExpAnalyteController {
      * @return
      */
 
-    @PostMapping("/exp/listExperiment")
-    public AjaxResult listExperiment(@RequestBody Map<String,Object> input){
+    @PostMapping("/pcr/listExperiment")
+    public AjaxResult listExperiment(@RequestBody Map<String, Object> input){
         return AjaxResult.success(this.uploadService.listExperiment(input));
     }
+    @GetMapping("/pcr/exp/{expId}")
+    public AjaxResult getPCRData(@PathVariable Long expId){
+         return  AjaxResult.success(this.pcrService.getPCRDataOfExp(expId));
+    }
+
+    @GetMapping("/pcr/bar/{barCode}")
+    public AjaxResult getPCRData(@PathVariable String barCode){
+       // return  AjaxResult.success(this.pcrService.getPCRDataOfExp(bar));
+        return AjaxResult.success(pcrService.getPCRDataByBarCode(barCode));
+    }
+
 
 
 }

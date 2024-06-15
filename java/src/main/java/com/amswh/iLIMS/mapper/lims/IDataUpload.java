@@ -18,7 +18,12 @@ public interface IDataUpload extends BaseMapper<DataUpload> {
             "</if>",
             "<if test='testName !=null'>",
             "AND testName like '%testName%'",
-            "order by uploadTime desc limit #{pageIndex},#{pageSize}",
+            "</if>",
+
+            "order by uploadTime desc ",
+            "<if test='pageIndex &gt;0 and pageSize &gt;0'>",
+            "limit #{pageIndex},#{pageSize}",
+            "</if>",
             "</script>"})
     public List<DataUpload> listExperiment(Map<String,Object> input);
 }
