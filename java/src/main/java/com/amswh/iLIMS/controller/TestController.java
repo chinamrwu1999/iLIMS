@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.amswh.iLIMS.service.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -16,8 +18,7 @@ import java.util.Map;
 public class TestController {
 
    @Resource
-//   ADCService service;
-   SeqService service;
+   ExpAnalyteService service;
 
 
    // @PostMapping("/service")
@@ -25,11 +26,15 @@ public class TestController {
     @Transactional(transactionManager="limsTransactionManager")
     public void TestMe(){
     try {
-         // service.fetchPatientInfo("WD2018120529");
-        long seq=service.getNextSeqId("party",1);
-        System.out.println("party:"+seq);
-        long seq1=service.getNextSeqId("sample",1);
-        System.out.println("sample:"+seq1);
+        List<String> sampleIds=new ArrayList<>();
+        sampleIds.add("ACK240001");
+        sampleIds.add("ACK240002");
+        sampleIds.add("ACK240003");
+        sampleIds.add("ACK240004");
+        sampleIds.add("ACK240005");
+        String expId="240614001";
+        service.batchInsertExpAnalytes(expId,sampleIds);
+
 
     }catch (Exception err){
         err.printStackTrace();
