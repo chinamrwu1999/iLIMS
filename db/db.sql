@@ -143,8 +143,22 @@ CREATE TABLE IF NOT EXISTS `Diagnose`(
     `barCode` varchar(60) not null ,
     `diseaseCode` VARCHAR(12) not null COMMENT '分析物品代码',
     `predict` varchar(8) not null comment '判定状态:阳性或弱阳性',
+    `createTime` timestamp not null default now()
     unique(`barCode`,`diseaseCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '记录多癌检测中阳性或弱阳性的癌症代码'; 
+
+
+CREATE TABLE IF NOT EXISTS `SurveryTemplate`(
+    `productId` varchar(12) not null primary key,
+    `template` JSON not null,
+    `createTime` timestamp not null default now()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '调查问卷模板';
+
+CREATE TABLE IF NOT EXISTS `PatientSurvey`(
+    `barCode` varchar(60) not null,
+    `answers` varchar(512) not null,
+    `createTime` timestamp not null default now()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '调查问卷答案';
 
 
 

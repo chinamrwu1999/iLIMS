@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS  `address`(
     `addressId` int unsigned NOT NULL AUTO_INCREMENT primary key comment '自增主键',
     `country` char(3)  not null default 'CHN' comment '三字母国家代码,默认中国CHN',
     `geoId` varchar(10)  comment '行政区划代码,如果有',
-    `stree` varchar(120)  comment '街道详细地址',
+    `street` varchar(120)  comment '街道详细地址',
     `type` varchar(30) comment '地址类别：常驻地址、收货地址',
     `createTime` datetime not null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1  DEFAULT CHARSET=utf8mb4 COMMENT '地址信息';
@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS  `partyRelationship`(
     `throughDate` date comment '关系的有效截至日期,null表示无期',
     `createTime` datetime not null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT 'party之间的关系';
+
 
 
 
@@ -129,3 +130,25 @@ CREATE TABLE IF NOT EXISTS  `orderAddress`(
     `deadline` date  comment '最迟应发货日期',
     `createTime` datetime not  null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '订单发货信息';
+
+
+CREATE TABLE IF NOT EXISTS `geo`(
+    geoId varchar(20) not null primary key,
+    geoName varchar(40) not null,
+    geoType varchar(30) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '国家地理（行政区划表）';
+
+CREATE TABLE IF NOT EXISTS `GeoAssoc`(
+    id INT unsigned not null primary key AUTO_INCREMENT,
+    geoId varchar(20) not null,
+    geoIdTo varchar(20) not null,
+    assocType varchar(30) not null 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '地理区域之间的关系';
+
+CREATE TABLE IF NOT EXISTS  `partyGeo`(
+    `id` int unsigned NOT NULL AUTO_INCREMENT primary key comment '自增主键',
+    `partyId`   char(8)  NOT NULL  comment 'partyId',
+    `geoId`     varchar(20)  NOT NULL comment '地理位置Id',
+    `throughDate` date default null,
+    `createTime` datetime not null default now()
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT 'party的地理位置关系';
