@@ -75,6 +75,38 @@ INSERT INTO product(code,projectCode,name) VALUES('LDT16','AD16','LDT肿瘤筛�
 INSERT INTO product(code,projectCode,name) VALUES('LDT17','AD17','LDT肿瘤筛查项目-乳腺癌、卵巢癌血检'); 
 INSERT INTO product(code,projectCode,name) VALUES('LDT15','AD15','LDT肿瘤筛查项目-卵巢癌血液检测'); 
 
+CREATE TABLE IF NOT EXISTS `Analyte2Product`(
+  `analyteId` varchar(20) comment '产品外部码,专用于系统对接',
+  `productId` varchar(10) not null unique comment '产品代码',
+  `createTime` timestamp not null default  CURRENT_TIMESTAMP,
+  primary key (`analyteId`,`productId`)
+) COMMENT '分析物编号到产品代码的映射关系';
+
+INSERT INTO Analyte2Product(analyteId,productId) VALUES
+('LDT01','ACK'),
+('LDT02','AGS'),
+('LDT03','AGL'),
+('LDT04','AGT'),
+('LDT06','ACJ'),
+('LDT07','AXG'),
+('LDT08','AWY'),
+('LDT09','AYN'),
+('LDT10','ASN'),
+('LDT11','AGL'),
+('LDT12','AXA'),
+('LDT13','L13'),
+('LDT14','L14'),
+('LDT15','L15'),
+('LDT16','L16'),
+('LDT17','L17'),
+('LDT21','L21'),
+('LDT22','L22'),
+('LDT23','L23'),
+('LDT24','L24'),
+('LDT25','L25'),
+('LDT99','L99');
+
+
 CREATE TABLE IF NOT EXISTS `enums`(
   `id` int not null primary key AUTO_INCREMENT,
   `code` varchar(10) not null comment '枚举代码',
