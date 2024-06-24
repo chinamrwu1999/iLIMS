@@ -9,4 +9,7 @@ import java.util.Map;
 
 public interface IProduct extends BaseMapper<Product> {
 
+    @Select("SELECT analyteId,productId FROM Analyte2Product ")
+    public Map<String,String> getAnalyte2Product();
+
 }

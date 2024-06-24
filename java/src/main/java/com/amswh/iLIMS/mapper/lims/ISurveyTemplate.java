@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.Map;
 
 public interface ISurveyTemplate extends BaseMapper<SurveyTemplate> {
-    @Select("SELECT * FROM surveyTemplate WHERE productId=#{productId}")
+    @Select("SELECT productId,template FROM surveyTemplate WHERE productId=#{productId}")
     public Map<String,Object> getSurveyTemplate(String productId);
 
     @Insert({"<script>",

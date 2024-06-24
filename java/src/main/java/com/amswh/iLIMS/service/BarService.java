@@ -63,9 +63,31 @@ public class BarService extends ServiceImpl<IBar, Bar> {
 	 }
 
 
-	public Map<String,Object>  getBarProgress(String barCode){
-		return  this.baseMapper.getBarProgress(barCode);
+	public Map<String,Object>  getBarProgress(String analyteCode){
+		return  this.baseMapper.getAnalyteProgress(analyteCode);
 	}
 
+
+	/**
+	 * 根据条码返回分析物
+	 * @param barCode
+	 * @return
+	 */
+	public List<Map<String,Object>> getAnalytes(String barCode){
+		 return  this.baseMapper.getAnalyteCodes(barCode);
+	}
+
+	/**
+	 *
+	 * @param code :条码或分析物代码
+	 * @return
+	 */
+	public String  getBarCode(String code){
+		return  this.baseMapper.getBarCode(code);
+	}
+
+	public Map<String,Object> getBindingTime(String code){
+             return this.baseMapper.getBindingTime(code);
+	}
 
 }

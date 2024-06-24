@@ -38,12 +38,12 @@ public class PartyService extends ServiceImpl<IParty, Party> {
     PartyContactService contactService;
 
     /**
-     * 根据采样管条码获取病人信息
-     * @param barCode
+     * 根据采样管条码/分析物代码获取病人信息
+     * @param code : 采样管条码 或 分析物代码
      * @return
      */
-    public Map<String,Object> getPatientByBarCode(String barCode){
-        return this.personService.getBaseMapper().getPatientByBarCode(barCode);
+    public Map<String,Object> getPatientByBarCode(String code){
+        return this.personService.getBaseMapper().getPatientByBarCode(code);
         //return null;
     }
 

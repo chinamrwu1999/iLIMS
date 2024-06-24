@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS  `party`(
 CREATE TABLE IF NOT EXISTS  `person`(
     `partyId`   varchar(12) NOT NULL primary key comment 'partyId 唯一标识一个人或组织机构的字符串',
     `name`   varchar(12)  NOT NULL comment '人员姓名',
-    `gender` char(1) not null comment '性别',
+    `gender` ENUM('F','M') comment '性别',
     `birthday` date comment '出生日期',
     `IdCardType` char(2) comment '证件类型:Id身份证,PP护照',
     `IDNumber`    varchar(30) comment '证件号码',

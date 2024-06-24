@@ -92,7 +92,7 @@ INSERT INTO Analyte2Product(analyteId,productId) VALUES
 ('LDT08','AWY'),
 ('LDT09','AYN'),
 ('LDT10','ASN'),
-('LDT11','AGL'),
+('LDT11','AGU'),
 ('LDT12','AXA'),
 ('LDT13','L13'),
 ('LDT14','L14'),

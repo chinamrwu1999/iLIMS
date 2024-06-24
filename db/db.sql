@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `PartyBar`(
     `partyId`  varchar(12) not null comment '病人对应的partyId',
     `barCode` varchar(20) not null comment '贴在采样管或采样盒上的条形码',
     `age` smallint comment '病人使用检测服务时候的年龄',
-    `bindWay` varchar(12) comment '绑定方式:wechat微信小程序扫码,api 通过api从partner处拉取;manual手工录入',
+   `bindWay` ENUM('wechat','api','manual') comment '绑定方式:wechat微信小程序扫码,api 通过api从partner处拉取;manual手工录入'
     `createTime` DATETIME NOT NULl default now(),
     unique(`partyId`,`barCode`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 comment '病人与样本条码关联';
@@ -54,7 +54,8 @@ CREATE TABLE IF NOT EXISTS `BarExpress`(
 CREATE TABLE IF NOT EXISTS `analyteProcess` (
     `id` int unsigned NOT NULL AUTO_INCREMENT primary key COMMENT '自增列主键',
     `analyteCode` varchar(20) NOT NULL COMMENT '分析物编号,引用自analyte表的analyteId',
-    `action` varchar(20) not null COMMENT '操作名称，枚举类型，收样、复检、检测',
+    #`action`varchar(20) not null COMMENT '操作名称，枚举类型，收样、复检、检测',
+    `action` ENUM('RECEIVE','RECHECK','TEST','RPTRV1','RPTRV2','RPTRV3','RPTGT','RPTPUB') comment '收样、复检、检测、RPTRV1(报告1审)、RPTRV2报告2审',
     `status` varchar(20) not null COMMENT '操作完成后的状态,success、fail等',
     `remark` varchar(100) COMMENT '备注',
     `employeeId` varchar(10) not null COMMENT '操作人的员工工号',
@@ -118,11 +119,6 @@ CREATE TABLE IF NOT EXISTS  `BioSample`(
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '生物样本基本信息表';
 
 
-
-CREATE TABLE IF NOT EXISTS `ReagentType`(
-
-);
-
 CREATE TABLE IF NOT EXISTS `ExpPlan`(
     `id` char(9) not null primary key COMMENT '9位字符的序列号:例如240304001,前6位为当天日期,后3位为当天流水顺序号',
     `employeeId` varchar(12) not null  COMMENT '员工工号',
@@ -131,12 +127,48 @@ CREATE TABLE IF NOT EXISTS `ExpPlan`(
 
 CREATE TABLE IF NOT EXISTS `ExpAnalyte`(
     `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',
-    `expPlanId` char(9) not null ,
+    `expId` varchar(20) not null ,
     `analyteCode` VARCHAR(12) not null COMMENT '分析物品代码',
     foreign key(`expPlanId`) references ExpPlan(`id`),
     unique(`expPlanId`,`analyteCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '一次检测实验包含的分析物代码'; 
 
+CREATE TABLE IF NOT EXISTS `Reagent`(
+    `id` varchar(25) NOT NULL PRIMARY KEY,
+    `name` varchar(50) NOT NULL,
+    `model` varchar(25),
+    `spec` smallint unsigned,
+    `createTime` timestamp not null default CURRENT_TIMESTAMP
+) comment '试剂信息';
+
+CREATE TABLE IF NOT EXISTS 'ReagentBatch'(
+    `id` int unsigned not null AUTO_INCREMENT primary key,
+    `reagentId` varchar(20) not null,
+    `batchNo` varchar(20) not null,
+    `quantity` int unsigned,
+    `produceDate` date,
+    `expireDate` date,
+    `createTime` timestamp not null defalut CURRENT_TIMESTAMP
+) comment '试剂批次信息'
+
+CREATE TABLE IF NOT EXISTS expSteps(
+    `productCode` varchar(10) not null,
+    `stepId` varchar(8) not null,
+    `stepName` varchar(20) not null,
+    `reagentId` varchar(12) not null,
+    `createTime` timestamp not null defalut CURRENT_TIMESTAMP,
+    primary key (`productCode`,`stepId`)
+) comment '不同检测项目的实验配置信息';
+
+CREATE TABLE IF NOT EXISTS expConsume(
+    `expId`  varchar(20) NOT NULL comment '实验Id',
+    `stepId` varchar(8) not null comment '实验步骤ID'
+    `reagentId` varchar(20) not null comment '试剂代码',
+    `batchNo` varchar(20) not null comment '试剂生产批次',
+    `amount` int unsigned not null comment '试剂数量',
+    `createTime` timestamp not null defalut CURRENT_TIMESTAMP,
+    primary key (`expId`,'stepId')
+) comment '实验领用试剂记录'
 
 CREATE TABLE IF NOT EXISTS `Diagnose`(
     `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',

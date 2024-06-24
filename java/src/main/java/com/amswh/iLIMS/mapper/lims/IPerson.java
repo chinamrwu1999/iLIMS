@@ -8,11 +8,19 @@ import java.util.Map;
 
 
 public interface IPerson extends BaseMapper<Person> {
-    @Select("SELECT A.*,B.*,FROM party A,Person B,PartyBar PB "+
-            "WHERE A.partyId=B.partyId AND A.partyId=PB.partyId  "+
-            "AND PB.barCode=#{barCode}"
-    )
-    public Map<String,Object> getPatientByBarCode(String barCode);
+
+
+
+    @Select({"<script>",
+            "SELECT P.partyId,P.externalId,",
+            "PS.name,gender,IDCardType,IDNumber,birthday,PB.age ",
+            "FROM PartyBar PB left join party P ON P.partyId=PB.partyId ",
+            "LEFT JOIN Person PS ON PS.partyId=PB.partyId ",
+            "WHERE  PB.barCode=#{code} or PB.barCode in ",
+            "(SELECT barCode FROM analyte WHERE analyteCode=#{code}) ",
+            "</script>"})
+    public Map<String,Object>  getPatientByBarCode(String code);
+
 
 
 }

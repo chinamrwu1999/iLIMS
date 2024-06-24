@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.amswh.iLIMS.domain.Bar;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.scripting.xmltags.WhereSqlNode;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -53,10 +54,52 @@ public interface IBar extends BaseMapper<Bar> {
             "LEFT JOIN analyteProcess AP ON AP.analyteCode=A.analyteCode",
             "LEFT JOIN product P ON P.code=PB1.productCode ",
             "LEFT JOIN PERSON PS ON PS.partyId=PB.partyID",
-            "WHERE PB.barCode=#{barCode} ",
-            "AND A.createTime IN (SELECT MAX(createTime) FROM analyte WHERE barCode=#{barCode})",
+            "WHERE A.analyteCode=#{analyteCode} ",
             "ORDER BY AP.createTime desc limit 1",
             "</script>" })
-    public Map<String,Object> getBarProgress(String barCode);
+    public Map<String,Object> getAnalyteProgress(String analyteCode);
+
+
+    @Select("SELECT barCode FROM analyte where analyteCode=#{analyteCode} or barCode=#{analyteCode}")
+    public String getBarCode(String analyteCode);
+
+    /**
+     * 根据条码获取分析物。可能是多个分析物返回
+     * @param barCode
+     * @return 如果存在复检，则返回多个分析物
+     */
+
+    @Select("SELECT analyteCode,createTime FROM analyte WHERE barCode=#{barCode}")
+    public List<Map<String,Object>> getAnalyteCodes(String barCode);
+
+
+    @Select({"SELECT date_format(createTime,'%Y-%m-%d %H:%i:%s') bindingTime,",
+            "case bindWay when 'wechat' then '微信扫码绑定' when 'api' then '通过客户API读取' when 'manual' then '手工录入' end as bindWay",
+            "FROM PartyAnalyte PB where barCode =#{code} or barCode IN "+
+            "(SELECT barCode FROM analyte WHERE analyteCode=#{code})"})
+    public Map<String,Object>   getBindingTime(String code);
+
+
+    @Select({"<script>",
+            "SELECT analyteCode," +
+            "case action ",
+            "WHEN 'RECEIVE' then '收样' ",
+            "WHEN 'RECHECK' THEN '复检' ",
+            "WHEN 'TEST' THEN '实验检测' ",
+            "WHEN 'RPTRV1' THEN '报告一审' ",
+            "WHEN 'RPTRV2' THEN '报告二审核' ",
+            "WHEN 'RPTRV3' THEN '报告三审' ",
+            "WHEN 'RPTGT' THEN '报告生成' ",
+            "WHEN 'RPTPUB' THEN '报告发布' ",
+            "END AS action,",
+            "case status WHEN 'success' then '成功' ",
+            "WHEN 'fail' THEN '失败'",
+            "END as status,remark",
+            "createTime actionTime,employeeId",
+            "FROM analyteProcess AP left join party P ON P.externalId=employeeId",
+            "WHERE analyteCode in (SELECT analyteCode FROM analyte WHERE barCode=#{code} OR analyte=#{bode} )",
+            "ORDER BY AP.createTime  ",
+            "</script>"})
+    public List<Map<String,Object>>  getBarProgress(String code);
 
 }

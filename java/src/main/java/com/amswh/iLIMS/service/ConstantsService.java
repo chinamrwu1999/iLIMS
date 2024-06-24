@@ -25,14 +25,16 @@ public class ConstantsService {
     @Resource
     DiseaseService diseaseService;
 
-    private Map<String,String> productMap=new HashMap<>();
-    private Map<String,String> projectMap=new HashMap<>();
+    private final Map<String,String> productMap=new HashMap<>();
+    private final Map<String,String> projectMap=new HashMap<>();
 
-    private Map<String,String> product2Project=new HashMap<>();
+    private final Map<String,String> product2Project=new HashMap<>();
 
-    private Map<String,String> diseaseMap=new HashMap<>();
+    private final Map<String,String> diseaseMap=new HashMap<>();
 
-    private Map<String,String> project2DiseaseMap=new HashMap<>();
+    private final Map<String,String> project2DiseaseMap=new HashMap<>();
+
+    private Map<String,String> analyte2ProductMap=new HashMap<>();
 
 
     @PostConstruct
@@ -58,6 +60,7 @@ public class ConstantsService {
          for(Map<String,String> mp: projectDiseases){
              this.project2DiseaseMap.put(mp.get("projectCode"),mp.get("diseaseCode"));
          }
+         this.analyte2ProductMap=this.productService.listAnalyte2Product();
 
 
    }
@@ -78,6 +81,10 @@ public class ConstantsService {
    public String getDiseaseByProductCode(String productCode){
          String  projectCode=this.product2Project.get(productCode);
          return this.diseaseMap.get(projectCode);
+   }
+
+   public String getProductIdBySampleHeader(String code){
+        return this.analyte2ProductMap.get(code);
    }
 
 }
