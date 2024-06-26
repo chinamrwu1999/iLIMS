@@ -141,41 +141,44 @@ CREATE TABLE IF NOT EXISTS `Reagent`(
     `createTime` timestamp not null default CURRENT_TIMESTAMP
 ) comment '试剂信息';
 
-CREATE TABLE IF NOT EXISTS 'ReagentBatch'(
+CREATE TABLE IF NOT EXISTS `ReagentBatch`(
     `id` int unsigned not null AUTO_INCREMENT primary key,
     `reagentId` varchar(20) not null,
     `batchNo` varchar(20) not null,
     `quantity` int unsigned,
+    `remaining` int unsigned,
     `produceDate` date,
     `expireDate` date,
-    `createTime` timestamp not null defalut CURRENT_TIMESTAMP
-) comment '试剂批次信息'
+    `createTime` timestamp not null default CURRENT_TIMESTAMP
+) comment '试剂批次信息';
 
-CREATE TABLE IF NOT EXISTS expSteps(
+CREATE TABLE IF NOT EXISTS `expSteps`(
+    `id` int unsigned not null AUTO_INCREMENT primary key,
     `productCode` varchar(10) not null,
     `stepId` varchar(8) not null,
     `stepName` varchar(20) not null,
     `reagentId` varchar(12) not null,
-    `createTime` timestamp not null defalut CURRENT_TIMESTAMP,
-    primary key (`productCode`,`stepId`)
+    `createTime` timestamp not null default CURRENT_TIMESTAMP
+    
 ) comment '不同检测项目的实验配置信息';
 
-CREATE TABLE IF NOT EXISTS expConsume(
+CREATE TABLE IF NOT EXISTS `expReagent`(
+    `id` int unsigned not null AUTO_INCREMENT primary key,
     `expId`  varchar(20) NOT NULL comment '实验Id',
-    `stepId` varchar(8) not null comment '实验步骤ID'
+    `stepId` varchar(8) not null comment '实验步骤ID',
     `reagentId` varchar(20) not null comment '试剂代码',
     `batchNo` varchar(20) not null comment '试剂生产批次',
     `amount` int unsigned not null comment '试剂数量',
-    `createTime` timestamp not null defalut CURRENT_TIMESTAMP,
-    primary key (`expId`,'stepId')
-) comment '实验领用试剂记录'
+    `createTime` timestamp not null default CURRENT_TIMESTAMP,
+    unique (`expId`,`stepId`)
+) comment '实验用试剂记录';
 
 CREATE TABLE IF NOT EXISTS `Diagnose`(
     `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',
     `barCode` varchar(60) not null ,
     `diseaseCode` VARCHAR(12) not null COMMENT '分析物品代码',
     `predict` varchar(8) not null comment '判定状态:阳性或弱阳性',
-    `createTime` timestamp not null default now()
+    `createTime` timestamp not null default now(),
     unique(`barCode`,`diseaseCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '记录多癌检测中阳性或弱阳性的癌症代码'; 
 
