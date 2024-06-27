@@ -53,9 +53,10 @@ public interface IParty extends BaseMapper<Party> {
      public List<Map<String,Object>> existPerson(Map<String,Object> inputMap);
 
      @Select({"<script>",
-      "SELECT PS.*,PC.*  FROM Person P LEFT JOIN PartyContact PC ON PS.partyId=PC.partyId ",
-             "WHERE PC.contactType=#{contactType} and PC.contact=#{contact}",
+      "SELECT PS.partyId,PS.name,PS.gender,PS.birthday,PS.IdCardType,PS.IDNumber  FROM Person P ",
+             "LEFT JOIN PartyContact PC ON PS.partyId=PC.partyId ",
+             "WHERE PC.contact=#{contact}",
       "</script>"
      })
-     public List<Map<String,Object>> getPersonInfByContact(String contactType,String contact);
+     public List<Map<String,Object>> getPersonInfByContact(String contact);
 }
