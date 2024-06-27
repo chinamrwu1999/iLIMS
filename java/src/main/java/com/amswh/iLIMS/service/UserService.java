@@ -6,6 +6,8 @@ import com.amswh.iLIMS.mapper.lims.IUserLogin;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 
+import java.util.Map;
+
 public class UserService extends ServiceImpl<IUser, User> {
 
     @Resource
@@ -24,9 +26,11 @@ public class UserService extends ServiceImpl<IUser, User> {
      * @param password：密码
      * @return
      */
-    public boolean LoginLIS(String userId,String password){
+    public Map<String,String> LoginLIS(String userId,String password){
 
+        Map<String,String> mp=userloginMapper.LoginLIS(userId);
         
+
 
         return null;
     }
