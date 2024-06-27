@@ -9,6 +9,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ExpAnalyteService extends ServiceImpl<IExpAnalyte, ExpAnalyte> {
@@ -24,5 +25,27 @@ public class ExpAnalyteService extends ServiceImpl<IExpAnalyte, ExpAnalyte> {
     public int addNewPlan(ExpPlan obj){
        return this.planMapper.insert(obj);
     }
+
+
+    /**
+     * 统计各个产品待计划安排的分析物总数
+     * @return
+     */
+
+    public List<Map<String,Object>> getProductAnalytesCount_to_test(){
+             return this.planMapper.AnalyteCountToTest();
+    }
+
+    public List<String> listAnalytesToTest(String productNo){
+         if(productNo==null || productNo.trim().isEmpty()) return null;
+         return  this.planMapper.listAnalytesToTest(productNo);
+    }
+
+
+
+    public List<Map<String,Object>> listReagents4Exp(String productNo){
+        return this.planMapper.listReagentsOfExpSteps(productNo);
+    }
+
 
 }

@@ -32,7 +32,7 @@ public class ExpAnalyteController {
     @Resource
     PcrdataService pcrService;
 
-    @PostMapping("/pcr/saveExpPlan")
+    @PostMapping("/exp/saveExpPlan")
     @Transactional
     public AjaxResult saveExpPlan(@RequestBody List<String> analyteCodes){
         String employee="15010040"; //需要从session获取
@@ -43,7 +43,6 @@ public class ExpAnalyteController {
         if(this.expAnalyteService.addNewPlan(entity)>0){
             this.expAnalyteService.batchInsertExpAnalytes(expId,analyteCodes);
             return AjaxResult.success("OK");
-
         }
         return AjaxResult.error("保存实验计划数据失败");
     }
@@ -69,5 +68,32 @@ public class ExpAnalyteController {
     }
 
 
+    /**
+     * 返回每个产品类别待实验安排的分析物数量
+
+     * @return
+     */
+
+    @GetMapping("/exp/product2Test")
+    public AjaxResult AnalytesCountToTest(){
+           return AjaxResult.success(this.expAnalyteService.getProductAnalytesCount_to_test());
+    }
+
+    /**
+     * 返回每个产品类别待实验安排的分析物数量
+     * @return
+     */
+
+    @GetMapping("/exp/analytes/toTest/{productNo}")
+    public AjaxResult  listAnalytesToTest(@PathVariable String productNo){
+        return AjaxResult.success(this.expAnalyteService.listAnalytesToTest(productNo));
+    }
+
+
+
+    @GetMapping("exp/reagents/{productNo}")
+    public AjaxResult listReagents4Exp(@PathVariable String productNo){
+         return  AjaxResult.success(this.expAnalyteService.listReagents4Exp(productNo));
+    }
 
 }

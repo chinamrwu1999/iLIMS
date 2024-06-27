@@ -190,10 +190,13 @@ CREATE TABLE IF NOT EXISTS `SurveryTemplate`(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '调查问卷模板';
 
 CREATE TABLE IF NOT EXISTS `PatientSurvey`(
-    `barCode` varchar(60) not null,
+    `barCode` varchar(60) not null primary key,
     `answers` varchar(512) not null,
     `createTime` timestamp not null default now()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '调查问卷答案';
+
+
+
 
 
 

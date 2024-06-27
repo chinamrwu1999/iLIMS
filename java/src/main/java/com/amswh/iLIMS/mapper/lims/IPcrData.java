@@ -12,9 +12,12 @@ public interface IPcrData extends BaseMapper<PcrData> {
     List<PcrData> listExpData(long expId);
 
     @Select({"<script>",
-            "SELECT d.* FROM PCRData where analyteCode IN (",
-            "SELECT analyteCode FROM analyte WHERE barCode=#{barCode})",
+            "SELECT d.* FROM PCRData D inner join analyte A on A.analyteCode=D.analyteCode",
+            "WHERE A.barCode=#{barCode} ",
     "</script>"})
     List<PcrData> getPCRDataByBarCode(String barCode);
+
+    @Select("SELECT * FROM PCRData WHERE analyteCode=#{code}")
+    List<PcrData> getPCRDataByAnalyteCode(String code);
 
 }

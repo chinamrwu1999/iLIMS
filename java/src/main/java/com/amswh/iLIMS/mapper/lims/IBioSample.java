@@ -10,5 +10,5 @@ import com.amswh.iLIMS.domain.BioSample;
 
 public interface IBioSample extends BaseMapper<BioSample> {
 
-    public void query
+
 }
