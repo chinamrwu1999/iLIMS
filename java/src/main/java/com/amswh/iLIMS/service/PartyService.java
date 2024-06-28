@@ -256,7 +256,7 @@ public class PartyService extends ServiceImpl<IParty, Party> {
     /**
      *  根据联系方式获取Party信息
      */
-     public List<Map<String,Object>> getPersonInfo(String contact){
+     public Map<String,String> getPersonInfo(String contact){
 
          return baseMapper.getPersonInfByContact(contact);
      }

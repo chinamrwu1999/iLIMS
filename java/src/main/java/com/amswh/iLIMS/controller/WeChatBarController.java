@@ -159,15 +159,19 @@ public class WeChatBarController extends BaseController {
     @Transactional
     public AjaxResult querySampleStatus(@RequestHeader("openId")String openId ,@RequestBody Map<String,Object> inputMap) throws  Exception{
         String phone=null;
-        List<String> partyIds=null;
+        String partyId=null;
        if(inputMap!=null && ! inputMap.isEmpty() && inputMap.get("phone") !=null){
            phone=inputMap.get("phone").toString();
        }
        if(phone==null){ //根据openId获取手机号
-           List<Map<String,Object>> mp=partyService.getPersonInfo(openId);
-           partyIds=mp.stream().map(x -> x.get("partyId").toString()).toList();
+           Map<String,String> mp=partyService.getPersonInfo(openId);
+           if(mp!=null) {
+               partyId = mp.get("partyId");
+               phone=contactService.getPartyContact(partyId,"mobile");
+           }
        }
-       if(partyIds!=null && ! partyIds.isEmpty()){
+       if(phone!=null ){
+           List<String> partyIds=this.contactService.listPartiesWithSameContact(phone);
            List<Map<String,Object>> analytes=this.partyBarService.getBarStatus(partyIds);
            return AjaxResult.success(analytes);
         }else{

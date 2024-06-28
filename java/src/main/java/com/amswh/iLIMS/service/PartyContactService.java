@@ -18,4 +18,14 @@ public class PartyContactService extends ServiceImpl<IPartyContact, PartyContact
     public List<PartyContact> listContacts(String partyId){
         return this.baseMapper.listContacts(partyId);
     }
+
+
+    public String getPartyContact(String partyId,String contactType){
+          return this.baseMapper.getContact(partyId,contactType);
+    }
+
+
+    public List<String> listPartiesWithSameContact(String contact){
+         return this.baseMapper.listPartiesWithSameContact(contact);
+    }
 }

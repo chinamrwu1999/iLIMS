@@ -2,7 +2,6 @@ use database iLIMS ;
 
 CREATE TABLE IF NOT EXISTS User(
     `id` int unsigned not null AUTO_INCREMENT primary key,
-    `userId` varchar(30) not null,
     `partyId` varchar(10) ,
     `password` varchar(40) not null comment '登录密码:MD5加密保存的用户密码', 
     `createTime` timestamp not null default CURRENT_TIMESTAMP
@@ -15,3 +14,8 @@ CREATE TABLE IF NOT EXISTS UserLogin(
      `loginType` ENUM('LIS','wechat') comment '登录方式:LIS从LIS系统的web端登录,wechat从微信小程序登录',
      `checkoutTime` datetime comment '退出时间'
 ) comment '用户登录日志';
+
+
+CREATE TABLE IF NOT EXISTS `Role`(
+     `
+)

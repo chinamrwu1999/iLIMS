@@ -1,5 +1,6 @@
 package com.amswh.iLIMS.mapper.lims;
 
+import com.amswh.iLIMS.domain.User;
 import com.amswh.iLIMS.domain.UserLogin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Select;
@@ -28,7 +29,7 @@ public interface IUserLogin extends BaseMapper<UserLogin> {
     public Map<String,String> LoginLIS(String userId);
 
     /**
-     * 受检者用户登录：根据userId查找工号，userId可以是微信openId
+     * 受检者用户登录：userId可以是微信openId或手机号
      * @param userId
      */
 
@@ -42,6 +43,22 @@ public interface IUserLogin extends BaseMapper<UserLogin> {
     public Map<String,String> LoginByWechat(String userId);
 
 
+    @Select({"<script>",
+            "SELECT partyId deptId,fullName deptName FROM partyGroup PG ",
+            "LEFT JOIN PartyRelationship PR ON PG.partyId=PR.toId",
+            "WHERE PR.fromId=#{partyId} and PR.typeId='member'",
+            "</script>"})
+    public Map<String,String> getDepartment(String partyId);
+
+
+    /**
+     * 用户登录核验密码
+     * @param partyId
+     * @param password
+     * @return
+     */
+    @Select("SELECT partyId,password FROM User where partyId=#{partyId} AND password=md5(#{password})")
+    public Map<String,String>  matchPassword(String partyId, String password);
 
 
 
