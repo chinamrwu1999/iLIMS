@@ -1,0 +1,12 @@
+Spring Security Implementation
+一. LIS-1.0实现分析
+相关class，主要位于：com.auxhub.framework.security.service 包下
+SysLoginService类
+UserDetailsServiceImpl implements UserDetailsService 该类实现身份认证
+http url：
+1. https://oa.amswh.com/miniapp/login  登录
+2. https://oa.amswh.com/miniapp/getInfo
+3. https://oa.amswh.com/miniapp/getRouters
+
+
+

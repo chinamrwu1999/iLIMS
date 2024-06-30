@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS  `partyRelationship`(
     `id` int unsigned NOT NULL AUTO_INCREMENT primary key comment '自增主键',
     `fromId`   varchar(12)  NOT NULL  comment '关系甲方',
     `toId`     varchar(12)  NOT NULL comment '关系的乙方',
-    `relationType` varchar(10)  not null  comment '关系类型',
+    `typeId` varchar(10)  not null  comment '关系类型',
     `throughDate` date comment '关系的有效截至日期,null表示无期',
     `createTime` datetime not null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT 'party之间的关系';

@@ -23,53 +23,33 @@ public class UserService extends ServiceImpl<IUser, User> {
 
 
     /**
-     * 员工登录LIS系统
-     * @param userId： 工号或手机号
-     * @param password：密码
+     * 登录系统
+     * @param userId： 工号或手机号或openId
      * @return
      */
-    public UserLoginStatus Login(String userId, String password){
+    public UserLoginStatus queryLoginUser(String userId){
 
-        Map<String,String> mp=userloginMapper.LoginLIS(userId);
-        if(mp!=null && !mp.isEmpty()){ // 员工身份确认
-            String partyId=mp.get("partyId");
-            if(this.matchPassword(partyId,password)) {// 核验密码正确
-                 Map<String,String> deptMap=this.getDepartment(partyId);
-                 mp.putAll(deptMap);
-                 mp.put("userType","LIS");
-                 UserLoginStatus loginStatus=new UserLoginStatus();
-                 loginStatus.setCode(200);
-                 loginStatus.message="登录成功";
-                 loginStatus.setUserInfo(mp);
-                 return loginStatus;
-            }else{ // 核验密码错误
-                UserLoginStatus loginStatus=new UserLoginStatus();
-                loginStatus.setCode(400);
-                loginStatus.message="密码错误";
-                return loginStatus;
+        String partyId=null;
+        String password=null;
+        Map<String,String> mp=userloginMapper.queryPartyByContact(userId);
+        if(mp!=null && !mp.isEmpty()){
+             partyId=mp.get("partyId");
+             password=this.userloginMapper.getUserPassword(partyId);
+             UserLoginStatus loginStatus=new UserLoginStatus(partyId,password);
+
+            Map<String,String> deptMap=this.userloginMapper.getDepartment(partyId);
+            if(deptMap!=null) { //员工
+                mp.putAll(deptMap);
             }
-       }else{ //非员工身份登录（例如受检者）
-             Map<String,String>  partyMap= this.userloginMapper.LoginByWechat(userId);
-             if(partyMap!=null){
-                 Map<String,String> personInf= partyService.getPersonInfo(userId);
-
-             }
-        }
-
-
-
-        return null;
+           loginStatus.setUserInfo(mp);
+             return loginStatus;
+       }
+      return null;
     }
 
 
-    public Map<String,String> getDepartment(String partyId){
-          return this.userloginMapper.getDepartment(partyId);
-    }
 
-    public boolean matchPassword(String partyId,String password){
-          Map<String,String> user=this.userloginMapper.matchPassword(partyId,password);
-          return user!=null && user.get("partyId")!=null;
-    }
+
 
 
 }

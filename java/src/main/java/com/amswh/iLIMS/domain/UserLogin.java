@@ -16,7 +16,7 @@ public class UserLogin {
     @TableId(value = "id",type = IdType.AUTO)
     private int id;
 
-    @TableField("loginId")
+    @TableField("userId")
     public String  userId ;
 
     @TableField("loginType")

@@ -14,10 +14,6 @@ public class User {
 
     @TableId(value = "id",type = IdType.AUTO)
     private int id;
-
-    @TableField("userId")
-    public String  userId ;
-
     @TableField("partyId")
     public String  partyId ;
 
