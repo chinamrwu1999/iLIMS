@@ -1,6 +1,8 @@
 package com.amswh.framework;
 
 
+import io.jsonwebtoken.Claims;
+
 /**
  * 通用常量信息
  *
@@ -121,7 +123,7 @@ public class Constants
     /**
      * 用户名称
      */
-//    public static final String JWT_USERNAME = Claims.SUBJECT;
+    public static final String JWT_USERNAME = Claims.SUBJECT;
 
     /**
      * 用户头像
@@ -174,4 +176,3 @@ public class Constants
     public static final String[] JOB_ERROR_STR = { "java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
             "org.springframework.jndi" };
 }
-
