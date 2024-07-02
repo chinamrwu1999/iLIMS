@@ -1,13 +1,12 @@
 package com.amswh.iLIMS.service;
 
 import com.amswh.iLIMS.domain.User;
-import com.amswh.iLIMS.domain.UserLoginStatus;
+import com.amswh.framework.model.LoginUser;
 import com.amswh.iLIMS.mapper.lims.IUser;
 import com.amswh.iLIMS.mapper.lims.IUserLogin;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 
-import java.util.List;
 import java.util.Map;
 
 public class UserService extends ServiceImpl<IUser, User> {
@@ -27,7 +26,7 @@ public class UserService extends ServiceImpl<IUser, User> {
      * @param userId： 工号或手机号或openId
      * @return
      */
-    public UserLoginStatus queryLoginUser(String userId){
+    public LoginUser queryLoginUser(String userId){
 
         String partyId=null;
         String password=null;
@@ -35,7 +34,7 @@ public class UserService extends ServiceImpl<IUser, User> {
         if(mp!=null && !mp.isEmpty()){
              partyId=mp.get("partyId");
              password=this.userloginMapper.getUserPassword(partyId);
-             UserLoginStatus loginStatus=new UserLoginStatus(partyId,password);
+             LoginUser loginStatus=new LoginUser(partyId,password);
 
             Map<String,String> deptMap=this.userloginMapper.getDepartment(partyId);
             if(deptMap!=null) { //员工

@@ -35,10 +35,10 @@ public class SysPermissionService {
     /**
      * 获取菜单数据权限
      *
-     * @param user 用户信息
+     * @param partyId 用户信息
      * @return 菜单权限信息
      */
-    public Set<String> getMenuPermission(SysUser user)
+    public Set<String> getMenuPermission(String partyId)
     {
 //        Set<String> perms = new HashSet<String>();
 //         if (user.isAdmin())  {

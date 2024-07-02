@@ -1,6 +1,6 @@
 package com.amswh.framework.security;
 import com.amswh.framework.commons.ServiceException;
-import com.amswh.iLIMS.domain.UserLoginStatus;
+import com.amswh.framework.model.LoginUser;
 import com.amswh.iLIMS.service.UserService;
 import jakarta.annotation.Resource;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +17,7 @@ public class UserDetailServiceImpl implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserLoginStatus user=userService.queryLoginUser(username);
+        LoginUser user=userService.queryLoginUser(username);
         if(user==null){
             throw new ServiceException("用户登录: 用户 "+username+" 不存在");
         }
