@@ -19,7 +19,10 @@ import java.util.*;
 @Service
 public class PartnerService implements ApplicationContextAware {
     private List<String> orderedCodes;// 根据partner的重要程度排序，可以确定哪个服务先调用
-    Map<String,IPartner> parters=new HashMap<>(); // 用于存放各个Partner实现类
+    private Map<String,IPartner> parters=new HashMap<>(); // 用于存放各个Partner实现类
+
+    private Map<String,String> expressNo2PartnerMap=new HashMap<String,String>();//
+
     @Resource
     ConstantsService constantsService;
 
@@ -45,6 +48,16 @@ public class PartnerService implements ApplicationContextAware {
          }
     }
 
+    public PatientInfo fetPatientInfoWithExpressNo(String barCode,String expressNo){
+           String code=this.getPartnerCode(expressNo);
+           if(code !=null){
+               return this.fetchPatientInfo(code,barCode);
+           }else{
+
+           }
+
+    }
+
     public PatientInfo fetchPatientInfo(String partnerCode,String barCode){
         IPartner partner=this.parters.get(partnerCode);
         if(partner==null){
@@ -60,6 +73,10 @@ public class PartnerService implements ApplicationContextAware {
     }
 
     public PatientInfo fetchPatientInfo(String barCode){
+
+
+
+
 
          for(String partnerCode:orderedCodes){
              try {
@@ -100,6 +117,14 @@ public class PartnerService implements ApplicationContextAware {
             System.out.println((index++)+" >>>>>>>>>>>>>>>>>>       initializing partner service: " + value.whoAmI() + " with class: " + value.getClass().getName());
             parters.put(value.whoAmI(), value);
         }
+    }
+
+    public void putExpressNo(String expressNo,String partnerCode){
+        this.expressNo2PartnerMap.putIfAbsent(expressNo,partnerCode);
+    }
+
+    public String getPartnerCode(String expressNo){
+        return this.expressNo2PartnerMap.get(expressNo);
     }
 
 
