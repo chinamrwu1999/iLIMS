@@ -24,7 +24,6 @@ CREATE TABLE IF NOT EXISTS `SysRole`(
      `createTime` timestamp not null DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '系统角色';
 
-
 CREATE TABLE IF NOT EXISTS `UserRole`(
     `id` int unsigned not null AUTO_INCREMENT primary key,
     `partyId` varchar(10) not null,
@@ -41,6 +40,7 @@ CREATE TABLE IF NOT EXISTS `SysMenu`(
   `url` varchar(250) comment '菜单对应的连接URL',
   `type` ENUM('menu','directory','button') comment '菜单类别',
   `status` ENUM('on','off') comment '菜单启用on或停用off',
+  `visible` boolean default 1 comment '是否可见',
   `perms` varchar(150) CHARACTER SET latin1 comment '权限标志字符串',
   `icon` varchar(100) comment '菜单图标',
   `createTime` timestamp not null DEFAULT CURRENT_TIMESTAMP

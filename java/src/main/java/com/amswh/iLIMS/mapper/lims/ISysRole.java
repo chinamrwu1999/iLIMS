@@ -20,4 +20,6 @@ public interface ISysRole extends BaseMapper<SysRole> {
     "</script>"})
     public List<String> getRolesByPartyId(String partyId);
 
+
+
 }

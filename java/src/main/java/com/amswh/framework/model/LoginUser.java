@@ -23,9 +23,15 @@ public class LoginUser implements UserDetails
       private Map<String,String> userInfo;
 
 
-      public LoginUser(String partyId, String password){
+      public LoginUser(String partyId, String password,Set<String> permissions){
            this.username =partyId;
            this.password=password;
+           this.permissions=permissions;
+      }
+
+      public LoginUser(String partyId, String password){
+            this.username =partyId;
+            this.password=password;
       }
 
 

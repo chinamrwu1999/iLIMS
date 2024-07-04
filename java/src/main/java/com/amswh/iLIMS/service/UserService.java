@@ -30,18 +30,17 @@ public class UserService extends ServiceImpl<IUser, User> {
 
         String partyId=null;
         String password=null;
-        Map<String,String> mp=userloginMapper.queryPartyByContact(userId);
+        Map<String,String> mp=userloginMapper.queryPartyByContactOrEmployeeId(userId);
         if(mp!=null && !mp.isEmpty()){
              partyId=mp.get("partyId");
              password=this.userloginMapper.getUserPassword(partyId);
-             LoginUser loginStatus=new LoginUser(partyId,password);
-
-            Map<String,String> deptMap=this.userloginMapper.getDepartment(partyId);
-            if(deptMap!=null) { //员工
+             LoginUser loginUser=new LoginUser(partyId,password);
+             Map<String,String> deptMap=this.userloginMapper.getDepartment(partyId);
+             if(deptMap!=null) { //员工
                 mp.putAll(deptMap);
-            }
-           loginStatus.setUserInfo(mp);
-             return loginStatus;
+             }
+            loginUser.setUserInfo(mp);
+             return loginUser;
        }
       return null;
     }

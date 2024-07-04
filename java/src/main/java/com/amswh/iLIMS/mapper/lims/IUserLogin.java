@@ -30,7 +30,9 @@ public interface IUserLogin extends BaseMapper<UserLogin> {
      * 受检者用户登录：userId可以是微信openId或手机号
      * @param userId
      */
-
+    /*
+       如果输入联系方式，如手机号，可能存在多个party返回的情况
+     */
     @Select({"<script>",
             "SELECT distinct P.partyId,PS.name,P.externalId",
             "FROM  Party P",
@@ -38,7 +40,7 @@ public interface IUserLogin extends BaseMapper<UserLogin> {
             "INNER JOIN partyContact PC ON P.partyId=PC.partyId",
             "WHERE PC.contact=#{userId} OR P.externalId=#{userId} ",
             "</script>"})
-    public Map<String,String> queryPartyByContact(String userId);
+    public Map<String,String> queryPartyByContactOrEmployeeId(String userId);
 
 
 
