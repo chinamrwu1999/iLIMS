@@ -1,4 +1,4 @@
-package com.amswh.framework.model;
+package com.amswh.framework.system.model;
 
 
 import lombok.Data;

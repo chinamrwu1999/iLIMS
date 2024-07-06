@@ -1,7 +1,6 @@
 package com.amswh.framework.security;
-import com.amswh.framework.commons.ServiceException;
-import com.amswh.framework.model.LoginUser;
-import com.amswh.iLIMS.service.UserService;
+import com.amswh.framework.system.model.LoginUser;
+import com.amswh.framework.system.service.UserService;
 import jakarta.annotation.Resource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

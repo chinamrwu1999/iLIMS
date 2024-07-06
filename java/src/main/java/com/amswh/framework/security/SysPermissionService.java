@@ -1,9 +1,8 @@
 package com.amswh.framework.security;
 
-import com.amswh.iLIMS.service.SysMenuService;
-import com.amswh.iLIMS.service.SysRoleService;
+import com.amswh.framework.system.service.SysMenuService;
+import com.amswh.framework.system.service.SysRoleService;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;

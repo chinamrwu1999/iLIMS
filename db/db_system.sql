@@ -34,16 +34,20 @@ CREATE TABLE IF NOT EXISTS `UserRole`(
 
 CREATE TABLE IF NOT EXISTS `SysMenu`(
   `id` int unsigned not null AUTO_INCREMENT primary key,
-  `name` varchar(30)  not null comment '菜单名称',
+  `menuName` varchar(30)  not null comment '菜单名称',
   `parentId` int unsigned default 0 comment '父菜单id',
   `orderIndex` smallint unsigned default 0 comment '显示顺序',
-  `url` varchar(250) comment '菜单对应的连接URL',
-  `type` ENUM('menu','directory','button') comment '菜单类别',
+  `path` varchar(250) comment '菜单对应的连接URL',
+  `component` varchar(250) comment '组件路径',
+  `query` varchar(250) comment '路由参数',
+  `isFrame` boolean default 0 comment '是否为外链',
+  `menuType` ENUM('menu','directory','button') comment '菜单类别',
   `status` ENUM('on','off') comment '菜单启用on或停用off',
-  `visible` boolean default 1 comment '是否可见',
+  `visible` boolean default 1 comment '是否可见,1可见0不可见',
   `perms` varchar(150) CHARACTER SET latin1 comment '权限标志字符串',
   `icon` varchar(100) comment '菜单图标',
-  `createTime` timestamp not null DEFAULT CURRENT_TIMESTAMP
+  `cached` boolean default 1 comment '是否缓存',
+  `createTime` DATETIME not null DEFAULT now()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '系统菜单';
 
 CREATE TABLE IF NOT EXISTS `SysRoleMenu`(

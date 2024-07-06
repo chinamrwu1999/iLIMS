@@ -1,6 +1,6 @@
-package com.amswh.iLIMS.mapper.lims;
+package com.amswh.framework.system.mapper;
 
-import com.amswh.iLIMS.domain.SysMenu;
+import com.amswh.framework.system.model.SysMenu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -21,8 +21,8 @@ public interface ISysMenu extends BaseMapper<SysMenu> {
     public List<String> getPartyMenuPermissions(String partyId);
 
     @Select({"<script>",
-        "SELECT id,name,parentId,orderIndex,URL,`type`,",
-        "visible,status,perms,icon,createTime",
+        "SELECT id,menuName,parentId,orderIndex,path,component,query,isFrame,menuType,",
+        "visible,status,perms,icon,cached,createTime",
         "FROM SysMenu M",
         "<if test='name!=null'>",
         "AND name like concat('%',#{name},'%')",
@@ -39,8 +39,8 @@ public interface ISysMenu extends BaseMapper<SysMenu> {
 
 
     @Select({"<script>",
-            "SELECT id,name,parentId,orderIndex,URL,`type`,",
-            "visible,status,perms,icon,createTime,orderIndex",
+            "SELECT id,menuName,parentId,orderIndex,path,component,query,menuType,",
+            "visible,status,perms,icon,cached,createTime,orderIndex",
             "FROM SysMenu M",
             "LEFT JOIN SysRoleMenu RM ON M.id=RM.menuId",
             "LEFT JOIN UserRole UR ON RM.roleId=UR.roleId",
@@ -60,16 +60,16 @@ public interface ISysMenu extends BaseMapper<SysMenu> {
     public List<SysMenu> selectMenuListByUserId(Map<String,Object> inputMap);
 
     @Select({"<script>",
-            "select distinct m.id, m.parentId, m.name, m.URL, m.visible, ",
-            "m.status, perms,  m.type, m.icon, m.orderIndex, m.createTime ",
+            "select distinct m.id, m.parentId, m.menuName, m.path,m.component,m.query,m.isFrame," +
+            "cached, m.visible, m.status, perms,  m.type, m.icon, m.orderIndex, m.createTime ",
             "FROM  SysMenu m where m.type in ('menu', 'directory') and m.status = 'on' " ,
             "order by m.parentId, m.orderIndex",
     "</script>"})
     public List<SysMenu> selectMenuTreeAll();
 
     @Select({"<script>",
-            "select distinct m.id, m.parentId, m.name, m.URL, m.visible, ",
-            "m.status, perms,  m.type, m.icon, m.orderIndex, m.createTime ",
+            "select distinct m.id, m.parentId,m.menuName, m.path,m.component,m.query,m.isFrame, m.visible, ",
+            "m.status, perms,  m.type, m.icon, m.orderIndex, cached, m.createTime ",
             "FROM  SysMenu m where m.type in ('menu', 'directory') and m.status = 'on' " ,
             "LEFT JOIN SysRoleMenu RM ON M.id=RM.menuId",
             "LEFT JOIN UserRole UR ON RM.roleId=UR.roleId",
@@ -89,5 +89,16 @@ public interface ISysMenu extends BaseMapper<SysMenu> {
      "</script>"})
     public List<Integer> selectMenuListByRoleId(long roleId);
 
+
+    @Select("SELECT count(*) ct FROM SysMenu where id=#{menuId}")
+    public int hasChildByMenuId(long menuId);
+
+    @Select("select * FROM sysMenun" +
+            "where menuName=#{menuName} and parentId= #{parentId} limit 1")
+    public SysMenu checkMenuNameUnique(String menuName,Long parentId);
+
+
+    @Select("SELECT count(1) from sys_role_menu where menu_id = #{menuId}")
+    public int checkMenuExistRole(Long menuId);
 
 }

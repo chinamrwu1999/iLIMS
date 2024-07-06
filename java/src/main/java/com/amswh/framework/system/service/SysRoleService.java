@@ -1,7 +1,7 @@
-package com.amswh.iLIMS.service;
+package com.amswh.framework.system.service;
 
-import com.amswh.iLIMS.domain.SysRole;
-import com.amswh.iLIMS.mapper.lims.ISysRole;
+import com.amswh.framework.system.model.SysRole;
+import com.amswh.framework.system.mapper.ISysRole;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 

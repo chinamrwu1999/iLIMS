@@ -1,11 +1,11 @@
 package com.amswh.framework.security;
 
 
-import com.amswh.framework.Constants;
+import com.amswh.framework.system.model.Constants;
 import com.amswh.framework.commons.service.RedisCache;
 import com.amswh.framework.utils.IdUtils;
 import com.amswh.framework.utils.StringUtils;
-import com.amswh.framework.model.LoginUser;
+import com.amswh.framework.system.model.LoginUser;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

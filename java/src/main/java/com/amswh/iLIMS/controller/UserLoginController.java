@@ -3,7 +3,7 @@ package com.amswh.iLIMS.controller;
 
 import com.amswh.framework.model.AjaxResult;
 import com.amswh.framework.utils.SecurityUtils;
-import com.amswh.framework.model.LoginUser;
+import com.amswh.framework.system.model.LoginUser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

@@ -1,4 +1,4 @@
-package com.amswh.iLIMS.domain;
+package com.amswh.framework.system.model;
 
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -18,24 +18,33 @@ import java.util.List;
 public class SysMenu {
 
     @TableId(value = "id", type = IdType.AUTO)
-    private int id;
+    private Long id;
 
     @TableField("parentId")
-    private int parentId;
+    private Long parentId;
 
     @TableField("orderIndex")
     private int orderIndex;
 
 
-    @TableField("name")
-    private String name; //menuName
+    @TableField("menuName")
+    private String menuName; //menuName
 
 
-    @TableField("url")
-    private String URL;
+    @TableField("path")
+    private String Path;
+
+    @TableField("component")
+    private String component;
+
+    @TableField("query")
+    private String query;
 
     @TableField("status")
     private boolean status;
+
+    @TableField("isFrame")
+    private boolean frame;
 
     @TableField("visible")
     private boolean visible;
@@ -47,8 +56,11 @@ public class SysMenu {
     @TableField("icon")
     private String icon;
 
-    @TableField("type")
-    private String type;
+    @TableField("menuType")
+    private String menuType;
+
+    @TableField("cached")
+    private boolean cached;
 
     @TableField("createTime")
     private LocalDateTime createTime;
@@ -59,14 +71,14 @@ public class SysMenu {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("menuId", id)
-                .append("menuName", name)
+                .append("menuName", menuName)
                 .append("parentId",parentId)
                 .append("orderIndex", this.orderIndex)
-                .append("path", this.URL)
-               // .append("component", )
-               // .append("isFrame", getIsFrame())
-               // .append("IsCache", getIsCache())
-                .append("menuType", this.type)
+                .append("path", this.Path)
+                .append("component", component)
+                .append("isFrame", frame)
+                .append("IsCache", cached)
+                .append("menuType", this.menuType)
                 .append("visible", this.visible)
                 .append("status ", this.status)
                 .append("perms", getPerms())
