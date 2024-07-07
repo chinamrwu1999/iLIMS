@@ -1,12 +1,10 @@
-package com.amswh.iLIMS.mapper.lims;
+package com.amswh.framework.system.mapper;
 
-import com.amswh.iLIMS.domain.SysMenu;
-import com.amswh.iLIMS.domain.SysRole;
+import com.amswh.framework.system.model.SysRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ISysRole extends BaseMapper<SysRole> {
 
@@ -19,5 +17,7 @@ public interface ISysRole extends BaseMapper<SysRole> {
     "AND UR.throughDate IS NULL AND SR.status=1 ",
     "</script>"})
     public List<String> getRolesByPartyId(String partyId);
+
+
 
 }

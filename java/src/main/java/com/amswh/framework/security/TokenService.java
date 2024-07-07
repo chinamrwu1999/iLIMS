@@ -1,13 +1,13 @@
 package com.amswh.framework.security;
 
 
-import com.amswh.framework.Constants;
+import com.amswh.framework.system.model.Constants;
 import com.amswh.framework.commons.service.RedisCache;
+import com.amswh.framework.utils.IdUtils;
 import com.amswh.framework.utils.StringUtils;
-import com.amswh.iLIMS.domain.UserLoginStatus;
+import com.amswh.framework.system.model.LoginUser;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -51,7 +51,7 @@ public class TokenService
      *
      * @return 用户信息
      */
-    public UserLoginStatus getLoginUser(HttpServletRequest request)
+    public LoginUser getLoginUser(HttpServletRequest request)
     {
         // 获取请求携带的令牌
         String token = getToken(request);
@@ -63,7 +63,7 @@ public class TokenService
                 // 解析对应的权限以及用户信息
                 String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
                 String userKey = getTokenKey(uuid);
-                UserLoginStatus user = redisCache.getCacheObject(userKey);
+                LoginUser user = redisCache.getCacheObject(userKey);
                 return user;
             }
             catch (Exception e)
@@ -76,9 +76,9 @@ public class TokenService
     /**
      * 设置用户身份信息
      */
-    public void setLoginUser(UserLoginStatus loginUser)
+    public void setLoginUser(LoginUser loginUser)
     {
-        if (StringUtils.isNotNull(UserLoginStatus) && StringUtils.isNotEmpty(loginUser.getToken()))
+        if (StringUtils.isNotNull(loginUser) && StringUtils.isNotEmpty(loginUser.getToken()))
         {
             refreshToken(loginUser);
         }
@@ -106,7 +106,7 @@ public class TokenService
     {
         String token = IdUtils.fastUUID();
         loginUser.setToken(token);
-        setUserAgent(loginUser);
+
         refreshToken(loginUser);
 
         Map<String, Object> claims = new HashMap<>();
@@ -117,7 +117,7 @@ public class TokenService
     /**
      * 验证令牌有效期，相差不足20分钟，自动刷新缓存
      *
-     * @param token 令牌
+
      * @return 令牌
      */
     public void verifyToken(LoginUser loginUser)
@@ -135,7 +135,7 @@ public class TokenService
      *
      * @param loginUser 登录信息
      */
-    public void refreshToken(UserLoginStatus loginUser)
+    public void refreshToken(LoginUser loginUser)
     {
         loginUser.setLoginTime(System.currentTimeMillis());
         loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
@@ -144,20 +144,7 @@ public class TokenService
         redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
 
-    /**
-     * 设置用户代理信息
-     *
-     * @param loginUser 登录信息
-     */
-    public void setUserAgent(LoginUser loginUser)
-    {
-        UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
-        String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
-        loginUser.setIpaddr(ip);
-        loginUser.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
-        loginUser.setBrowser(userAgent.getBrowser().getName());
-        loginUser.setOs(userAgent.getOperatingSystem().getName());
-    }
+
 
     /**
      * 从数据声明生成令牌
@@ -170,7 +157,7 @@ public class TokenService
         String token = Jwts.builder()
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
-        return token;
+         return token;
     }
 
     /**

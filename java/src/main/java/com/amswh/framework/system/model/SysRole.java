@@ -1,4 +1,4 @@
-package com.amswh.iLIMS.domain;
+package com.amswh.framework.system.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

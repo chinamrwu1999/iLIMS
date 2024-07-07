@@ -1,4 +1,4 @@
-package com.amswh.framework;
+package com.amswh.framework.system.model;
 
 
 import io.jsonwebtoken.Claims;
