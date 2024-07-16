@@ -1,5 +1,5 @@
-package com.amswh.framework.security;
-import com.amswh.framework.system.model.LoginUser;
+package com.amswh.framework.security.service;
+import com.amswh.framework.security.model.LoginUser;
 import com.amswh.framework.system.service.UserService;
 import jakarta.annotation.Resource;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +11,7 @@ import java.util.Set;
 public class UserDetailServiceImpl implements UserDetailsService{
 
     @Resource
-    UserService userService;
+    SysUserService userService;
 
     @Resource
     SysPermissionService permissionService;

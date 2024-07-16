@@ -3,7 +3,6 @@ package com.amswh.framework.utils;
 
 import com.amswh.framework.commons.HttpStatus;
 import com.amswh.framework.commons.ServiceException;
-import com.amswh.framework.system.model.LoginUser;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
