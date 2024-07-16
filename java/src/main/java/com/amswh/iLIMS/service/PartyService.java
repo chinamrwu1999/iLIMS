@@ -233,6 +233,12 @@ public class PartyService extends ServiceImpl<IParty, Party> {
         return  persons;
     }
 
+    /**
+     *  添加受检者信息
+     * @param patient
+     * @return
+     */
+
     public Person savePatient(PatientInfo patient){
         if(patient==null || patient.getName()==null) return null;
         Map<String,Object> mp=new HashMap<>();

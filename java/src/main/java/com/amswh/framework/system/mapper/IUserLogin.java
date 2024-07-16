@@ -1,12 +1,13 @@
 package com.amswh.framework.system.mapper;
 
-import com.amswh.framework.system.model.UserLogin;
+import com.amswh.framework.system.model.LoginLog;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.Map;
 
-public interface IUserLogin extends BaseMapper<UserLogin> {
+public interface IUserLogin extends BaseMapper<LoginLog> {
 
 
     /**

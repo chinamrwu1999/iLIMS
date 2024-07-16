@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Data
 @TableName("UserLogin")
-public class UserLogin {
+public class LoginLog {
 
     @TableId(value = "id",type = IdType.AUTO)
     private int id;

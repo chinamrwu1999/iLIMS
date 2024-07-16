@@ -1,4 +1,4 @@
-package com.amswh.framework.security;
+package com.amswh.framework.security.service;
 
 import com.amswh.framework.system.service.SysMenuService;
 import com.amswh.framework.system.service.SysRoleService;
