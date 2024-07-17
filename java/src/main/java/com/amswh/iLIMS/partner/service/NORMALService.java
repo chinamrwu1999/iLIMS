@@ -1,14 +1,13 @@
 package com.amswh.iLIMS.partner.service;
 
-import com.amswh.iLIMS.domain.BarExpress;
-import com.amswh.iLIMS.domain.Product;
+import com.amswh.iLIMS.project.domain.Product;
 import com.amswh.iLIMS.oa.OAQueryService;
 import com.amswh.iLIMS.partner.IPartner;
 import com.amswh.iLIMS.partner.PatientInfo;
-import com.amswh.iLIMS.service.BarExpressService;
-import com.amswh.iLIMS.service.BarService;
-import com.amswh.iLIMS.service.OrderService;
-import com.amswh.iLIMS.service.PartyService;
+import com.amswh.iLIMS.project.service.BarExpressService;
+import com.amswh.iLIMS.project.service.BarService;
+import com.amswh.iLIMS.project.service.OrderService;
+import com.amswh.iLIMS.project.service.PartyService;
 import com.amswh.iLIMS.utils.MapUtil;
 import jakarta.annotation.Resource;
 

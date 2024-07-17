@@ -1,7 +1,7 @@
 package com.amswh.iLIMS.oa;
 
 
-import com.amswh.iLIMS.mapper.oa.OAMapper;
+import com.amswh.iLIMS.project.mapper.oa.OAMapper;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 

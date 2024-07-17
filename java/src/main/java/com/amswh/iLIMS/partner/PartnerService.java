@@ -1,9 +1,9 @@
 package com.amswh.iLIMS.partner;
 
 
-import com.amswh.iLIMS.domain.PartyGroup;
-import com.amswh.iLIMS.service.ConstantsService;
-import com.amswh.iLIMS.service.PartygroupService;
+import com.amswh.iLIMS.project.domain.PartyGroup;
+import com.amswh.iLIMS.project.service.ConstantsService;
+import com.amswh.iLIMS.project.service.PartygroupService;
 import com.amswh.iLIMS.utils.MyStringUtils;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
@@ -53,7 +53,7 @@ public class PartnerService implements ApplicationContextAware {
            }else{
 
            }
-
+           return  null;
     }
 
     public PatientInfo fetchPatientInfo(String partnerCode,String barCode){

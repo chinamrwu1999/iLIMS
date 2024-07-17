@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 
 
 @Configuration
-@MapperScan(basePackages = {"com.amswh.iLIMS.mapper.oa"}, sqlSessionFactoryRef = "OASqlSessionFactory")
+@MapperScan(basePackages = {"com.amswh.iLIMS.project.mapper.oa"}, sqlSessionFactoryRef = "OASqlSessionFactory")
 public class OADataSourceConfig {
 
 

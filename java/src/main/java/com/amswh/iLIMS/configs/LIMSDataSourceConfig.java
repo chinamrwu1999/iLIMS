@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 
 @EnableTransactionManagement
 @Configuration
-@MapperScan(basePackages = {"com.amswh.iLIMS.mapper.lims"}, sqlSessionFactoryRef = "limsSqlSessionFactory")
+@MapperScan(basePackages = {"com.amswh.iLIMS.project.mapper.lims,com.amswh.iLIMS.framework.security.mapper"}, sqlSessionFactoryRef = "limsSqlSessionFactory")
 public class LIMSDataSourceConfig {
     @Bean(name = "limsDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.lims")
