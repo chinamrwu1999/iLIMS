@@ -39,16 +39,6 @@ public  class TestController {
    }
 
    private  List<SysMenu> menuTreeTest(){
-//      List<SysMenu> menus = menuService.getUserMenu(1L);
-//      menus.forEach( x -> System.out.println(x.getMenuId()+":"+x.getName()));
-//      List<SysMenu> topMenu=menus.stream().filter(x -> x.getMenuId()==0).toList();
-//      for(SysMenu menu:topMenu){
-//          System.out.println(menu.getMenuId()+"->"+menu.getName());
-//          if(menu.getChildren()!=null){
-//              menu.getChildren().stream().forEach(x -> x.);
-//          }
-//      }
-
        return menuService.getUserMenu(1L);
       // return null;
    }

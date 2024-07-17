@@ -6,30 +6,55 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class SysMenuService extends ServiceImpl<SysMenuMapper, SysMenu> {
 
 
        public List<SysMenu> getUserMenu(long userId){
-             List<SysMenu> menus= this.baseMapper.getUserMenus(userId);
-             List<SysMenu> topMenus = new ArrayList<>(menus.stream().filter(x -> x.getParentId() == 0).toList());
-             for(SysMenu menu:topMenus){
-                 findChildren(menus,menu);
-             }
-
-             return menus;
+              List<SysMenu> menuList= this.baseMapper.getUserMenus(userId);
+             return buildMenuTree(menuList);
        }
 
+    private  List<SysMenu> findRootMenus(List<SysMenu> menuList) {
+        List<SysMenu> rootMenus = new ArrayList<>();
+        Set<Integer> allMenuIds = new HashSet<>();
+        for (SysMenu menu : menuList) {
+            allMenuIds.add(menu.getMenuId());
+        }
 
-       private void findChildren(List<SysMenu> menusList, SysMenu menu ){
-            if(menu==null) return ;
-            List<SysMenu> children=menusList.stream().filter(x -> x.getParentId().equals(menu.getMenuId())).toList();
-            for(SysMenu m:children) {
-                findChildren(children, m);
+        for (SysMenu menu : menuList) {
+            if (!allMenuIds.contains(menu.getParentId())) {
+                rootMenus.add(menu);
             }
-            menu.setChildren(children);
-       }
+        }
+
+        return rootMenus;
+    }
+    private  void buildMenuTree(List<SysMenu> menuList, SysMenu parentMenu) {
+        for (SysMenu menu : menuList) {
+            if (menu.getParentId() == parentMenu.getMenuId()) {
+                if (parentMenu.getChildren() == null) {
+                    parentMenu.setChildren(new ArrayList<>());
+                }
+                parentMenu.getChildren().add(menu);
+                buildMenuTree(menuList, menu);
+            }
+        }
+    }
+    private  List<SysMenu> buildMenuTree(List<SysMenu> menuList) {
+        List<SysMenu> rootMenus = findRootMenus(menuList);
+        for (SysMenu rootMenu : rootMenus) {
+            buildMenuTree(menuList, rootMenu);
+        }
+        return rootMenus;
+    }
+
+    public List<String> getUserPrivileges(long userId){
+           return  this.baseMapper.getUserPrivileges(userId);
+    }
 
 }

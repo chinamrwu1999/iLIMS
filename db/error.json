@@ -1,81 +1,108 @@
 {
-  "data": {
-    "hospital": "云鹊医",
-    "hospitalId": 475838,
-    "detectName": "艾米森12癌联检（男9项，女12项）【2管/份】",
-    "productNo": "LDT13",
-    "name": "陈美兰",
-    "mobile": "13709345835",
-    "idNo": "350623195609244823",
-    "gender": 2,
-    "birthDay": "1956-09-24",
-    "age": 67,
-    "sampleCode": "10791014221",
-    "sampleTime": "2024-05-17 16:50:51"
-  },
-  "code": "000000",
-  "message": "成功",
-  "requestId": ""
-}
-{
-  "message": "未匹配到人员信息",
-  "result": null,
-  "resultCode": 0
-}
-
-{
-  "message": "success",
-  "result": {
-    "age": 50,
-    "birthday": "1974-01-19",
-    "education": "",
-    "genderCode": "女",
-    "homeAddress": "some place in a city",
-    "idCardNum": "51102********",
-    "maritalStatus": "married",
-    "name": "Li ZheKai",
-    "nation": null,
-    "num": "20240428042",
-    "projectCode": "AD06",
-    "tel": "1311800"
-  },
-  "resultCode": 1
-}
-
-
-{
-  "code": "SUCCESS",
-  "msg": null,
+  "msg": "操作成功",
+  "code": 200,
   "data": [
-    {
-      "agent": "美年青白江分院(10577)",
-      "birthdate": "1969-12-13",
-      "order_serial": null,
-      "gender": "男",
-      "mega_num": null,
-      "pdf_time": "2023-12-07 13:38:51",
-      "sample_type": "外周血",
-      "operator": "",
-      "is_need_examine": "1",
-      "emp_no": null,
-      "delivery_method": null,
-      "barcode": "BP231129000112",
-      "unique_flag": "03b0d2e2915f98e3",
-      "over_time": 0,
-      "com_name": "艾米森",
-      "package": "第二代结直肠癌无创早期筛查(简装电子版)",
-      "date_sampling": "2023-11-29",
-      "dept_name": null,
-      "is_in_database": "1",
-      "sales_man": null,
-      "agent_num": "10577",
-      "phone": "13688312887",
-      "intercept": "1",
-      "save_time": "2023-12-06 08:36:54",
-      "descript": null,
-      "workplace": "（年度）成都市青白江区审计局",
-      "username": "李俊祥",
-      "package_num": "CCF001E"
-    }
+      {
+          "menuId": 1,
+          "name": "receiveSample",
+          "label": "样本接收",
+          "parentId": 0,
+          "createTime": "2024-07-17T19:56:39",
+          "children": [
+              {
+                  "menuId": 5,
+                  "name": "receiveSample",
+                  "label": "分拣",
+                  "parentId": 1,
+                  "createTime": "2024-07-17T19:56:41",
+                  "children": null,
+                  "url": "/sample/sorting"
+              },
+              {
+                  "menuId": 6,
+                  "name": "testSample",
+                  "label": "收样",
+                  "parentId": 1,
+                  "createTime": "2024-07-17T19:56:41",
+                  "children": null,
+                  "url": "/sample/receive"
+              },
+              {
+                  "menuId": 7,
+                  "name": "testSample",
+                  "label": "异常样本",
+                  "parentId": 1,
+                  "createTime": "2024-07-17T19:56:41",
+                  "children": null,
+                  "url": null
+              }
+          ],
+          "url": null
+      },
+      {
+          "menuId": 2,
+          "name": "testSample",
+          "label": "样本检测",
+          "parentId": 0,
+          "createTime": "2024-07-17T19:56:39",
+          "children": [
+              {
+                  "menuId": 8,
+                  "name": "reportReview",
+                  "label": "实验安排",
+                  "parentId": 2,
+                  "createTime": "2024-07-17T19:56:41",
+                  "children": null,
+                  "url": null
+              },
+              {
+                  "menuId": 9,
+                  "name": "dataReview",
+                  "label": "检测数据",
+                  "parentId": 2,
+                  "createTime": "2024-07-17T19:56:41",
+                  "children": [
+                      {
+                          "menuId": 10,
+                          "name": "reportReview",
+                          "label": "数据审核",
+                          "parentId": 9,
+                          "createTime": "2024-07-17T21:51:15",
+                          "children": null,
+                          "url": null
+                      },
+                      {
+                          "menuId": 11,
+                          "name": "dataReview",
+                          "label": "数据看看",
+                          "parentId": 9,
+                          "createTime": "2024-07-17T21:51:15",
+                          "children": null,
+                          "url": null
+                      }
+                  ],
+                  "url": null
+              }
+          ],
+          "url": null
+      },
+      {
+          "menuId": 3,
+          "name": "reportReview",
+          "label": "数据审核",
+          "parentId": 0,
+          "createTime": "2024-07-17T19:56:39",
+          "children": null,
+          "url": null
+      },
+      {
+          "menuId": 4,
+          "name": "dataReview",
+          "label": "检测报告",
+          "parentId": 0,
+          "createTime": "2024-07-17T19:56:39",
+          "children": null,
+          "url": null
+      }
   ]
 }

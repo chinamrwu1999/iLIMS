@@ -13,17 +13,21 @@ import java.util.List;
 @TableName("SysMenu")
 public class SysMenu {
     @TableId(value = "roleId",type= IdType.AUTO)
-    private  Long menuId;
+    private  Integer menuId;
     @TableField("name")
     private  String name;
     @TableField("label")
     private String label;
     @TableField("parentId")
-    private Long parentId;
+    private Integer parentId;
 
     @TableField("createTime")
     private LocalDateTime createTime;
+
     @TableField(exist = false)
     private List<SysMenu> children;
+
+    @TableField(exist = false)
+    private String url;
 
 }
