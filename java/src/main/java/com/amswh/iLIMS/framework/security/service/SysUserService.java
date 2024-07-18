@@ -1,6 +1,8 @@
 package com.amswh.iLIMS.framework.security.service;
 
 
+import com.amswh.iLIMS.framework.model.AjaxResult;
+import com.amswh.iLIMS.framework.security.SecurityUtils;
 import com.amswh.iLIMS.framework.security.mapper.SysUserMapper;
 import com.amswh.iLIMS.framework.security.model.LoginUser;
 import com.amswh.iLIMS.framework.security.model.SysComponent;
@@ -53,6 +55,45 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> implemen
             System.out.println("not found permissions");
             return null;
         }
+    }
+
+    /**
+     * 创建新用户
+     * @param userName
+     * @param password
+     * @return
+     */
+    public SysUser createUser(String userName,String password){
+
+        SysUser sysUser=new SysUser();
+        sysUser.setUsername(userName);
+        sysUser.setPassword(SecurityUtils.encryptPassword(password));
+        this.save(sysUser);
+        return sysUser;
+    }
+
+
+    /**
+     * 改变用户账号的激活或失活状态
+     * @param userId
+     * @param status
+     * @return
+     */
+    public boolean changeUserStatus(Integer userId,String status){
+        SysUser sysUser=this.getById(userId);
+        sysUser.setStatus(status);
+       return   this.save(sysUser);
+    }
+
+    public AjaxResult changePassword(Integer userId, String oldPwd, String newPwd){
+         SysUser sysUser=this.getById(userId);
+         if(sysUser==null) return AjaxResult.error("未找到该ID对应的用户账号！");
+         if(!SecurityUtils.matchesPassword(oldPwd, sysUser.getPassword())){
+             return AjaxResult.error("旧密码错误！");
+         }
+         sysUser.setPassword(SecurityUtils.encryptPassword(newPwd));
+         this.save(sysUser);
+         return  AjaxResult.success("密码修改成功！");
     }
 
 }

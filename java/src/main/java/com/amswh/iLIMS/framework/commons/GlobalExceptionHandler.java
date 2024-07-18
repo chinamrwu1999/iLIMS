@@ -32,6 +32,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public AjaxResult handleException(Exception e, HttpServletRequest request)
     {
+        e.printStackTrace();
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}',发生系统异常:{}", requestURI, e.getMessage());
         return AjaxResult.error(e.getMessage());
@@ -40,18 +41,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ServiceException.class)
     public AjaxResult handleServiceException(ServiceException e, HttpServletRequest request)
     {
-         return AjaxResult.error(e.getMessage());
+         e.printStackTrace();
+        return AjaxResult.error(e.getMessage());
     }
 
     @ExceptionHandler(IllegalAccessException.class)
     public AjaxResult handleIllegalAccessException(IllegalAccessException e, HttpServletRequest request)
     {
+
+        e.printStackTrace();
         return AjaxResult.error("非法访问错误:"+e.getMessage());
     }
 
     @ExceptionHandler(InstantiationException.class)
     public AjaxResult handleInstantiationException(InstantiationException e, HttpServletRequest request)
     {
+        e.printStackTrace();
         return AjaxResult.error("实例化对象错误："+e.getMessage());
     }
 

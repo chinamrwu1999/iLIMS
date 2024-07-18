@@ -28,7 +28,7 @@ public  class TestController {
     @Transactional(transactionManager="limsTransactionManager")
     public AjaxResult TestMe(){
     try {
-
+        System.out.println("calling test hello........");
         return AjaxResult.success(menuTreeTest());
 
 
@@ -39,7 +39,7 @@ public  class TestController {
    }
 
    private  List<SysMenu> menuTreeTest(){
-       return menuService.getUserMenu(1L);
+       return menuService.getUserMenu(1);
       // return null;
    }
 }

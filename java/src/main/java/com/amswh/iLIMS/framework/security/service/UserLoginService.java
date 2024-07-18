@@ -16,6 +16,9 @@ public class UserLoginService {
     SysUserService userService;
 
     @Resource
+    TokenService tokenService;
+
+    @Resource
     private AuthenticationManager authenticationManager;
 
     public String login(String username, String password){
@@ -28,6 +31,8 @@ public class UserLoginService {
             System.out.println(" kkkk login authenticating success........");
             LoginUser user= (LoginUser)authentication.getPrincipal();
             System.out.println("authenticated user:"+user.getUsername());
+            String token=tokenService.createToken(user);
+            System.out.println("token:"+token);
             return user.getUsername();
         }
 

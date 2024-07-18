@@ -24,6 +24,10 @@ public class SysUser {
     @TableField("password")
     private String password;
 
+
+    @TableField("status")
+    private String status;
+
     @TableField("createTime")
     private LocalDateTime createTime;
 

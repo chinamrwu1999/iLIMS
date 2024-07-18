@@ -5,17 +5,15 @@ import com.amswh.iLIMS.framework.security.model.SysMenu;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class SysMenuService extends ServiceImpl<SysMenuMapper, SysMenu> {
 
 
-       public List<SysMenu> getUserMenu(long userId){
+       public List<SysMenu> getUserMenu(Integer userId){
               List<SysMenu> menuList= this.baseMapper.getUserMenus(userId);
+           menuList.sort(Comparator.comparingInt(SysMenu::getParentId));
              return buildMenuTree(menuList);
        }
 
@@ -53,7 +51,7 @@ public class SysMenuService extends ServiceImpl<SysMenuMapper, SysMenu> {
         return rootMenus;
     }
 
-    public List<String> getUserPrivileges(long userId){
+    public List<String> getUserPrivileges(Integer userId){
            return  this.baseMapper.getUserPrivileges(userId);
     }
 
