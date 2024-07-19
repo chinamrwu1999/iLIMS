@@ -1,5 +1,6 @@
 package com.amswh.iLIMS.framework.security;
 
+import com.amswh.iLIMS.framework.security.service.JWTAuthenticationFilter;
 import com.amswh.iLIMS.framework.security.service.SysUserService;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -23,13 +25,19 @@ public class SecurityConfig {
 
     @Resource
     SysUserService userService;
+
+    @Resource
+    JWTAuthenticationFilter tokenService;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults())
+                .addFilterBefore(tokenService, UsernamePasswordAuthenticationFilter.class)
         .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/login","/test/**").permitAll()
                         .requestMatchers("/**").hasRole("admin")
                         .anyRequest().authenticated()
+
+
                 );
 
         return http.build();

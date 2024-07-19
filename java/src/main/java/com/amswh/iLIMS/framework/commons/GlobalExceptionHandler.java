@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
     {
 
         e.printStackTrace();
-        return AjaxResult.error("非法访问错误:"+e.getMessage());
+        return AjaxResult.error("非法访问:"+e.getMessage());
     }
 
     @ExceptionHandler(InstantiationException.class)

@@ -155,5 +155,17 @@ public class RSAUtils {
 
         return plainData;
     }
+
+    public static void test(){
+        try {
+            KeyPair pair=generateKeyPair();
+            saveKeyForEncodedBase64(pair.getPrivate(),new File("E:/private_key.txt"));
+            saveKeyForEncodedBase64(pair.getPublic(),new File("E:/public_key.txt"));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
 

@@ -42,8 +42,9 @@ public class PartnerService implements ApplicationContextAware {
                 }
          }
          for(String code:orderedCodes){
-             System.out.println(" >>>>>>>>>>>>>> "+ code+" is ready for service");
+             System.out.println(" \t\t\t\t>>>>>>>>>>>>>> "+ code+" is ready for service");
          }
+         System.out.println("\n\n");
     }
 
     public PatientInfo fetPatientInfoWithExpressNo(String barCode,String expressNo){
@@ -78,7 +79,7 @@ public class PartnerService implements ApplicationContextAware {
 
          for(String partnerCode:orderedCodes){
              try {
-                 System.out.println(">>>>>>>>>>>>>>>>>>>"+partnerCode);
+                // System.out.println(">>>>>>>>>>>>>>>>>>>"+partnerCode);
                  PatientInfo patient = this.fetchPatientInfo(partnerCode, barCode);
                  if (patient != null) {
                      patient.setPartnerCode(partnerCode);
@@ -112,7 +113,7 @@ public class PartnerService implements ApplicationContextAware {
         int index=0;
         for(String key:map.keySet()){
             IPartner value=map.get(key);
-            System.out.println((index++)+" >>>>>>>>>>>>>>>>>>       initializing partner service: " + value.whoAmI() + " with class: " + value.getClass().getName());
+            //System.out.println((index++)+" >>>>>>>>>>>>>>>>>>       initializing partner service: " + value.whoAmI() + " with class: " + value.getClass().getName());
             parters.put(value.whoAmI(), value);
         }
     }

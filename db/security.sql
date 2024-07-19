@@ -78,3 +78,10 @@ CREATE TABLE IF NOT EXISTS `SysUserLogin`(
      `checkoutTime` datetime comment '退出时间'
 ) comment '用户登录日志';
 
+DROP TABLE IF EXISTS `SysKeys`;
+CREATE TABLE IF NOT EXISTS `SysKeys`(
+     `id`  varchar(20) not null primary key  ,
+     `privateKey` text not null,
+     `publicKey`  text not null,
+     `createTime` datetime  not null default now()
+) comment '存储系统用到的RSA加密的公钥和私钥';

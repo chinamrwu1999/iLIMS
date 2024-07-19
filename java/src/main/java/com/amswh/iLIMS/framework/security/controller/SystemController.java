@@ -4,6 +4,7 @@ import com.amswh.iLIMS.framework.model.AjaxResult;
 import com.amswh.iLIMS.framework.security.model.SysUser;
 import com.amswh.iLIMS.framework.security.service.SysUserService;
 import jakarta.annotation.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,7 @@ public class SystemController {
      * @return
      */
     @PostMapping("/user/create")
-     public AjaxResult createUser(@RequestBody Map<String,String> input){
+    public AjaxResult createUser(@RequestBody Map<String,String> input){
         String username=input.get("userName");
         String password=input.get("password");
         String message="";

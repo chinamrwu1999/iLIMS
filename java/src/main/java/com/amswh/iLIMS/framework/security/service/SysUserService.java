@@ -23,11 +23,9 @@ import java.util.stream.Collectors;
 public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("querying user:"+username);
+
         SysUser user=this.baseMapper.getUser(username);
         if(user!=null) {
-            System.out.println("found user:"+user.getUsername());
-
             LoginUser loginUser=new LoginUser(user.getUsername(),user.getPassword());
             loginUser.setPermissions(this.getUserAuthorities(username));
             System.out.println("login user returning");
@@ -46,13 +44,12 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> implemen
      * @return
      */
     public Set<String> getUserAuthorities(String username){
-        System.out.println("query permissions....");
+
         List<SysComponent> perms=this.baseMapper.getUserPrivileges(username);
         if(perms!=null) {
-            System.out.println(" found permissions");
             return perms.stream().map(SysComponent::getName).collect(Collectors.toSet());
         }else {
-            System.out.println("not found permissions");
+
             return null;
         }
     }

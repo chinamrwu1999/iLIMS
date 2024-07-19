@@ -1,5 +1,6 @@
 package com.amswh.iLIMS.framework.security.model;
 
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Data
 public class LoginUser implements UserDetails {
 
     private Long userId;
@@ -17,7 +19,9 @@ public class LoginUser implements UserDetails {
     private String password;
 
 
-    private Set<String> perms;
+    private Set<String> permissions;
+
+    private Set<String> roles;
 
     private Map<String,Object> userInfo;
 
@@ -37,17 +41,11 @@ public class LoginUser implements UserDetails {
         this.loginTime = loginTime;
     }
 
-    private String token;
+    private String cachedId;
 
     private long loginTime;
 
-    public String getToken() {
-        return token;
-    }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
 
     public long getExpireTime() {
         return expireTime;
@@ -79,20 +77,20 @@ public class LoginUser implements UserDetails {
 
     public void setPermissions(Set<String> perms){
         System.out.println("setting permissions 000000000000000000000");
-        this.perms=perms;
+        this.permissions=perms;
     }
 
     public boolean hasPerms(String perm){
-        if(this.perms!=null){
-            return this.perms.contains(perm);
+        if(this.permissions!=null){
+            return this.permissions.contains(perm);
         }
         return false;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.perms!=null){
-            return this.perms.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+        if(this.permissions!=null){
+            return this.permissions.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
         }
         return null;
     }
@@ -142,5 +140,9 @@ public class LoginUser implements UserDetails {
             return this.userInfo.get(key);
         }
         return null;
+    }
+
+    public boolean hasRole(String role){
+        return this.roles.contains(role);
     }
 }

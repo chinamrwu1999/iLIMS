@@ -16,24 +16,26 @@ public class UserLoginService {
     SysUserService userService;
 
     @Resource
-    TokenService tokenService;
+    SysRoleService roleService;
+
+    @Resource
+    JoseJWTService tokenService;
 
     @Resource
     private AuthenticationManager authenticationManager;
 
     public String login(String username, String password){
-        System.out.println(" kkkk login authenticating ........");
+
         Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
         if(authentication==null){
-            System.out.println("authentication failed!");
+
             return  null;
         }else{
-            System.out.println(" kkkk login authenticating success........");
+
             LoginUser user= (LoginUser)authentication.getPrincipal();
-            System.out.println("authenticated user:"+user.getUsername());
-            String token=tokenService.createToken(user);
-            System.out.println("token:"+token);
-            return user.getUsername();
+            user.setPermissions(userService.getUserAuthorities(username));
+            user.setRoles(roleService.getUserRoles(user.getUsername()));
+            return tokenService.createToken(user);
         }
 
     }

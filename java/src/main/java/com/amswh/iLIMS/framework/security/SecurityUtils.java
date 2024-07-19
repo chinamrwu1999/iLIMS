@@ -7,6 +7,7 @@ import com.amswh.iLIMS.framework.commons.ServiceException;
 import com.amswh.iLIMS.framework.security.model.LoginUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
@@ -22,10 +23,17 @@ public class SecurityUtils
     {
         try
         {
-            return (LoginUser) getAuthentication().getPrincipal();
+            Object obj= getAuthentication().getPrincipal();
+            System.out.println("user detail :username is "+obj);
+          //  UserDetails details=(UserDetails) ;
+
+            return (LoginUser) obj;
         }
         catch (Exception e)
         {
+            System.out.println("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+            e.printStackTrace();
+            System.out.println("\n\n");
             throw new ServiceException("获取用户信息异常", HttpStatus.UNAUTHORIZED);
         }
     }

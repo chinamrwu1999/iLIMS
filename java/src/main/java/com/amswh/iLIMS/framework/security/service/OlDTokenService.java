@@ -23,7 +23,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
  * @author ruoyi
  */
 @Component
-public class TokenService
+public class OlDTokenService
 {
     // 令牌自定义标识
    // @Value("${token.header}")
@@ -31,7 +31,7 @@ public class TokenService
 
 //    // 令牌秘钥
 //    @Value("${token.secret}")
-    private String secret="ams@wh1234";
+    private final String secret="ams@wh1234";
 
     // 令牌有效期（默认30分钟）
     //@Value("${token.expireTime}")
@@ -78,7 +78,7 @@ public class TokenService
      */
     public void setLoginUser(LoginUser loginUser)
     {
-        if (StringUtils.isNotNull(loginUser) && StringUtils.isNotEmpty(loginUser.getToken()))
+        if (StringUtils.isNotNull(loginUser) && StringUtils.isNotEmpty(loginUser.getCachedId()))
         {
             refreshToken(loginUser);
         }
@@ -105,7 +105,7 @@ public class TokenService
     public String createToken(LoginUser loginUser)
     {
         String token = IdUtils.fastUUID();
-        loginUser.setToken(token);
+        loginUser.setCachedId(token);
 
         refreshToken(loginUser);
 
@@ -140,7 +140,7 @@ public class TokenService
         loginUser.setLoginTime(System.currentTimeMillis());
         loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
-        String userKey = getTokenKey(loginUser.getToken());
+        String userKey = getTokenKey(loginUser.getCachedId());
         redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
 
