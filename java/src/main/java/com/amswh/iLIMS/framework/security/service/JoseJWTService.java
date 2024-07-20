@@ -51,13 +51,23 @@ public class JoseJWTService {
     {
         // 获取请求携带的令牌
         String token = getToken(request);
+
         if (StringUtils.isNotEmpty(token))
         {
             try
             {
                 JwtClaims claims = parseToken(token);
                 String cacheId = claims.getIssuer();
+                System.out.println("cacheId:"+cacheId);
                 LoginUser user = redisCache.getCacheObject(cacheId);
+                System.out.println("fetched cached user:"+user.getUsername());
+                for(String str:user.getPermissions()){
+                    System.out.println("perm>>>"+str);
+                }
+                System.out.println("user roles are:");
+                for(String str:user.getRoles()){
+                    System.out.println("role:"+str);
+                }
                 return user;
             }catch (Exception e){
                  e.printStackTrace();
@@ -76,7 +86,7 @@ public class JoseJWTService {
         try {
             String cachedId=IdUtils.fastUUID(); // 作为存到Redis的key
             loginUser.setCachedId(cachedId);
-            refreshToken(loginUser);
+
             JwtClaims claims = new JwtClaims();
             claims.setIssuer(cachedId);
             claims.setAudience("love@china"); //
@@ -90,6 +100,7 @@ public class JoseJWTService {
             jws.setKey(this.keyService.getMasterPrivateKey());
             jws.setDoKeyValidation(false);
             jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
+            refreshToken(loginUser);
             return jws.getCompactSerialization();
         }catch (Exception err){
             err.printStackTrace();
@@ -104,8 +115,7 @@ public class JoseJWTService {
                       .setExpectedAudience(audience)
                       .setVerificationKey(this.keyService.getMasterPublicKey())
                       .build();
-              JwtClaims claims = consumer.processToClaims(token);
-              return claims;
+              return consumer.processToClaims(token);
           }catch (Exception err){
               err.printStackTrace();
           }
@@ -164,10 +174,12 @@ public class JoseJWTService {
      */
     public void refreshToken(LoginUser loginUser)
     {
+        System.out.println("refreshing token");
         loginUser.setLoginTime(System.currentTimeMillis());
         loginUser.setExpireTime(loginUser.getLoginTime() + EXPIRE_TIME * MILLIS_MINUTE);
         String cachedId = loginUser.getCachedId();
         redisCache.setCacheObject(cachedId, loginUser, EXPIRE_TIME, TimeUnit.MINUTES);
+        System.out.println("refreshed token for user "+loginUser.getUsername());
     }
 
     /**

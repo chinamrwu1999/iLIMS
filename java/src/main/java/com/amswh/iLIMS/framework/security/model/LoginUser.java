@@ -76,7 +76,7 @@ public class LoginUser implements UserDetails {
     }
 
     public void setPermissions(Set<String> perms){
-        System.out.println("setting permissions 000000000000000000000");
+      //  System.out.println("setting permissions 000000000000000000000");
         this.permissions=perms;
     }
 
