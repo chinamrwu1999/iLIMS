@@ -39,13 +39,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults())
-
-        .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/login","/test/**").permitAll());
-         http.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/**").hasRole("admin")
-         .anyRequest().authenticated())
-         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(tokenService, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+        .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/login","/test/**").permitAll()
+        .requestMatchers("/login/changePassword").authenticated()
+        .requestMatchers("/**").hasRole("admin")
+        .anyRequest().authenticated())
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(tokenService, UsernamePasswordAuthenticationFilter.class);
+         return http.build();
     }
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

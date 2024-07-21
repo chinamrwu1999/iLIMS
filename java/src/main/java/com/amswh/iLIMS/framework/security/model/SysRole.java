@@ -19,6 +19,9 @@ public class SysRole {
     @TableField("name")
     private  String roleName;
 
+    @TableField("chineseName")
+    private String chineseName;
+
     @TableField("status")
     private String status;
 

@@ -37,4 +37,18 @@ INSERT INTO `SysRoleMenu`(`roleId`,`menuId`) values
 (1,11),(1,12),(1,13),(1,14),(1,15),(1,16),(1,18),(1,19),(1,20),
 (1,21),(1,22),(1,23),(1,24),(1,25),(1,26),(1,27),(1,28);
 
+INSERT INTO `SysComponent`(`componentId`,`name`,`description`,`url`) values
+(1,'createUser','创建系统用户','/system/user/create'),
+(2,'editUser','编辑用户信息','/system/user/changeStatus'),
+(3,'createRole','新建系统角色','/system/role/create'),
+(4,'editRole','编辑系统角色','/system/role/edit'),
+(5,'createMenu','新建菜单','/system/menu/create'),
+(6,'editMenu','编辑菜单','/system/menu/edit'),
+(7,'userRole','用户角色分配','/system/userRole'),
+(8,'permission','角色权限分配','/system/permission'),
+(9,'myMenu','获取用户个人菜单树','/system/myMenu');
+
+INSERT INTO `SysRolePrivilege`(`roleId`,`componentId`) VALUES 
+(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9);
+
 

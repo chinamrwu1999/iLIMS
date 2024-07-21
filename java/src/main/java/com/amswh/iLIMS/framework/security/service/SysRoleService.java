@@ -24,5 +24,20 @@ public class SysRoleService extends ServiceImpl<SysRoleMapper, SysRole> {
         return null;
     }
 
+    public List<SysRole> listUserRoles(Integer userId){
+        return  this.baseMapper.getUserRolesByUserId(userId);
+    }
+
+    public  boolean createRole(String roleName,String chineseName){
+        SysRole role=new SysRole();
+        role.setRoleName(roleName);
+        role.setChineseName(chineseName);
+        return this.save(role);
+
+    }
+
+
+
+
 
 }

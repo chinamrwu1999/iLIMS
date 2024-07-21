@@ -11,7 +11,7 @@ import lombok.Data;
 public class ExpSteps {
 
     @TableId(value = "id",type= IdType.AUTO)
-    private int id;
+    private Integer id;
 
     @TableField("productCode")
     private String productCode;

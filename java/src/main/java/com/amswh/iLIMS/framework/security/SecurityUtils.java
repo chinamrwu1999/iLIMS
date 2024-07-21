@@ -23,17 +23,12 @@ public class SecurityUtils
     {
         try
         {
-            Object obj= getAuthentication().getPrincipal();
-            System.out.println("user detail :username is "+obj);
-          //  UserDetails details=(UserDetails) ;
 
-            return (LoginUser) obj;
+
+            return (LoginUser)  getAuthentication().getPrincipal();
         }
         catch (Exception e)
         {
-            System.out.println("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-            e.printStackTrace();
-            System.out.println("\n\n");
             throw new ServiceException("获取用户信息异常", HttpStatus.UNAUTHORIZED);
         }
     }

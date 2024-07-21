@@ -37,6 +37,9 @@ public  class TestController {
     JoseJWTService tokenService;
 
    @Resource
+   SysKeyService keyService;
+
+   @Resource
     SysUserService userService;
 
 
@@ -47,9 +50,9 @@ public  class TestController {
     try {
         System.out.println("calling test hello........");
         //return AjaxResult.success(menuTreeTest());
-       // RSAKeyTest();
-        UserTest();
-
+        //RSAKeyTest();
+       UserTest();
+       return AjaxResult.success("OK");
 
     }catch (Exception err){
         err.printStackTrace();
@@ -64,28 +67,28 @@ public  class TestController {
 
    private void RSAKeyTest(){
        try {
-          // KeyPair pair= RSAUtils.generateKeyPair();
+           KeyPair pair= RSAUtils.generateKeyPair();
           // RSAUtils.saveKeyForEncodedBase64(pair.getPrivate(),new File("E:/private_key.txt"));
           // RSAUtils.saveKeyForEncodedBase64(pair.getPublic(),new File("E:/public_key.txt"));
 
-//           Key privateKey=pair.getPrivate();
-//           Key publicKey=pair.getPublic();
-//           byte[] encBytes = privateKey.getEncoded();
-//           String encBase64 = Base64.encodeBase64String(encBytes);
-//           byte[] encBytes1 = publicKey.getEncoded();
-//           String encBase641 = Base64.encodeBase64String(encBytes1);
-//
-//           SysKeys sysKey=new SysKeys();
-//           sysKey.setId("AMS");
-//           sysKey.setPrivateKey(encBase64);
-//           sysKey.setPublicKey(encBase641);
-//           this.keyService.save(sysKey);
-           LoginUser user=new LoginUser();
-           user.setUsername("someone");
-           String token=this.tokenService.createToken(user);
+           Key privateKey=pair.getPrivate();
+           Key publicKey=pair.getPublic();
+           byte[] encBytes = privateKey.getEncoded();
+           String encBase64 = Base64.encodeBase64String(encBytes);
+           byte[] encBytes1 = publicKey.getEncoded();
+           String encBase641 = Base64.encodeBase64String(encBytes1);
 
-           JwtClaims claims =this.tokenService.parseToken(token);
-           System.out.println(claims.getSubject());
+           SysKeys sysKey=new SysKeys();
+           sysKey.setId("AMS");
+           sysKey.setPrivateKey(encBase64);
+           sysKey.setPublicKey(encBase641);
+           this.keyService.save(sysKey);
+//           LoginUser user=new LoginUser();
+//           user.setUsername("someone");
+//           String token=this.tokenService.createToken(user);
+//
+//           JwtClaims claims =this.tokenService.parseToken(token);
+//           System.out.println(claims.getSubject());
 
 
        } catch (Exception e) {
@@ -96,6 +99,6 @@ public  class TestController {
 
 
    private void UserTest(){
-        userService.createUser("guess","guess");
+        userService.createUser("guess","guess123");
    }
 }

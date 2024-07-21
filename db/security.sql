@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS `SysRole`;
 CREATE TABLE IF NOT EXISTS `SysRole`(
         `roleId` int unsigned not null auto_increment primary key,
         `name` varchar(30) not null,
+        `chineseName` varchar(30) ,
         `status` char(1) not null default 'A' comment '激活与否,A(active)激活,D(ead)失活',
         `createTime` timestamp not null default CURRENT_TIMESTAMP
 ) comment '角色定义';

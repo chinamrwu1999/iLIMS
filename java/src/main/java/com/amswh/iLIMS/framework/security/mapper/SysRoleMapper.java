@@ -17,4 +17,11 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
             "</script>"})
     public List<String> getUserRoles(String userName);
 
+    @Select({"<script>",
+            "SELECT R.* FROM SysUser U INNER JOIN SysUserRole UR ON U.userId=UR.userId",
+            "INNER JOIN SysRole R ON R.roleId=UR.roleId",
+            "WHERE U.userId=#{userId}",
+            "</script>"})
+    public List<SysRole> getUserRolesByUserId(Integer userId);
+
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Set;
 
 
 @Service
@@ -32,15 +33,18 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException
     {
-        LoginUser loginUser = this.tokenService.getLoginUser(request);
+        LoginUser loginUser = this.tokenService.getLoginUser(request);//get user from cached
+        if(loginUser!=null){
+            loginUser.getAuthorities().forEach( x -> System.out.println(">>>>> role :"+x));
+        }
         if (StringUtils.isNotNull(loginUser) && StringUtils.isNull(SecurityUtils.getAuthentication()))
         {
-          //  System.out.println("  >>>>> JWT filter get user :"+loginUser.getUsername());
             tokenService.verifyToken(loginUser);
+
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-           // System.out.println("jwt end");
+
         }
 
         chain.doFilter(request, response);

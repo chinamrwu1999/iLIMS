@@ -34,7 +34,7 @@ public class SysMenuService extends ServiceImpl<SysMenuMapper, SysMenu> {
     }
     private  void buildMenuTree(List<SysMenu> menuList, SysMenu parentMenu) {
         for (SysMenu menu : menuList) {
-            if (menu.getParentId() == parentMenu.getMenuId()) {
+            if (Objects.equals(menu.getParentId(), parentMenu.getMenuId())) {
                 if (parentMenu.getChildren() == null) {
                     parentMenu.setChildren(new ArrayList<>());
                 }
@@ -53,6 +53,14 @@ public class SysMenuService extends ServiceImpl<SysMenuMapper, SysMenu> {
 
     public List<String> getUserPrivileges(Integer userId){
            return  this.baseMapper.getUserPrivileges(userId);
+    }
+
+    public boolean createMenu(SysMenu menu){
+          return this.save(menu);
+    }
+
+    public List<SysMenu> listAllMenus(){
+           return baseMapper.listAllMenus();
     }
 
 }

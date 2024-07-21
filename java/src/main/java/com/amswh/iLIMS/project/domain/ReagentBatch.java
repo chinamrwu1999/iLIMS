@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class ReagentBatch {
 
     @TableId(value = "id",type= IdType.AUTO)
-    private  int id;
+    private  Integer id;
 
     @TableField("reagentId")
     private String reagentId;

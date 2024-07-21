@@ -21,6 +21,9 @@ public class SysMenu {
     @TableField("parentId")
     private Integer parentId;
 
+    @TableField("displayIndex")
+    private Integer displayIndex;
+
     @TableField("createTime")
     private LocalDateTime createTime;
 

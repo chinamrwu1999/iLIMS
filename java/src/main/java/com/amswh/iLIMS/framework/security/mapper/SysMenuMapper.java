@@ -29,4 +29,15 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
             "WHERE U.userId=#{userId}",
             "</script>"})
     public List<String> getUserPrivileges(Integer userId);
+
+
+    @Select({"<script>",
+            "SELECT M.*,SC.url FROM SysRole R INNER JOIN SysUserRole UR ON R.roleId=UR.roleId",
+            "LEFT JOIN SysRoleMenu RM ON RM.roleId=UR.roleId ",
+            "LEFT JOIN SysMenu M ON M.menuId=RM.menuId ",
+            "LEFT JOIN SysMenuComponent MC ON MC.menuId=M.menuId",
+            "LEFT JOIN SysComponent SC ON SC.componentId=MC.componentId",
+            "WHERE R.name='admin' order by M.menuId",
+            "</script>"})
+    public List<SysMenu> listAllMenus();
 }

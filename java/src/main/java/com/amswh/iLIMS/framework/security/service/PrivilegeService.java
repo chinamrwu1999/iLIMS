@@ -88,7 +88,7 @@ public class PrivilegeService {
      */
     public boolean hasRole(String role)
     {
-        System.out.println("user privilege role :"+role);
+        System.out.println("user privilege role 111 :"+role);
         if (StringUtils.isEmpty(role))
         {
             return false;

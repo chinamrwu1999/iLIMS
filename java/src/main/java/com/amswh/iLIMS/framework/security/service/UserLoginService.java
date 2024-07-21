@@ -31,7 +31,7 @@ public class UserLoginService {
 
         Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
         if(authentication==null){
-
+            System.out.println("authentication failed for user "+username);
             return  null;
         }else{
 
