@@ -261,12 +261,26 @@ public class PartyService extends ServiceImpl<IParty, Party> {
     /**
      *  根据联系方式获取Party信息
      */
-     public Map<String,String> getPersonInfo(String contact){
+     public Map<String,Object> getPersonInfo(String contact){
 
          return baseMapper.getPersonInfByContact(contact);
      }
 
 
+     public Map<String,Object> getSysUserBasicInfo(String username){
+         if(username==null || username.isBlank()) return  null;
+         Map<String,Object> result=new HashMap<>();
+         if("admin".equalsIgnoreCase(username)){
+             result.put("name","超级管理员");
+             result.put("role","超级管理员");
+             return  result;
+         }
+         result=this.findPartyByExternalId(username);
+         if(!result.isEmpty()){
+             return result;
+         }
+         return (Map<String,Object>)this.getPersonInfo(username);
+     }
 
 
 }

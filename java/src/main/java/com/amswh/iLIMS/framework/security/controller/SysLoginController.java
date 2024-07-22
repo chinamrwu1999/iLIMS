@@ -2,10 +2,8 @@ package com.amswh.iLIMS.framework.security.controller;
 import com.amswh.iLIMS.framework.model.AjaxResult;
 
 import com.amswh.iLIMS.framework.security.model.LoginUser;
-import com.amswh.iLIMS.framework.security.service.JoseJWTService;
-import com.amswh.iLIMS.framework.security.service.SysRoleService;
-import com.amswh.iLIMS.framework.security.service.SysUserService;
-import com.amswh.iLIMS.framework.security.service.UserLoginService;
+import com.amswh.iLIMS.framework.security.model.SysUser;
+import com.amswh.iLIMS.framework.security.service.*;
 import jakarta.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -35,6 +34,9 @@ public class SysLoginController {
     @Resource
     JoseJWTService tokenService;
 
+    @Resource
+    SysMenuService menuService;
+
     @PostMapping("/login")
     public AjaxResult login(@RequestBody Map<String,String> input){
         String username=input.get("userName");
@@ -43,9 +45,19 @@ public class SysLoginController {
             return  AjaxResult.error("At least 6 characters required for password");
         }
         String token=loginService.login(username,password);
-        AjaxResult result=AjaxResult.success();
-        result.put("token",token);
-        return  result;
+
+        SysUser user=userService.getSysUser(username);
+        Integer userId=user.getUserId();
+        Map<String,Object> dataMap=new HashMap<>();
+        dataMap.put("token",token);
+        dataMap.put("menuTrue",menuService.getUserMenu(userId));
+        Map<String,Object> userInfo=new HashMap<>();
+//        if(!"admin".equalsIgnoreCase(username)){
+//
+//        }
+//        dataMap.put("userInf",)
+
+        return  AjaxResult.success(dataMap);
     }
 
 

@@ -58,5 +58,5 @@ public interface IParty extends BaseMapper<Party> {
              "WHERE PC.contact=#{contact}",
       "</script>"
      })
-     public Map<String,String> getPersonInfByContact(String contact);
+     public Map<String,Object> getPersonInfByContact(String contact);
 }

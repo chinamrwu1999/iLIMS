@@ -163,9 +163,9 @@ public class WeChatBarController extends BaseController {
            phone=inputMap.get("phone").toString();
        }
        if(phone==null){ //根据openId获取手机号
-           Map<String,String> mp=partyService.getPersonInfo(openId);
+           Map<String,Object> mp=partyService.getPersonInfo(openId);
            if(mp!=null) {
-               partyId = mp.get("partyId");
+               partyId = mp.get("partyId").toString();
                phone=contactService.getPartyContact(partyId,"mobile");
            }
        }

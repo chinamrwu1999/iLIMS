@@ -15,7 +15,7 @@ public class SysUser {
 
 
     @TableId(value = "userId",type= IdType.AUTO)
-    private Long userId;
+    private Integer userId;
 
 
     @TableField("userName")

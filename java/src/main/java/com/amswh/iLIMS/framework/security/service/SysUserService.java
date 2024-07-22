@@ -125,5 +125,9 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> implemen
         }
     }
 
+    public SysUser getSysUser(String userName){
+        return baseMapper.getUser(userName);
+    }
+
 }
 

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Data
 public class LoginUser implements UserDetails {
 
-    private Long userId;
+    private Integer userId;
     private  String username;
     private String password;
 
@@ -62,11 +62,11 @@ public class LoginUser implements UserDetails {
     }
 
 
-    public void setUserId(Long userId){
+    public void setUserId(Integer userId){
         this.userId=userId;
     }
 
-    public Long getUserId(){
+    public Integer getUserId(){
         return  userId;
     }
 
