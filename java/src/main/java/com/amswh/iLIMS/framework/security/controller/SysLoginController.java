@@ -50,7 +50,7 @@ public class SysLoginController {
         Integer userId=user.getUserId();
         Map<String,Object> dataMap=new HashMap<>();
         dataMap.put("token",token);
-        dataMap.put("menuTrue",menuService.getUserMenu(userId));
+        dataMap.put("menuTree",menuService.getUserMenu(userId));
         Map<String,Object> userInfo=new HashMap<>();
 //        if(!"admin".equalsIgnoreCase(username)){
 //

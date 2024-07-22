@@ -1,15 +1,20 @@
 package com.amswh.iLIMS.framework.security.controller;
 
 import com.amswh.iLIMS.framework.model.AjaxResult;
+import com.amswh.iLIMS.framework.security.model.LoginUser;
 import com.amswh.iLIMS.framework.security.model.SysMenu;
 import com.amswh.iLIMS.framework.security.model.SysUser;
+import com.amswh.iLIMS.framework.security.service.JoseJWTService;
 import com.amswh.iLIMS.framework.security.service.SysMenuService;
 import com.amswh.iLIMS.framework.security.service.SysRoleService;
 import com.amswh.iLIMS.framework.security.service.SysUserService;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +31,9 @@ public class SystemController {
 
         @Resource
         SysRoleService roleService;
+
+    @Resource
+    JoseJWTService tokenService;
 
         @Resource
         SysMenuService menuService;
@@ -94,14 +102,27 @@ public class SystemController {
     }
 
     /**
+     * 列出角色
+
+     * @return
+     */
+
+    @GetMapping("/role/list")
+    public AjaxResult listAllRoles(){
+        return AjaxResult.success(this.roleService.listAllRoles());
+
+    }
+
+
+    /**
      * 列出用户拥有的角色
      * @param userId
      * @return
      */
 
     @GetMapping("/userRole/list/{userId}")
-    public AjaxResult assignUserRole(@PathVariable Integer userId){
-        return AjaxResult.success(this.roleService.listUserRoles(userId));
+    public AjaxResult listUserRole(@PathVariable Integer userId){
+        return AjaxResult.success(this.roleService.listUserRolesStatusByUserId(userId));
 
     }
 
@@ -136,23 +157,47 @@ public class SystemController {
         }
       //  return  null;
     }
-
     @GetMapping("/menu/list")
     public AjaxResult  listAllMenu(@RequestBody Map<String,Object> input){
              return  AjaxResult.success(menuService.listAllMenus());
     }
 
-
-
+    @GetMapping("/tokenMenu")
+    public AjaxResult  fetchMenuByToken(@RequestHeader String token, HttpServletRequest request){
+        LoginUser loginUser=this.tokenService.getLoginUser(request);
+        if(loginUser==null){
+           return AjaxResult.error("会话已过期,请重新登录！");
+        }
+        Integer userId=loginUser.getUserId();
+        return  AjaxResult.success(menuService.getUserMenu(userId));
+    }
+    @GetMapping("/user/basicInfo")
+    public AjaxResult  fetchUserInfo(@RequestHeader String token, HttpServletRequest request){
+        LoginUser loginUser=this.tokenService.getLoginUser(request);
+        if(loginUser==null){
+            return AjaxResult.error("会话已过期,请重新登录！");
+        }
+        Integer userId=loginUser.getUserId();
+        return  AjaxResult.success(userService.getSysUser(loginUser.getUsername()));
+    }
     /**
      * 用户分配角色
      * @param input
      * @return
      */
     @PostMapping("/userRole/update")
-    public AjaxResult changeUserRole(@RequestBody Map<String,Object> input){
-
-        return  null;
+    public AjaxResult updateUserRoles(@RequestBody Map<String,Object> input){
+        if(input.get("userId")==null || input.get("roles")==null){
+            return AjaxResult.error("用户Id缺失或权限Id为空！");
+        }
+        Integer userId = (Integer) input.get("userId");
+        if(input.get("roles")!=null) {
+            List<Integer> roles = (List<Integer>) input.get("roles");
+            if(this.roleService.updateUserRoles(userId,roles)){
+                return AjaxResult.success("用户角色更新成功！");
+            }
+        }
+        return  AjaxResult.error("更新用户角色发生错误！");
     }
 
 }

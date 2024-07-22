@@ -16,10 +16,10 @@ public class SysUserRole {
     private  Long id;
 
     @TableField("userId")
-    private Long userId;
+    private Integer userId;
 
     @TableField("roleId")
-    private Long roleId;
+    private Integer roleId;
 
     @TableField("createTime")
     private LocalDateTime createTime;

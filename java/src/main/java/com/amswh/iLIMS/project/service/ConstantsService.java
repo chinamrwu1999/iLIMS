@@ -85,4 +85,15 @@ public class ConstantsService {
         return this.analyte2ProductMap.get(code);
    }
 
+   public List<Product> listProducts(){
+        return productService.list();
+   }
+
+   public List<Project> listProjects(){
+        return this.projectService.list();
+   }
+
+   public List<Disease> listDiseases(){
+        return this.diseaseService.list();
+   }
 }

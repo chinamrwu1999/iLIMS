@@ -2,7 +2,10 @@ package com.amswh.iLIMS.framework.security.service;
 
 import com.amswh.iLIMS.framework.security.mapper.SysMenuMapper;
 import com.amswh.iLIMS.framework.security.model.SysMenu;
+import com.amswh.iLIMS.framework.security.model.SysUser;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.annotation.Resource;
+import org.jose4j.jwt.MalformedClaimException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -10,6 +13,10 @@ import java.util.*;
 @Service
 public class SysMenuService extends ServiceImpl<SysMenuMapper, SysMenu> {
 
+     @Resource
+     JoseJWTService tokenService;
+     @Resource
+     SysUserService userService;
 
        public List<SysMenu> getUserMenu(Integer userId){
               List<SysMenu> menuList= this.baseMapper.getUserMenus(userId);
@@ -62,5 +69,8 @@ public class SysMenuService extends ServiceImpl<SysMenuMapper, SysMenu> {
     public List<SysMenu> listAllMenus(){
            return baseMapper.listAllMenus();
     }
+
+
+
 
 }
