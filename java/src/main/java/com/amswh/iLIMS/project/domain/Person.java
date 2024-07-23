@@ -30,8 +30,8 @@ public class Person{
 	@TableField("birthday")
 	private LocalDate birthday;
 
-	@TableField("wechat")
-	private String wechat;
+//	@TableField("wechat")
+//	private String wechat;
 
 	@TableField("IdCardType")
 	private String IdCardType;

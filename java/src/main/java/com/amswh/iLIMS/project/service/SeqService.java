@@ -4,6 +4,7 @@ import com.amswh.iLIMS.project.domain.Sequence;
 import com.amswh.iLIMS.project.mapper.lims.ISequence;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +24,19 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
     private  String idColName="seqId";
     private final ConcurrentMap<String, SequenceBank> sequences = new ConcurrentHashMap<>();
     private  final DateTimeFormatter date6Formatter = DateTimeFormatter.ofPattern("yyMMdd");
+
+
+
+    public String nextPartySeq(){
+        String partyId=String.format("%08d",getNextSeqId("party", 1L));
+      //  System.out.println("partyId is "+partyId);
+        return partyId;
+    }
+
+
     public Long getNextSeqId(String seqName, long staggerMax) {
         SequenceBank bank = this.getBank(seqName);
+        if(bank==null){System.out.println(" sequence "+seqName+" bank  is null");}
         return bank.getNextSeqId(staggerMax);
     }
 
@@ -69,7 +81,7 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
 
     private final class SequenceBank {
         public static final long DEF_BANK_SIZE = 35;
-        public static final long MAX_BANK_SIZE = 0;
+        public static final long MAX_BANK_SIZE = 5000;
         public static final long START_SEQ_ID = 10000;
 
         private final String seqName;
@@ -93,9 +105,12 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
                 if (stagger == 0) stagger = 1;
             }
             synchronized (this) {
+
                 if ((curSeqId + stagger) <= maxSeqId) {
                     long retSeqId = curSeqId;
+
                     curSeqId += stagger;
+
                     return retSeqId;
                 } else {
                     try {
@@ -103,8 +118,10 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
                         if ((curSeqId + stagger) <= maxSeqId) {
                             long retSeqId = curSeqId;
                             curSeqId += stagger;
+
                             return retSeqId;
                         } else {
+
                             return null;
                         }
                     }catch (Exception err){

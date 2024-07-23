@@ -10,6 +10,7 @@ import jakarta.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -77,26 +78,21 @@ public class WeChatBarController extends BaseController {
     @Transactional
     public AjaxResult bindBox(@RequestHeader("openId")String openId, @RequestBody Map<String,Object> input) throws  Exception{
           Bar bar=barService.getBar(input.get("barCode").toString());  //确保用艾米森微信小程序扫的是艾米森的条码
-//        if(bar==null){
-//            return AjaxResult.error("您扫的码不是有效的产品条码！");
-//        }
         PartyBar pb=new PartyBar();
         pb.setBindWay("wechat");
         MapUtil.copyFromMap(input,pb);
 
+
         if(input.get("partyId")==null){ //传入的不是partyId,新建Person
+            input.put("wechat",openId);
             Person person=this.partyService.addPerson(input);
             pb.setPartyId(person.getPartyId());
         }else{
             pb.setPartyId(input.get("partyId").toString());
         }
         partyBarService.save(pb);
-        PartnerBar partnerBar=new PartnerBar();
-        partnerBar.setBarCode(bar.getBarCode());
-        partnerBar.setPartnerId("root");
-        partnerBar.setProductCode(bar.getProductCode());
-        partnerBarService.save(partnerBar);
-        return AjaxResult.success("绑定成功");
+
+        return AjaxResult.success("绑定成功！");
     }
 
 

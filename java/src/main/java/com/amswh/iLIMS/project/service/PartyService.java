@@ -22,6 +22,9 @@ public class PartyService extends ServiceImpl<IParty, Party> {
 
     @Resource
     PersonService personService;
+
+
+
     @Resource
     PartygroupService orgService;
 
@@ -50,8 +53,8 @@ public class PartyService extends ServiceImpl<IParty, Party> {
         if(party==null ) return null;
         String partyId=party.getPartyId();
         if(partyId==null){
-            partyId=String.format("%08d",seqService.getNextSeqId("party",1l));
-            party.setPartyId(partyId);
+
+            party.setPartyId(seqService.nextPartySeq());
         }
         if(this.save(party)){
             partyId=party.getPartyId();
@@ -150,13 +153,16 @@ public class PartyService extends ServiceImpl<IParty, Party> {
             }
         }
         inputMap.put("partyType","PERSON");
-        Party party = new Party();
+        Party party=new Party();
+        String partyId=seqService.nextPartySeq();
+        party.setPartyId(partyId);
         MapUtil.copyFromMap(inputMap, party);
-        String partyId=addParty(party);
+        this.addParty(party);
+
         Person person=new Person();
         MapUtil.copyFromMap(inputMap, person);
         person.setPartyId(partyId);
-        this.personService.save(person);
+        inputMap.put("partyId",partyId);
         this.addPartyContact(inputMap);
         return person;
     }

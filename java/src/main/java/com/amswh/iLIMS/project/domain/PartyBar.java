@@ -22,6 +22,12 @@ public class PartyBar {
 	@TableField("partyId")
 	private String partyId;
 
+	@TableField("productCode")
+	private String productCode;
+
+	@TableField("partnerCode")
+	private String partnerCode;
+
 	@NotBlank(message = "barCode 不能为空")
 	@TableField("barCode")
 	private String barCode;
