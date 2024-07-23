@@ -149,7 +149,7 @@ public class PartyService extends ServiceImpl<IParty, Party> {
                 return existeds.get(0);
             }
         }
-        inputMap.put("partyType","PSON");
+        inputMap.put("partyType","PERSON");
         Party party = new Party();
         MapUtil.copyFromMap(inputMap, party);
         String partyId=addParty(party);

@@ -72,8 +72,8 @@ public class BaseDataController {
 
     @GetMapping("/list/partners")
     public AjaxResult listPartners(){
+        return  AjaxResult.success(partygroupService.listPartners());
 
-        return  null;
     }
 
     /**

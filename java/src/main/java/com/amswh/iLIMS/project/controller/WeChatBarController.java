@@ -68,27 +68,27 @@ public class WeChatBarController extends BaseController {
      *                phone：
      *                IDNumber：身份证号码
      * @param openId
-     * @param inputMap
+     * @param input
      * @return
      * @throws Exception
      */
 
     @PostMapping("/bindBar")
     @Transactional
-    public AjaxResult bindBox(@RequestHeader("openId")String openId, @RequestBody Map<String,Object> inputMap) throws  Exception{
-        Bar bar=barService.getBar(inputMap.get("barCode").toString());  //确保用艾米森微信小程序扫的是艾米森的条码
-        if(bar==null){
-            return AjaxResult.error("您扫的码不是有效的产品条码！");
-        }
+    public AjaxResult bindBox(@RequestHeader("openId")String openId, @RequestBody Map<String,Object> input) throws  Exception{
+          Bar bar=barService.getBar(input.get("barCode").toString());  //确保用艾米森微信小程序扫的是艾米森的条码
+//        if(bar==null){
+//            return AjaxResult.error("您扫的码不是有效的产品条码！");
+//        }
         PartyBar pb=new PartyBar();
         pb.setBindWay("wechat");
-        MapUtil.copyFromMap(inputMap,pb);
+        MapUtil.copyFromMap(input,pb);
 
-        if(inputMap.get("partyId")==null){ //传入的不是partyId,新建Person
-            Person person=this.partyService.addPerson(inputMap);
+        if(input.get("partyId")==null){ //传入的不是partyId,新建Person
+            Person person=this.partyService.addPerson(input);
             pb.setPartyId(person.getPartyId());
         }else{
-            pb.setPartyId(inputMap.get("partyId").toString());
+            pb.setPartyId(input.get("partyId").toString());
         }
         partyBarService.save(pb);
         PartnerBar partnerBar=new PartnerBar();
@@ -138,10 +138,11 @@ public class WeChatBarController extends BaseController {
      * @param inputMap
      * @throws Exception
      */
-    @PostMapping("/newWechatUser")
+    @PostMapping("/register")
     @Transactional
     public void addWeChatUser(@RequestHeader("openId")String openId ,@RequestBody Map<String,Object> inputMap) throws  Exception{
         Person person=new Person();
+        inputMap.put("wechat",openId);
         MapUtil.copyFromMap(inputMap,person);
 
         if(inputMap.get("name")==null){

@@ -61,8 +61,8 @@ public  class TestController {
    }
 
    private  List<SysMenu> menuTreeTest(){
-       return menuService.getUserMenu(1);
-      // return null;
+       //return menuService.getUserMenu(1);
+       return null;
    }
 
    private void RSAKeyTest(){

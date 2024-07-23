@@ -14,4 +14,8 @@ public class PartygroupService extends ServiceImpl<IPartyGroup, PartyGroup> {
 	public List<Map<String,Object>> listDepartments(){
 		return this.baseMapper.listDepartments();
 	}
+
+	public List<Map<String,Object>> listPartners(){
+		return this.baseMapper.listPartner();
+	}
 }

@@ -2,7 +2,8 @@ create view VDepartment as
 select PG.partyId deptId,fullName deptName FROM PartyGroup PG
 inner join partyRelationship PR1 ON PG.partyId=PR1.toId
 inner join Party P ON P.partyId=PR1.fromId
-WHERE P.partyType='root';
+inner join Party P1 ON P1.partyId=PR1.toId
+WHERE P.partyType='ROOT' AND P1.partyType='DEPT';
 
 
 create view VEmployee as
@@ -12,3 +13,11 @@ inner join partyRelationship PR ON PR.fromId=PS.partyId
 left join VDepartment D ON D.deptId=PR.toId 
 LEFT JOIN partyContact PC1 ON PS.partyId=PS.partyId
 WHERE P.partyType='PERSON' and PC1.contactType='mobile';
+
+
+create view VPartner as
+select PG.partyId partyId,fullName,P1.externalId code FROM PartyGroup PG
+inner join partyRelationship PR1 ON PG.partyId=PR1.toId
+inner join Party P ON P.partyId=PR1.fromId
+inner join Party P1 ON P1.partyId=PR1.toId
+WHERE P.partyType='ROOT' AND P1.partyType='COMPANY' AND PR1.typeId='partner';

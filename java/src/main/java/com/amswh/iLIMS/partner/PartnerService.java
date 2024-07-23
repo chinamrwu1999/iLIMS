@@ -1,6 +1,7 @@
 package com.amswh.iLIMS.partner;
 
 
+import com.amswh.iLIMS.partner.service.ExpressNo2PartnerMap;
 import com.amswh.iLIMS.project.domain.PartyGroup;
 import com.amswh.iLIMS.project.service.ConstantsService;
 import com.amswh.iLIMS.project.service.PartygroupService;
@@ -19,7 +20,7 @@ public class PartnerService implements ApplicationContextAware {
     private List<String> orderedCodes;// 根据partner的重要程度排序，可以确定哪个服务先调用
     private Map<String,IPartner> parters=new HashMap<>(); // 用于存放各个Partner实现类
 
-    private Map<String,String> expressNo2PartnerMap=new HashMap<String,String>();//
+    private ExpressNo2PartnerMap expressNo2PartnerMap=new ExpressNo2PartnerMap();//
 
     @Resource
     ConstantsService constantsService;
@@ -48,13 +49,15 @@ public class PartnerService implements ApplicationContextAware {
     }
 
     public PatientInfo fetPatientInfoWithExpressNo(String barCode,String expressNo){
-           String code=this.getPartnerCode(expressNo);
+           String code=this.expressNo2PartnerMap.getPartner(expressNo);
            if(code !=null){
                return this.fetchPatientInfo(code,barCode);
            }else{
-
+               PatientInfo patientInfo=this.fetchPatientInfo(barCode);
+               this.expressNo2PartnerMap.pushNewPartner(expressNo,patientInfo.getPartnerCode());
+               return  patientInfo;
            }
-           return  null;
+
     }
 
     public PatientInfo fetchPatientInfo(String partnerCode,String barCode){
@@ -117,14 +120,5 @@ public class PartnerService implements ApplicationContextAware {
             parters.put(value.whoAmI(), value);
         }
     }
-
-    public void putExpressNo(String expressNo,String partnerCode){
-        this.expressNo2PartnerMap.putIfAbsent(expressNo,partnerCode);
-    }
-
-    public String getPartnerCode(String expressNo){
-        return this.expressNo2PartnerMap.get(expressNo);
-    }
-
 
 }

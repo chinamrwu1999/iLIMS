@@ -14,8 +14,7 @@ import java.util.*;
 @Service
 public class SysRoleService extends ServiceImpl<SysRoleMapper, SysRole> {
 
-    @Resource
-    SysUserRoleMapper userRoleMapper;
+
     public Set<String> getUserRoles(String username){
         List<String> roles= this.baseMapper.getUserRoles(username);
         if(roles!=null){

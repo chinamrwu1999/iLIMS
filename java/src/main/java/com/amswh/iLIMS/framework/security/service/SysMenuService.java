@@ -18,8 +18,8 @@ public class SysMenuService extends ServiceImpl<SysMenuMapper, SysMenu> {
      @Resource
      SysUserService userService;
 
-       public List<SysMenu> getUserMenu(Integer userId){
-              List<SysMenu> menuList= this.baseMapper.getUserMenus(userId);
+       public List<SysMenu> getUserMenu(String userName){
+              List<SysMenu> menuList= this.baseMapper.getUserMenus(userName);
            menuList.sort(Comparator.comparingInt(SysMenu::getParentId));
              return buildMenuTree(menuList);
        }

@@ -17,9 +17,9 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
         "LEFT JOIN SysMenu M ON M.menuId=RM.menuId ",
             "LEFT JOIN SysMenuComponent MC ON MC.menuId=M.menuId",
             "LEFT JOIN SysComponent SC ON SC.componentId=MC.componentId",
-        "WHERE U.userId=#{userId} order by M.menuId",
+        "WHERE U.username=#{username} order by M.menuId",
      "</script>"})
-    public List<SysMenu> getUserMenus(Integer userId);
+    public List<SysMenu> getUserMenus(String userName);
 
 
     @Select({"<script>",

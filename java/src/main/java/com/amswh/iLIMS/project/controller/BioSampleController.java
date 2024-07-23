@@ -47,8 +47,7 @@ public class BioSampleController {
      * @param inputMap
      */
 
-    @PostMapping("/sample/fetchBoundInf")
-    @Transactional
+    @PostMapping("/sample/getBoundInfo")
     public AjaxResult fetchBoundInf(@RequestBody Map<String,Object> inputMap){
         if(inputMap.get("barCode")==null && inputMap.get("udi")==null){
             return AjaxResult.error("条码号与udi至少提供一样");

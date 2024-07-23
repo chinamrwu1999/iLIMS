@@ -47,6 +47,12 @@ public class SystemController {
     public AjaxResult createUser(@RequestBody Map<String,String> input){
         String username=input.get("userName");
         String password=input.get("password");
+
+        SysUser sysUser=userService.getSysUser(username.trim());
+        if(sysUser!=null){
+            return AjaxResult.error("用户名:"+username+" 已经被别人注册了");
+        }
+
         String message="";
         if(username==null || username.trim().length()<6){
             message+="用户名不得少于6个字符";
@@ -76,6 +82,11 @@ public class SystemController {
         }
         return  AjaxResult.success( this.userService.changeUserStatus(userId,status));
     }
+
+
+
+
+
 
     /**
      * 重置用户密码
@@ -158,26 +169,25 @@ public class SystemController {
       //  return  null;
     }
     @GetMapping("/menu/list")
-    public AjaxResult  listAllMenu(@RequestBody Map<String,Object> input){
+    public AjaxResult  listAllMenu(){
              return  AjaxResult.success(menuService.listAllMenus());
     }
 
     @GetMapping("/tokenMenu")
-    public AjaxResult  fetchMenuByToken(@RequestHeader String token, HttpServletRequest request){
+    public AjaxResult  fetchMenuByToken(HttpServletRequest request){
         LoginUser loginUser=this.tokenService.getLoginUser(request);
         if(loginUser==null){
            return AjaxResult.error("会话已过期,请重新登录！");
         }
-        Integer userId=loginUser.getUserId();
-        return  AjaxResult.success(menuService.getUserMenu(userId));
+        String userName=loginUser.getUsername();
+        return  AjaxResult.success(menuService.getUserMenu(userName));
     }
     @GetMapping("/user/basicInfo")
-    public AjaxResult  fetchUserInfo(@RequestHeader String token, HttpServletRequest request){
+    public AjaxResult  fetchUserInfo(HttpServletRequest request){
         LoginUser loginUser=this.tokenService.getLoginUser(request);
         if(loginUser==null){
             return AjaxResult.error("会话已过期,请重新登录！");
         }
-        Integer userId=loginUser.getUserId();
         return  AjaxResult.success(userService.getSysUser(loginUser.getUsername()));
     }
     /**
@@ -199,5 +209,8 @@ public class SystemController {
         }
         return  AjaxResult.error("更新用户角色发生错误！");
     }
+
+
+
 
 }

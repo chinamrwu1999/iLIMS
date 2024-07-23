@@ -5,6 +5,7 @@ import com.amswh.iLIMS.framework.security.model.LoginUser;
 import com.amswh.iLIMS.framework.security.model.SysUser;
 import com.amswh.iLIMS.framework.security.service.*;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,10 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,22 +43,12 @@ public class SysLoginController {
             return  AjaxResult.error("At least 6 characters required for password");
         }
         String token=loginService.login(username,password);
-
-        SysUser user=userService.getSysUser(username);
-        Integer userId=user.getUserId();
-        Map<String,Object> dataMap=new HashMap<>();
-        dataMap.put("token",token);
-        dataMap.put("menuTree",menuService.getUserMenu(userId));
-        Map<String,Object> userInfo=new HashMap<>();
-//        if(!"admin".equalsIgnoreCase(username)){
-//
-//        }
-//        dataMap.put("userInf",)
-
-        return  AjaxResult.success(dataMap);
+        Map<String,Object> data=new HashMap<>();
+        data.put("token",token);
+        AjaxResult result=AjaxResult.success("登录成功");
+        result.put("data",data);
+        return  result;
     }
-
-
     @PostMapping("/business")
    // @PreAuthorize("@ss.hasRole('admin')")
     public AjaxResult businessTest(@RequestBody Map<String,String> input){

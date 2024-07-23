@@ -3,7 +3,7 @@ use iLIMS;
 DROP TABLE IF EXISTS `SysUser`;
 CREATE TABLE IF NOT EXISTS  `SysUser`(
     `userId` int unsigned not null auto_increment primary key,
-    `userName` varchar(30) not null ,
+    `userName` varchar(30) not null unique,
     `password` varchar(60) not null,
     `status`  char(1) not null default 'A' comment '激活与否,A(active)激活,D(ead)失活',
     `createTime` timestamp not null default CURRENT_TIMESTAMP
