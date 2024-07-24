@@ -18,12 +18,10 @@ import java.util.Map;
 
 @Service
 public class PartyBarService extends ServiceImpl<IPartyBar, PartyBar> {
-	   @Resource
-	   PartnerService  partnerService;
+
 	   @Resource
 	   PartyService partyService;
-	   @Resource
-	   PartnerBarService partnerBarService;
+
 	   public Map<String,Object> findPartner(String barCode){
 		   return this.baseMapper.findPartner(barCode);
 	   }
@@ -61,15 +59,7 @@ public class PartyBarService extends ServiceImpl<IPartyBar, PartyBar> {
 	}
 
 	public Map<String,Object> getBindedInfo(String barCode){
-		  Map<String,Object> bindedInf= this.baseMapper.getBindedInfo(barCode);
-		  if(bindedInf==null || bindedInf.isEmpty()){ //本地未找到绑定信息
-			  PatientInfo patientInf=partnerService.fetchPatientInfo(barCode);
-		      if(patientInf!=null) {
-				  bindedInf=new HashMap<>();
-				  MapUtil.copy2Map(patientInf, bindedInf);
-			  }
-		  }
-		  return bindedInf;
+        return this.baseMapper.getBindedInfo(barCode);
 	}
 
 }

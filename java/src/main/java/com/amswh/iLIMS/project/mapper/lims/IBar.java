@@ -34,7 +34,7 @@ public interface IBar extends BaseMapper<Bar> {
      * @param barCode
      * @return
      */
-    @Select("SELECT P.partyId,P.name,P.gender,,date_format(P.birthday,'%Y-%m-%d') birthday,"+
+    @Select("SELECT P.partyId,P.name,P.gender,date_format(P.birthday,'%Y-%m-%d') birthday,"+
             "P.IDCardType,P.IDNumber,PB.age FROM PartyBar PB,Person P "+
             "WHERE PB.partyId=P.partyId AND PB.barCode=#{barCode}")
     public Map<String,Object> getPatient(String barCode);

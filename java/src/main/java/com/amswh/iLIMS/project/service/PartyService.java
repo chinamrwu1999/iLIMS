@@ -162,6 +162,7 @@ public class PartyService extends ServiceImpl<IParty, Party> {
         Person person=new Person();
         MapUtil.copyFromMap(inputMap, person);
         person.setPartyId(partyId);
+        this.personService.save(person);
         inputMap.put("partyId",partyId);
         this.addPartyContact(inputMap);
         return person;

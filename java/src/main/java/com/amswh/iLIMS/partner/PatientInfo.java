@@ -26,7 +26,7 @@ public class PatientInfo {
     private String gender;
     private Integer age;
     private String birthDate;
-    private String productCode;
+
     private String samplingTime;
     private String barCode;
     private String IDNumber;
@@ -34,6 +34,7 @@ public class PatientInfo {
     private String phone;
     private String partnerCode;
     private String productName;
+    private String productCode;
 
     private String partnerName;
     private Map<String,Object> otherInfo;

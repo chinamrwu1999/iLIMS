@@ -3,7 +3,9 @@ package com.amswh.iLIMS.project.controller;
 
 import com.amswh.iLIMS.framework.model.AjaxResult;
 
+import com.amswh.iLIMS.partner.PartnerService;
 import com.amswh.iLIMS.partner.PatientInfo;
+import com.amswh.iLIMS.partner.service.NORMALService;
 import com.amswh.iLIMS.project.domain.Analyte;
 import com.amswh.iLIMS.project.domain.AnalyteProcess;
 import com.amswh.iLIMS.project.domain.BarExpress;
@@ -36,7 +38,13 @@ public class BioSampleController {
     PartyBarService partyBarService;
 
     @Resource
+    NORMALService normalService;
+
+    @Resource
     BarExpressService barExpressService;
+
+    @Resource
+    PartnerService partnerService;
 
     @Resource
     BarService barService;
@@ -59,17 +67,31 @@ public class BioSampleController {
            barCode=inputMap.get("udi").toString();
         }
         //PatientInfo patientInfo=partnerService.fetchPatientInfo(barCode);
-        Map<String,Object> mp=partyBarService.getBindedInfo(barCode);
-        if(mp!=null && !mp.isEmpty() ) {//保存受检者、partner信息
-            return AjaxResult.success(mp);
-        }else{
-            AjaxResult result=new AjaxResult();
-            result.put("code","200");
-            result.put("msg","未找到该条码的足够信息,请手工分拣");
-            PatientInfo patientInfo=new PatientInfo();
-            patientInfo.setBarCode(barCode);
-            result.put("data",patientInfo);
-            return result;
+        Map<String,Object> mp=partyBarService.getBindedInfo(barCode);// 获取扫码绑定信息
+        if(mp!=null && !mp.isEmpty() ) {//
+             if("unknown".equals(mp.get("partnerCode").toString())){ //代理商未知
+               Map<String,Object> partnerMap=  normalService.findPartnerInfo(barCode);
+               if(partnerMap!=null){
+                   mp.put("partnerCode",partnerMap.get("sampleSrc"));
+                   mp.put("partnerName",partnerMap.get("customerName"));
+                   return AjaxResult.success(mp);
+               }else{
+                   return AjaxResult.error("未能找到合作代理客户信息，请手工确认或联系相关销售人员",mp);
+               }
+            }else{
+                return AjaxResult.success(mp);
+            }
+        }else{// 未找到扫码绑定信息，说明样本来自某个Partner，需要调用Partner的API接口获取受检者个人信息
+             String expressNo=null;
+             if(inputMap.get("expressNo")!=null){
+                 expressNo=inputMap.get("expressNo").toString().trim();
+             }
+             PatientInfo patientInfo=partnerService.fetPatientInfoWithExpressNo(barCode,expressNo);
+             if(patientInfo!=null){
+
+             }
+
+
         }
   }
 

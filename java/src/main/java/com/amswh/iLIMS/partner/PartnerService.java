@@ -32,7 +32,7 @@ public class PartnerService implements ApplicationContextAware {
     public void loadServices(){
         Set<String> set1=this.parters.keySet();
         this.orderedCodes=new ArrayList<>();
-        for(String code: Arrays.asList("YQ","HY","MEGA","XNYT","PAJK","RH")){
+        for(String code: Arrays.asList("YQ","HY","XNYT","MEGA","PAJK","RH")){
             if(set1.contains(code)){
                 this.orderedCodes.add(code);
             }
@@ -75,10 +75,6 @@ public class PartnerService implements ApplicationContextAware {
     }
 
     public PatientInfo fetchPatientInfo(String barCode){
-
-
-
-
 
          for(String partnerCode:orderedCodes){
              try {

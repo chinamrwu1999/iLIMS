@@ -55,7 +55,7 @@ public class NORMALService implements IPartner {
 
 
 
-    private Product findProductInfo(String barCode){
+    public Product findProductInfo(String barCode){
      Product result=orderService.getShippedProductInfo(barCode); //根据发货信息查找条码的产品类型
         if(result!=null ){
             return result;
@@ -76,20 +76,17 @@ public class NORMALService implements IPartner {
      * @param barCode
      * @return
      */
-    private Map<String,Object> findPartnerInfo(String barCode){
+    public Map<String,Object> findPartnerInfo(String barCode){
        Map<String,Object> order=orderService.getOrderInfo(barCode);// 根据订单发货查找客户
         if(order !=null){
+            Map<String,Object> result=new HashMap<>();
+            result.put("partner",order.get("customerName"));
            if(order.get("externalId")!=null){
-               Map<String,Object> result=new HashMap<>();
                result.put("sampleSrc",order.get("externalId"));
-               result.put("partner",order.get("shortName"));
-               return result;
            }else if(order.get("fullName")!=null){
-               Map<String,Object> result=new HashMap<>();
-               result.put("sampleSrc",inferSampleSrc(order.get("fullName").toString()));
-               result.put("partner",order.get("shortName"));
-               return result;
+               result.put("sampleSrc",inferSampleSrc(order.get("customerName").toString()));
            }
+            return result;
         }
 
         return null;
