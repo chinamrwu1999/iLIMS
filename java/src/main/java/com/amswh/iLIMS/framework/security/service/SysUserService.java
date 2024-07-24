@@ -129,5 +129,17 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> implemen
         return baseMapper.getUser(userName);
     }
 
+
+    public List<SysUser> getPageUsers(Integer pageIndex,Integer pageSize){
+        if(pageSize==null || pageSize<=0) pageSize=20;
+        if(pageIndex==null || pageIndex<0) pageIndex=0;
+        Integer offset=pageIndex*pageSize;
+        return this.baseMapper.listUser(pageSize,offset);
+    }
+
+    public Integer totalUsers(){
+        return  this.baseMapper.countUsers();
+    }
+
 }
 

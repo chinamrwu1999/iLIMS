@@ -14,6 +14,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +74,7 @@ public class SystemController {
      * @return
      */
     @PostMapping("/user/changeStatus")
+//    @PreAuthorize("@ss.hasRole('admin')")
     public AjaxResult changeUserStatus(@RequestBody Map<String,Object> input){
         Integer userId=(Integer) input.get("userId");
         String status=input.get("status").toString();
@@ -84,6 +86,32 @@ public class SystemController {
     }
 
 
+    /**
+     * 分页列出用户
+     * @param input
+     * @return
+     */
+    @RequestMapping("/user/list")
+    @PreAuthorize("@ss.hasRole('admin')")
+    public AjaxResult listUsers(@RequestBody Map<String,Object> input){
+         Integer pageIndex=0;
+         Integer pageSize=20;
+         if(input.get("pageIndex")!=null){
+             pageIndex=(Integer) input.get("pageIndex");
+         }
+        if(input.get("pageSize")!=null){
+            pageSize=(Integer) input.get("pageSize");
+        }
+        Map<String,Object> data=new HashMap<>();
+        data.put("currentPage",pageIndex+1);
+        int total= userService.totalUsers();
+        data.put("total",total);
+        int totalPages=(int)Math.ceil(1.0*total/pageSize);
+        data.put("totalPages",totalPages);
+        data.put("pageSize",pageSize);
+        data.put("list",userService.getPageUsers(pageIndex,pageSize));
+         return AjaxResult.success(data);
+    }
 
 
 

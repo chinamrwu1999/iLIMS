@@ -17,6 +17,9 @@ public class Sequence {
     @TableField("seqId")
     private Long seqId;
 
+//    @TableField("colName")
+//    private String colName;
+
     @TableField("updateTime")
     private LocalDateTime updateTime;
 

@@ -1,9 +1,13 @@
+
 create view VDepartment as
-select PG.partyId deptId,fullName deptName FROM PartyGroup PG
-inner join partyRelationship PR1 ON PG.partyId=PR1.toId
-inner join Party P ON P.partyId=PR1.fromId
-inner join Party P1 ON P1.partyId=PR1.toId
-WHERE P.partyType='ROOT' AND P1.partyType='DEPT';
+select PG.partyId deptId,fullName deptName,PR.fromId parentId FROM PartyGroup PG
+INNER JOIN Party P0 ON P0.partyId=PG.partyId
+LEFT JOIN partyRelationship PR ON PR.toId=P0.partyId
+LEFT JOIN Party P1 ON P1.partyId=PR.fromId
+WHERE P0.partyType='DEPT' AND PR.typeId='OWN'
+;
+
+
 
 
 create view VEmployee as

@@ -17,8 +17,13 @@ public interface IPartyGroup extends BaseMapper<PartyGroup> {
     @Select("SELECT * FROM VDepartment ")
     public List<Map<String,Object>> listDepartments();
 
+    @Select("SELECT * FROM VDepartment ")
+    public List<Map<String,Object>> listChildDepartments(String parentId);
+
     @Select("SELECT * FROM VPartner ")
     public List<Map<String,Object>> listPartner();
+
+
 
 
 }

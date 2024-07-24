@@ -209,5 +209,15 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
 
     }
 
+//    @PostConstruct
+//    public void Initialize(){
+//
+//    }
+//
+//
+//    public Long getMaxUsedSeq(String seqId){
+//
+//    }
+
 
 }

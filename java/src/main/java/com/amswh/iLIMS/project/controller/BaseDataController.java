@@ -3,12 +3,10 @@ package com.amswh.iLIMS.project.controller;
 
 import com.amswh.iLIMS.framework.model.AjaxResult;
 import com.amswh.iLIMS.project.service.ConstantsService;
+import com.amswh.iLIMS.project.service.PartyService;
 import com.amswh.iLIMS.project.service.PartygroupService;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -18,7 +16,8 @@ public class BaseDataController {
     @Resource
     PartygroupService partygroupService;
 
-
+  @Resource
+    PartyService partyService;
 
     @Resource
     ConstantsService constantsService;
@@ -61,6 +60,17 @@ public class BaseDataController {
     }
 
     /**
+     * 列出部门人员
+     * @param deptId
+     * @return
+     */
+    @RequestMapping("/list/deptEmployee/{deptId}")
+    public AjaxResult listDepartmentEmployees(@PathVariable String deptId){
+
+        return  AjaxResult.success(partyService.listDepartentEmployees(deptId));
+    }
+
+    /**
      * 新增部门
      * @return
      */
@@ -74,6 +84,16 @@ public class BaseDataController {
     public AjaxResult listPartners(){
         return  AjaxResult.success(partygroupService.listPartners());
 
+    }
+
+    /**
+     * 全部员工列表
+     * @return
+     */
+    @RequestMapping ("/list/employees")
+    public AjaxResult listEmployees(){
+
+        return AjaxResult.success(partyService.listAllEmployees());
     }
 
     /**

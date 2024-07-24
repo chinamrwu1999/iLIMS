@@ -22,4 +22,15 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
             "AND U.userName=#{userName}",
             "</script>"})
     public List<SysComponent> getUserPrivileges(String userName);
+
+    @Select({"<script>",
+            "SELECT userId,username,'*****' as password FROM SysUser",
+            "<if test='offSet!=null and pageSize>0' >",
+            "limit #{offSet},#{pageSize}",
+            "</if>",
+            "</script>"})
+    public List<SysUser> listUser(Integer pageSize,Integer offSet);
+
+    @Select("SELECT count(*) total FROM SysUser  ")
+    public Integer countUsers();
 }

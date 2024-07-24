@@ -288,5 +288,12 @@ public class PartyService extends ServiceImpl<IParty, Party> {
          return (Map<String,Object>)this.getPersonInfo(username);
      }
 
+     public List<Map<String,Object>> listAllEmployees(){
+         return baseMapper.listAllEmployee();
+     }
+
+     public List<Map<String,Object>> listDepartentEmployees(String deptId){
+         return this.baseMapper.listDepartmentEmployee(deptId);
+     }
 
 }

@@ -59,4 +59,10 @@ public interface IParty extends BaseMapper<Party> {
       "</script>"
      })
      public Map<String,Object> getPersonInfByContact(String contact);
+
+     @Select("SELECT * FROM vEmployee")
+     public List<Map<String,Object>> listAllEmployee();
+
+     @Select("SELECT * FROM vEmployee where deptId=#{deptId}")
+     public List<Map<String,Object>> listDepartmentEmployee(String deptId);
 }

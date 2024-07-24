@@ -17,4 +17,6 @@ public interface ISequence extends BaseMapper<Sequence> {
     @Update("UPDATE sequence set seqId=#{seqId},updateTime=now() WHERE seqName=#{seqName}")
     public int updateSequence(String seqName,Long seqId);
 
+
+
 }
