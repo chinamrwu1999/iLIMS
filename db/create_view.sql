@@ -25,3 +25,7 @@ inner join partyRelationship PR1 ON PG.partyId=PR1.toId
 inner join Party P ON P.partyId=PR1.fromId
 inner join Party P1 ON P1.partyId=PR1.toId
 WHERE P.partyType='ROOT' AND P1.partyType='COMPANY' AND PR1.typeId='partner';
+
+
+CREATE VIEW Patient AS SELECT PS.*,P.createTime FROM Person PS,Party P 
+WHERE PS.partyId=P.partyId AND P.partyType='PATIENT';

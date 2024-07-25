@@ -29,8 +29,8 @@ public class BarExpress {
 //    @TableField("partyId")
 //    private Integer partnerId;
 
-    @TableField("handleWay")
-    private String handleWay;//处理方式：自动分拣还是公手工分拣
+//    @TableField("handleWay")
+//    private String handleWay;//处理方式：自动分拣还是公手工分拣
 
     @TableField("createTime")
     private LocalDateTime createTime;

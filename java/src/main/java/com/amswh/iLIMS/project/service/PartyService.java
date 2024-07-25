@@ -149,10 +149,10 @@ public class PartyService extends ServiceImpl<IParty, Party> {
             if(!MyStringUtils.isEmpty(person.getPartyId())) {
                 inputMap.put("partyId", person.getPartyId());
                 this.addPartyContact(inputMap);//添加联系人信息
-                return existeds.get(0);
+                return person;
             }
         }
-        inputMap.put("partyType","PERSON");
+        inputMap.putIfAbsent("partyType", "PERSON");
         Party party=new Party();
         String partyId=seqService.nextPartySeq();
         party.setPartyId(partyId);
@@ -255,6 +255,7 @@ public class PartyService extends ServiceImpl<IParty, Party> {
         if(patient.getBirthDate()!=null){mp.put("birthday",patient.getBirthDate());}
         if(patient.getIDType()!=null){mp.put("IDCardType",patient.getIDType());}
         if(patient.getPhone()!=null){mp.put("phone",patient.getPhone());}
+        mp.put("partyType","PATIENT");
         mp.putAll(patient.getOtherInfo());
         try {
             return this.addPerson(mp);

@@ -50,8 +50,11 @@ public class PartnerService implements ApplicationContextAware {
 
     public PatientInfo fetPatientInfoWithExpressNo(String barCode,String expressNo){
            String code=this.expressNo2PartnerMap.getPartner(expressNo);
+
            if(code !=null){
-               return this.fetchPatientInfo(code,barCode);
+               PatientInfo patientInf= this.fetchPatientInfo(code,barCode);
+               patientInf.setPartnerCode(code);
+               return patientInf;
            }else{
                PatientInfo patientInfo=this.fetchPatientInfo(barCode);
                this.expressNo2PartnerMap.pushNewPartner(expressNo,patientInfo.getPartnerCode());

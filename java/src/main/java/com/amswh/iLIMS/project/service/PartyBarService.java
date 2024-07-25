@@ -8,6 +8,7 @@ import com.amswh.iLIMS.partner.PatientInfo;
 import com.amswh.iLIMS.utils.MapUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import org.springframework.aot.generate.InMemoryGeneratedFiles;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,12 +45,6 @@ public class PartyBarService extends ServiceImpl<IPartyBar, PartyBar> {
 		PatientInfo patientInfo = new PatientInfo();
 		MapUtil.copyFromMap(inputMap, patientInfo);
 		Person patient = partyService.savePatient(patientInfo);
-		PartnerBar partnerBar = new PartnerBar();
-		MapUtil.copyFromMap(inputMap, partnerBar);
-		if(inputMap.get("partnerCode")!=null) {
-			partnerBar.setPartnerId(inputMap.get("partnerCode").toString());
-		}
-		partnerBarService.save(partnerBar);
 		PartyBar pb = new PartyBar();
 		MapUtil.copyFromMap(inputMap, pb);
 		pb.setPartyId(patient.getPartyId());
@@ -58,8 +53,37 @@ public class PartyBarService extends ServiceImpl<IPartyBar, PartyBar> {
 
 	}
 
-	public Map<String,Object> getBindedInfo(String barCode){
-        return this.baseMapper.getBindedInfo(barCode);
+
+	public boolean updataPartyBar(Map<String,Object> input){
+		 if(input.get("partyId")!=null){
+			 String partyId=input.get("partyId").toString();
+			 PartyBar pb=new PartyBar();
+			 pb.setPartyId(partyId);
+			 if(input.get("partnerCode")!=null){
+				 pb.setPartnerCode(input.get("partnerCode").toString().trim());
+			 }else{
+				 pb.setPartnerCode(null);
+			 }
+			 if(input.get("productCode")!=null){
+				 pb.setProductCode(input.get("productCode").toString().trim());
+			 }else{
+				 pb.setProductCode(null);
+			 }
+			 if(input.get("age")!=null){
+				 pb.setAge((Integer) input.get("age"));
+			 }else{
+				 pb.setAge(null);
+			 }
+			 return baseMapper.updatePartyBar(pb);
+
+		 }
+		 return false;
+	}
+
+
+
+	public Map<String,Object> getBoundInfo(String barCode){
+        return this.baseMapper.getBoundInfo(barCode);
 	}
 
 }

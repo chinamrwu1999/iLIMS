@@ -37,8 +37,7 @@ CREATE TABLE IF NOT EXISTS `analyte`(
     `barCode` varchar(60) NOT NULL COMMENT '分析物对应的样本条码号',
     `analyteCode` varchar(20) NOT NULL COMMENT '分析物编号，用于实验室内部编排实验用，类如 ACK23000018等',
     `createTime` datetime not null default now(),
-    unique(`barCode`,`analyteCode`),
-    constraint fk_analyte_1 foreign key (barCode) references PartyBar(barCode)
+    unique(`barCode`,`analyteCode`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '分析物:一份生物样本BioSample 可能会被多次检测,每一次检测用到的只是BioSample的一部分,称为analyte，不同analyte可以做不同检测';
 CREATE index analyteIndex on `analyte`(`analyteCode`);
 
@@ -47,7 +46,6 @@ CREATE TABLE IF NOT EXISTS `BarExpress`(
     `barCode` varchar(60) not null comment '条码号',
     `udi` varchar(60)  comment 'udi',
     `expressNo` varchar(60) comment '快递单号' ,
-    `handleWay` varchar(10) comment '分拣方式:auto自动,manual',
     `createTime` datetime not null default now(),
     unique(`barCode`,`expressNo`)
 ) comment '收到快递送来的样本，分拣动作' ;
@@ -61,8 +59,7 @@ CREATE TABLE IF NOT EXISTS `analyteProcess` (
     `remark` varchar(100) COMMENT '备注',
     `employeeId` varchar(10) not null COMMENT '操作人的员工工号',
     `createTime` DATETIME not null default now(),
-    unique (`analyteCode`,`action`),
-    constraint fk_analyteProcess_01 foreign Key (`analyteCode`) references `analyte`(`analyteCode`)   
+    unique (`analyteCode`,`action`)      
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '分析物处理表：记录分析物被操作处理的每一个步骤状态';
 
 CREATE index analyte_process_Index1 on `analyteProcess`(`analyteCode`);
@@ -96,8 +93,7 @@ CREATE index index_PCRData_analyteId on `PCRData`( `analyteCode`);
 
 CREATE TABLE IF NOT EXISTS PCRCurve(
     `id` int unsigned not null primary key,
-    `dltRN` varchar(800) not null,
-    constraint fk_curve foreign key(`id`) references `PCRData`(`id`)
+    `dltRN` varchar(800) not null
 ) ENGINE=InnoDB comment '标记物的扩展曲线值';
 
 
@@ -115,8 +111,7 @@ CREATE TABLE IF NOT EXISTS  `BioSample`(
     `sampleImage` varchar(200) COMMENT '样本照片',
     `formImage` varchar(200) COMMENT '个人信息表格图片',
     `surveyImage` varchar(200) COMMENT '如有纸质问卷，则拍照保存',
-    constraint fk_biosample_bar foreign key (barCode) references PartyBar(barCode),
-    `createTime` datetime not null default now() COMMENT '收到样本时间，插入数据库时候的时间'
+   `createTime` datetime not null default now() COMMENT '收到样本时间，插入数据库时候的时间'
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '生物样本基本信息表';
 
 

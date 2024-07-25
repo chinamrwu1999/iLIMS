@@ -10,10 +10,12 @@ import com.amswh.iLIMS.project.service.OrderService;
 import com.amswh.iLIMS.project.service.PartyService;
 import com.amswh.iLIMS.utils.MapUtil;
 import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class NORMALService implements IPartner {
 
     @Resource

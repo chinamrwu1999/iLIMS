@@ -6,17 +6,16 @@ import com.amswh.iLIMS.framework.model.AjaxResult;
 import com.amswh.iLIMS.partner.PartnerService;
 import com.amswh.iLIMS.partner.PatientInfo;
 import com.amswh.iLIMS.partner.service.NORMALService;
-import com.amswh.iLIMS.project.domain.Analyte;
-import com.amswh.iLIMS.project.domain.AnalyteProcess;
-import com.amswh.iLIMS.project.domain.BarExpress;
-import com.amswh.iLIMS.project.domain.BioSample;
+import com.amswh.iLIMS.project.domain.*;
 import com.amswh.iLIMS.project.service.*;
 import com.amswh.iLIMS.utils.MapUtil;
 import jakarta.annotation.Resource;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -25,8 +24,8 @@ public class BioSampleController {
     @Resource
     BioSampleService sampleService;
 
-//    @Resource
-//    Patientervice patientService;
+    @Resource
+    PartyService partyService;
 
     @Autowired
     AnalyteService analyteService;
@@ -50,48 +49,71 @@ public class BioSampleController {
     BarService barService;
 
     /**
-     *  样本分拣信息检索：
-     *  输入条码号或udi，查询病人信息、产品信息、partner信息给前端
+     *  样本分拣：
+     *  输入条码号或udi，获取病人信息、产品信息、partner信息给前端
      * @param inputMap
      */
 
-    @PostMapping("/sample/getBoundInfo")
-    public AjaxResult fetchBoundInf(@RequestBody Map<String,Object> inputMap){
-        if(inputMap.get("barCode")==null && inputMap.get("udi")==null){
-            return AjaxResult.error("条码号与udi至少提供一样");
+    @PostMapping("/sample/categorize")
+    @Transactional
+    public AjaxResult sampleCategorize(@RequestBody Map<String,Object> inputMap){
+        String barCode=inputMap.get("barCode")==null?null:inputMap.get("barCode").toString().trim();
+        String expressNo=inputMap.get("expressNo")==null?null:inputMap.get("expressNo").toString().trim();
+        String udi=inputMap.get("udi")==null?null:inputMap.get("udi").toString().trim();
+        if(barCode==null && udi==null){  return AjaxResult.error("条码号与udi至少提供一样");  }
+        if(barCode==null ){   barCode=udi;    }
+
+        if(expressNo!=null){ // 保存快递单号与条码的关联信息
+            BarExpress be=new BarExpress();
+            be.setBarCode(barCode);
+            be.setExpressNo(expressNo);
+            be.setUdi(udi);
+            barExpressService.save(be);
         }
-        String barCode=null;
-        if(inputMap.get("barCode")!=null){
-            barCode=inputMap.get("barCode").toString();
-        } else if(inputMap.get("udi")!=null){
-           barCode=inputMap.get("udi").toString();
-        }
-        //PatientInfo patientInfo=partnerService.fetchPatientInfo(barCode);
-        Map<String,Object> mp=partyBarService.getBindedInfo(barCode);// 获取扫码绑定信息
-        if(mp!=null && !mp.isEmpty() ) {//
-             if("unknown".equals(mp.get("partnerCode").toString())){ //代理商未知
+        Map<String,Object> boundInfo=partyBarService.getBoundInfo(barCode);// 获取扫码绑定信息
+        if(boundInfo!=null && !boundInfo.isEmpty() ) {//
+             if("unknown".equals(boundInfo.get("partnerCode").toString())){ //代理商未知
                Map<String,Object> partnerMap=  normalService.findPartnerInfo(barCode);
                if(partnerMap!=null){
-                   mp.put("partnerCode",partnerMap.get("sampleSrc"));
-                   mp.put("partnerName",partnerMap.get("customerName"));
-                   return AjaxResult.success(mp);
+                   boundInfo.put("partnerCode",partnerMap.get("sampleSrc"));
+                   boundInfo.put("partnerName",partnerMap.get("customerName"));
+                   partyBarService.updataPartyBar(boundInfo);
+                   return AjaxResult.success(boundInfo);
                }else{
-                   return AjaxResult.error("未能找到合作代理客户信息，请手工确认或联系相关销售人员",mp);
+                   return AjaxResult.error("未能找到合作代理客户信息，请手工确认或联系相关销售人员",boundInfo);
                }
             }else{
-                return AjaxResult.success(mp);
+                return AjaxResult.success(boundInfo);
             }
-        }else{// 未找到扫码绑定信息，说明样本来自某个Partner，需要调用Partner的API接口获取受检者个人信息
-             String expressNo=null;
-             if(inputMap.get("expressNo")!=null){
-                 expressNo=inputMap.get("expressNo").toString().trim();
+        }else{// 未找到扫码绑定信息，说明样本来自某个Partner，需要调用Partner的API接口获取受检者个人信息  ---------------------- 2
+              PatientInfo patientInfo=partnerService.fetPatientInfoWithExpressNo(barCode,expressNo);
+             if(patientInfo!=null){ // 通过partner的api成功获取信息
+                   Person patient =partyService.savePatient(patientInfo);
+                   if(patient!=null){
+                        String partyId=patient.getPartyId();
+                        PartyBar pb=new PartyBar();
+                        BeanUtils.copyProperties(patientInfo,pb);
+                        pb.setPartyId(partyId);
+                        pb.setBindWay("api");
+                        partyBarService.save(pb);
+                        return AjaxResult.success(patientInfo);
+                   }else{
+                       return  AjaxResult.error("保存受检者个人信息时发生异常",patientInfo);
+                   }
+             }else{ //既没有绑定信息，也没有partner的API信息   --------------------------------------------- 3
+                   Map<String,Object> result=new HashMap<>();
+                   Map<String,Object> partnerMap=normalService.findPartnerInfo(barCode);
+                   if(partnerMap!=null && !partnerMap.isEmpty()){
+                       result.put("partnerCode",partnerMap.get("sampleSrc"));
+                       result.put("partnerName",partnerMap.get("partner"));
+                   }
+                   Product product=normalService.findProductInfo(barCode);
+                   if(product!=null){
+                       result.put("productCode",product.getCode());
+                       result.put("productName",product.getName());
+                   }
+                  return AjaxResult.success("未能找到受检者个人的信息，请手工录入！",result);
              }
-             PatientInfo patientInfo=partnerService.fetPatientInfoWithExpressNo(barCode,expressNo);
-             if(patientInfo!=null){
-
-             }
-
-
         }
   }
 
@@ -102,7 +124,7 @@ public class BioSampleController {
      * @return
      */
 
-    @PostMapping("/sample/saveBoundInf")
+    @PostMapping("/sample/boundInf")
     @Transactional
     public AjaxResult saveBoundInf(@RequestBody Map<String,Object> inputMap){
         if(inputMap.get("expressNo")==null ||  inputMap.get("expressNo").toString().isBlank() ||
@@ -128,7 +150,7 @@ public class BioSampleController {
      */
     @GetMapping("/sample/receive/{barCode}")
     public AjaxResult receiveSample(@PathVariable String barCode){
-        Map<String,Object> mp=partyBarService.getBindedInfo(barCode);
+        Map<String,Object> mp=partyBarService.getBoundInfo(barCode);
         if(mp!=null && !mp.isEmpty() ) {//保存受检者、partner信息
             return AjaxResult.success(mp);
         }else{

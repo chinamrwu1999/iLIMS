@@ -77,21 +77,22 @@ public class WeChatBarController extends BaseController {
     @PostMapping("/bindBar")
     @Transactional
     public AjaxResult bindBox(@RequestHeader("openId")String openId, @RequestBody Map<String,Object> input) throws  Exception{
-          Bar bar=barService.getBar(input.get("barCode").toString());  //确保用艾米森微信小程序扫的是艾米森的条码
+        Bar bar=barService.getBar(input.get("barCode").toString());  //确保用艾米森微信小程序扫的是艾米森的条码
+        if(bar==null){
+            return AjaxResult.error("您扫的码不是有效的产品条码！");
+        }
         PartyBar pb=new PartyBar();
         pb.setBindWay("wechat");
         MapUtil.copyFromMap(input,pb);
-
-
-        if(input.get("partyId")==null){ //传入的不是partyId,新建Person
+       if(input.get("partyId")==null){ //传入的不是partyId,新建Person
             input.put("wechat",openId);
+            input.put("partyType","PATIENT");
             Person person=this.partyService.addPerson(input);
             pb.setPartyId(person.getPartyId());
         }else{
             pb.setPartyId(input.get("partyId").toString());
         }
         partyBarService.save(pb);
-
         return AjaxResult.success("绑定成功！");
     }
 
