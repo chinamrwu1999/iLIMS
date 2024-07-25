@@ -1,4 +1,5 @@
 package com.amswh.iLIMS.project.mapper.lims;
+import com.amswh.iLIMS.project.domain.Partner;
 import com.amswh.iLIMS.project.domain.PartyGroup;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Select;
@@ -20,10 +21,11 @@ public interface IPartyGroup extends BaseMapper<PartyGroup> {
     @Select("SELECT * FROM VDepartment ")
     public List<Map<String,Object>> listChildDepartments(String parentId);
 
-    @Select("SELECT * FROM VPartner ")
-    public List<Map<String,Object>> listPartner();
 
 
+
+    @Select("SELECT * FROM VPartner")
+    public List<Partner> listPartners();
 
 
 }

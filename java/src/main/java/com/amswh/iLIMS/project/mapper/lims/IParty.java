@@ -1,4 +1,5 @@
 package com.amswh.iLIMS.project.mapper.lims;
+import com.amswh.iLIMS.project.domain.Partner;
 import com.amswh.iLIMS.project.domain.PartyRelationship;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.amswh.iLIMS.project.domain.Party;
@@ -65,4 +66,6 @@ public interface IParty extends BaseMapper<Party> {
 
      @Select("SELECT * FROM vEmployee where deptId=#{deptId}")
      public List<Map<String,Object>> listDepartmentEmployee(String deptId);
+
+
 }

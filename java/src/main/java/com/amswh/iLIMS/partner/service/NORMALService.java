@@ -16,8 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class NORMALService implements IPartner {
-
+public class NORMALService {
     @Resource
     OAQueryService OA;
 
@@ -42,7 +41,7 @@ public class NORMALService implements IPartner {
      * @return
      * @throws Exception
      */
-    @Override
+
     public PatientInfo fetchPatientInfo(String barCode) throws Exception {
        Map<String,Object> mp=barService.getPatient(barCode); //根据样本绑定信息获取
        PatientInfo patient=new PatientInfo();
@@ -104,7 +103,6 @@ public class NORMALService implements IPartner {
         return null;
     }
 
-    @Override
     public String whoAmI() {
         return "NORMAL";
     }

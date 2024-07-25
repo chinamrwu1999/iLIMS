@@ -1,4 +1,5 @@
 package com.amswh.iLIMS.project.service;
+import com.amswh.iLIMS.project.domain.Partner;
 import com.amswh.iLIMS.project.domain.PartyGroup;
 import com.amswh.iLIMS.project.mapper.lims.IPartyGroup;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -15,7 +16,9 @@ public class PartygroupService extends ServiceImpl<IPartyGroup, PartyGroup> {
 		return this.baseMapper.listDepartments();
 	}
 
-	public List<Map<String,Object>> listPartners(){
-		return this.baseMapper.listPartner();
+	public List<Partner> listPartners(){
+		return this.baseMapper.listPartners();
 	}
+
+
 }

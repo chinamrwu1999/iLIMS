@@ -2,6 +2,7 @@ package com.amswh.iLIMS.project.service;
 
 
 import com.amswh.iLIMS.project.domain.Disease;
+import com.amswh.iLIMS.project.domain.Partner;
 import com.amswh.iLIMS.project.domain.Product;
 import com.amswh.iLIMS.project.domain.Project;
 import jakarta.annotation.PostConstruct;
@@ -23,6 +24,9 @@ public class ConstantsService {
     @Resource
     DiseaseService diseaseService;
 
+    @Resource
+    PartygroupService partygroupService;
+
     private final Map<String,String> productMap=new HashMap<>();
     private final Map<String,String> projectMap=new HashMap<>();
 
@@ -33,6 +37,8 @@ public class ConstantsService {
     private final Map<String,String> project2DiseaseMap=new HashMap<>();
 
     private Map<String,String> analyte2ProductMap=new HashMap<>();
+
+    private Map<String,String> partnerMap=new HashMap<>();
 
 
     @PostConstruct
@@ -59,6 +65,12 @@ public class ConstantsService {
              this.project2DiseaseMap.put(mp.get("projectCode"),mp.get("diseaseCode"));
          }
         // this.analyte2ProductMap=this.productService.listAnalyte2Product();
+
+        List<Partner> partners=partygroupService.listPartners();
+
+         for(Partner pt:partners){
+             partnerMap.put(pt.getPartnerCode(),pt.getPartnerName());
+         }
 
 
    }
@@ -95,5 +107,9 @@ public class ConstantsService {
 
    public List<Disease> listDiseases(){
         return this.diseaseService.list();
+   }
+
+   public String getPartnerName(String partnerCode){
+        return  this.partnerMap.get(partnerCode);
    }
 }

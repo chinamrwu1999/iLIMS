@@ -60,6 +60,23 @@ CREATE TABLE IF NOT EXISTS  `partyAddress`(
     `createTime` datetime not null default now()
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT '关系类型'; */
 
+CREATE TABLE IF NOT EXISTS `PartnerConfiguration`(
+    `partnerCode` varchar(8) not null primary key,
+    `property` varchar(25) not null,
+    `value` varchar(100) not null 
+) comment 'Partner的配置信息' ;
+
+
+
+CREATE TABLE IF NOT EXISTS `PartnerKeys`(
+    `partnerCode` varchar(8) not null primary key,
+    `privateKey`   text not null,
+    `publicKey`    text not null,
+    `createTime` DATETIME not null default now() 
+) comment 'Partner的RSA密钥' ;
+
+
+
 
 
 

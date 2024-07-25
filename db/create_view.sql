@@ -20,7 +20,7 @@ WHERE P.partyType='PERSON' and PC1.contactType='mobile';
 
 
 create view VPartner as
-select PG.partyId partyId,fullName,P1.externalId code FROM PartyGroup PG
+select PG.partyId partyId,fullName partnerName,P1.externalId partnerCode FROM PartyGroup PG
 inner join partyRelationship PR1 ON PG.partyId=PR1.toId
 inner join Party P ON P.partyId=PR1.fromId
 inner join Party P1 ON P1.partyId=PR1.toId
