@@ -3,6 +3,8 @@ package com.amswh.iLIMS.project.controller;
 
 import com.amswh.iLIMS.framework.model.AjaxResult;
 
+import com.amswh.iLIMS.framework.security.SecurityUtils;
+import com.amswh.iLIMS.framework.security.model.LoginUser;
 import com.amswh.iLIMS.partner.PartnerService;
 import com.amswh.iLIMS.partner.PatientInfo;
 import com.amswh.iLIMS.partner.service.NORMALService;
@@ -116,42 +118,14 @@ public class BioSampleController {
              }
         }
   }
-
-
-    /**
-     * 分拣成功：保存快递单号与条码关联信息
-     * @param inputMap
-     * @return
-     */
-
-    @PostMapping("/sample/boundInf")
-    @Transactional
-    public AjaxResult saveBoundInf(@RequestBody Map<String,Object> inputMap){
-        if(inputMap.get("expressNo")==null ||  inputMap.get("expressNo").toString().isBlank() ||
-           inputMap.get("barCode")==null ||  inputMap.get("barCode").toString().isBlank()
-        ){
-            return AjaxResult.error("快递单号、条码号都不能为空");
-        }
-        inputMap.put("bindWay","API");
-        if(partyBarService.saveBindedInfo(inputMap)) {
-            BarExpress be=new BarExpress();
-            MapUtil.copyFromMap(inputMap,be);
-            barExpressService.save(be);
-            return AjaxResult.success("OK,样本信息保存成功");
-        }
-        return AjaxResult.error("收样失败！请联系技术人员");
-    }
-
-
-
     /**
      * 医检所前端收样人员收到样本，查看该样本绑定的相关信息
      * @param barCode 样本信息描述
      */
-    @GetMapping("/sample/receive/{barCode}")
-    public AjaxResult receiveSample(@PathVariable String barCode){
+    @GetMapping("/sample/boundInfo/{barCode}")
+    public AjaxResult receive_Sample_BoundInfo(@PathVariable String barCode){
         Map<String,Object> mp=partyBarService.getBoundInfo(barCode);
-        if(mp!=null && !mp.isEmpty() ) {//保存受检者、partner信息
+        if(mp!=null && !mp.isEmpty() ) {
             return AjaxResult.success(mp);
         }else{
             AjaxResult result=new AjaxResult();
@@ -168,7 +142,7 @@ public class BioSampleController {
      *  保存收样信息
      * @param inputMap 样本信息描述
      */
-    @PostMapping("/sample/receive/save")
+    @PostMapping("/sample/receive")
     @Transactional
     public AjaxResult saveReceivedSampleInf(@RequestBody Map<String,Object> inputMap){
         BioSample sample=new BioSample();
@@ -179,7 +153,8 @@ public class BioSampleController {
         process.setAction("RECEIVE");
         process.setStatus("success");
         process.setAnalyteCode(inputMap.get("analyteCode").toString());
-        process.setEmployeeId("15010040");//此处需要从session里面获取
+        LoginUser loginUser=SecurityUtils.getLoginUser();
+        process.setEmployeeId(loginUser.getUsername());//此处需要从session里面获取
 
         if(analyteService.save(analyte) &&
           sampleService.save(sample) &&

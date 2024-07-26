@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS PCRCurve(
 CREATE TABLE IF NOT EXISTS  `BioSample`(
     `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',
     `barCode` varchar(80) not null COMMENT '唯一标识生物样本的条形码号',
-    `type` varchar(12) not null COMMENT '类型:F粪便、B血液、C细胞、T组织',
+    `sampleType` varchar(12) not null COMMENT '类型:F粪便、B血液、C细胞、T组织',
     `weight` decimal(5,3) COMMENT '重量',
     `volume` decimal(5,3) COMMENT '体积',
     `color` varchar(30) COMMENT '样本颜色',
