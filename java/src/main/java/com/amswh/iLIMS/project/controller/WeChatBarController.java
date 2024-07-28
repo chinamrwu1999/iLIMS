@@ -2,6 +2,7 @@ package com.amswh.iLIMS.project.controller;
 
 import com.amswh.iLIMS.framework.model.AjaxResult;
 import com.amswh.iLIMS.framework.utils.BaseController;
+import com.amswh.iLIMS.partner.service.NORMALService;
 import com.amswh.iLIMS.project.domain.*;
 import com.amswh.iLIMS.project.service.*;
 
@@ -33,10 +34,7 @@ public class WeChatBarController extends BaseController {
     PartyBarService partyBarService;
 
     @Resource
-    PersonService personService;
-
-    @Resource
-    PartnerBarService partnerBarService;
+    NORMALService normalService;
 
     /*
          业务：通过微信小程序扫码进入绑定界面
@@ -77,10 +75,13 @@ public class WeChatBarController extends BaseController {
     @PostMapping("/bindBar")
     @Transactional
     public AjaxResult bindBox(@RequestHeader("openId")String openId, @RequestBody Map<String,Object> input) throws  Exception{
-        Bar bar=barService.getBar(input.get("barCode").toString());  //确保用艾米森微信小程序扫的是艾米森的条码
-        if(bar==null){
-            return AjaxResult.error("您扫的码不是有效的产品条码！");
-        }
+        String barCode=input.get("barCode")==null?null:input.get("barCode").toString();
+//        Bar bar=barService.getBar(input.get("barCode").toString());  //确保用艾米森微信小程序扫的是艾米森的条码
+//        PartyBar existed=partyBarService.getBarByCode(barCode);
+//        if(bar==null || existed!=null){
+//            return AjaxResult.error("您扫的码是无效条码！");
+//        }
+
         PartyBar pb=new PartyBar();
         pb.setBindWay("wechat");
         MapUtil.copyFromMap(input,pb);
@@ -88,10 +89,17 @@ public class WeChatBarController extends BaseController {
             input.put("wechat",openId);
             input.put("partyType","PATIENT");
             Person person=this.partyService.addPerson(input);
+           Map<String,Object> partnerMap=  normalService.findPartnerInfo(barCode);
+           if(partnerMap!=null){
+               pb.setPartnerCode(partnerMap.get("partnerCode").toString());
+           }else{
+               pb.setPartnerCode("unknown");
+           }
             pb.setPartyId(person.getPartyId());
-        }else{
-            pb.setPartyId(input.get("partyId").toString());
         }
+//       else{
+//            pb.setPartyId(input.get("partyId").toString());
+//        }
         partyBarService.save(pb);
         return AjaxResult.success("绑定成功！");
     }

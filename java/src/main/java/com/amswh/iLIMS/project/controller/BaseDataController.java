@@ -105,4 +105,11 @@ public class BaseDataController {
 
         return null;
     }
+
+    @GetMapping("/list/enums/{type}")
+    public AjaxResult listEnums(@PathVariable String type){
+        return  AjaxResult.success(partygroupService.listPartners());
+
+    }
+
 }

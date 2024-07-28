@@ -34,9 +34,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter
             throws ServletException, IOException
     {
         LoginUser loginUser = this.tokenService.getLoginUser(request);//get user from cached
-        if(loginUser!=null){
-            loginUser.getAuthorities().forEach( x -> System.out.println(">>>>> role :"+x));
-        }
         if (StringUtils.isNotNull(loginUser) && StringUtils.isNull(SecurityUtils.getAuthentication()))
         {
             tokenService.verifyToken(loginUser);

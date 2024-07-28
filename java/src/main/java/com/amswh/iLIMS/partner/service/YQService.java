@@ -83,10 +83,11 @@ public class YQService implements IPartner {
                 }
                 return patient;
 
-            }else if("400004".equals(code)){
-                System.out.println("云鹊医:fetchPatientInf  barCode="+barCode+" "+message);
-               // return  null;
             }
+//            else if("400004".equals(code)){
+//                System.out.println("云鹊医:fetchPatientInf  barCode="+barCode+" "+message);
+//               // return  null;
+//            }
         } catch (Exception e) {
             System.out.println("云鹊医:fetchPatientInf error barCode="+barCode+" error:"+e.getMessage());
             throw new Exception("访问云鹊网络异常");

@@ -24,8 +24,8 @@ public class BioSample {
 	private String barCode;
 
 	@NotBlank(message = "type 不能为空")
-	@TableField("type")
-	private String type;
+	@TableField("sampleType")
+	private String sampleType;
 
 	@TableField("weight")
 	private Double weight;
@@ -52,11 +52,15 @@ public class BioSample {
 	@TableField("sampleImage")
 	private String sampleImage;
 
-	@TableField("formImage")
-	private String formImage;
+//	@TableField("formImage")
+//	private String formImage;
 
 	@TableField("surveyImage")
 	private String surveyImage;
+
+	@TableField("isVIP")
+	private Boolean  fromVIP;
+
 	@TableField("createTime")
 	private LocalDateTime createTime;
 

@@ -46,90 +46,6 @@ public class ADCService implements IPartner {
     String token=null;
     private LocalDateTime tokenTime=null;
 
-
-
-
-  //private static final Logger log = LoggerFactory.getLogger(AdcBusinessServiceImpl.class);
-
-
-
-   // @Override
-//    public ThirdSampleInfoResult getSampleInfo(ThirdSampleInfoVo vo) throws ServiceException {
-//        ThirdSampleInfoResult infoResult = new ThirdSampleInfoResult();
-//        String token = "";
-//        try {
-//            token =  refreshToken();
-//        }catch (Exception e){
-//            infoResult.setSampleSrc(null);
-//            infoResult.setMsg("获取艾迪康token失败");
-//            infoResult.setCode(ThirdRequestEnum.ERROR.getCode());
-//            return infoResult;
-//        }
-//        JSONObject paramObj = new JSONObject();
-//        paramObj.put("barcode",vo.getBoxNo());
-//        paramObj.put("orgcode","1014");
-//        String result = "";
-//        try {
-//            HttpPost httpPost = new HttpPost(adcDomain.concat("/api/lims/sampleinfo/get"));
-//            httpPost.setEntity(new StringEntity(paramObj.toJSONString(), ContentType.APPLICATION_JSON));
-//            httpPost.setHeader("Authorization","Bearer ".concat(token));
-//            result = getHttpsClient().execute(httpPost,responseHandler);
-//        } catch (Exception e) {
-//            infoResult.setSampleSrc(null);
-//            infoResult.setMsg("艾迪康接口调用异常");
-//            infoResult.setCode(ThirdRequestEnum.ERROR.getCode());
-//            return infoResult;
-//        }
-//        JSONObject resultObj = JSONObject.parseObject(result);
-//        if(resultObj.get("data")==null){
-//            infoResult.setSampleSrc(this.whoAmI());
-//            infoResult.setMsg("艾迪康接口调用异常");
-//            infoResult.setCode(ThirdRequestEnum.ERROR.getCode());
-//            return infoResult;
-//        }
-//        if(resultObj!=null && "200".equals(resultObj.getString("code"))){
-//            JSONObject itemObj = resultObj.getJSONObject("data");
-//            infoResult.setBoxNo(vo.getBoxNo());
-//            infoResult.setUdiNo(vo.getUdiNo());
-//            infoResult.setProductNo("LDT01");
-//            infoResult.setPhone(itemObj.getString("patienttel"));
-//            infoResult.setName(itemObj.getString("patientname"));
-//            infoResult.setSamplingTime(itemObj.getString("sampletime"));
-//            infoResult.setChooseFlag(true);
-//            Pattern pattern = Pattern.compile("\\d+");
-//            String age = itemObj.getString("age");
-//            Matcher matcher = pattern.matcher(age);
-//            while (matcher.find()) {
-//                infoResult.setAge(Integer.parseInt(matcher.group()));
-//            }
-//            infoResult.setSex("男".equals(itemObj.getString("sex"))?1:0);
-//            infoResult.setCode(ThirdRequestEnum.SUCCESS.getCode());
-//        }
-//        return infoResult;
-//    }
-//
-
-
-
-
-    public void fetchToken() throws Exception {
-        HttpPost httpPost = new HttpPost(domain.concat("/api/oauth/gettoken?userName=".concat(userName)+"&userPwd=".concat(password)));
-        String response = getHttpsClient().execute(httpPost,responseHandler);
-        ObjectMapper objectMapper=new ObjectMapper();
-        System.out.println(response);
-        JsonNode responseNode=objectMapper.readTree(response);
-        if(responseNode!=null && responseNode.get("code").asInt()==200){
-            JsonNode dataNode=responseNode.get("data");
-            if(dataNode!=null){
-                this.token=dataNode.get("access_token").asText();
-                this.tokenTime=LocalDateTime.now();
-            }else{
-                System.out.println("武汉艾迪康:获取身份token认证失败");
-            }
-        }else{
-            System.out.println("武汉艾迪康:获取身份token认证时网络异常");
-        }
-    }
     @Override
     public PatientInfo fetchPatientInfo(String barCode) throws Exception {
           try {
@@ -146,44 +62,46 @@ public class ADCService implements IPartner {
 
                   JsonNode responseNode=objectMapper.readTree(response);
                   if(responseNode!=null && responseNode.get("code").asInt()==200){
-                         JsonNode src=responseNode.get("data");
+                         JsonNode data=responseNode.get("data");
+                         int total=responseNode.get("total").asInt();
+
                          JsonNode node=null;
                          String nodeStr=null;
-                         if(src!=null){
-                             PatientInfo patient=new PatientInfo(barCode,src.get("patientname").asText());
-                             if(src.get("sex")!=null){
-                                 String val=src.get("sex").asText();
+                         if(total>0) {
+                             PatientInfo patient=new PatientInfo(barCode,data.get("patientname").asText());
+                             if(data.get("sex")!=null){
+                                 String val=data.get("sex").asText();
                                  patient.setGender("男".equals(val)? "M" : "F");
                              }
-                            node=src.get("age");
+                            node=data.get("age");
                              if(node!=null) {
                                  nodeStr=node.asText();
                                  if (nodeStr != null && nodeStr.indexOf("^岁") > 0) {
                                      patient.setAge( Integer.parseInt(nodeStr.substring(0, nodeStr.indexOf("^岁"))));
                                  }
                              }
-                             node=src.get("patienttel");
+                             node=data.get("patienttel");
                              if(node!=null) {
                                  nodeStr=node.asText();
                                  if (nodeStr != null ) {
                                      patient.setPhone(nodeStr.trim());
                                     }
                              }
-                             node=src.get("sampletime");
+                             node=data.get("sampletime");
                              if(node!=null) {
                                  nodeStr=node.asText();
                                  if (nodeStr != null ) {
                                      patient.setSamplingTime(nodeStr.trim());
                                  }
                              }
-                             node=src.get("testitemcode");
+                             node=data.get("testitemcode");
                              if(node!=null) {
                                  nodeStr=node.asText();
                                  if (nodeStr != null && "Q4417".equals(nodeStr.trim()) ) {
                                      patient.setProductCode("LDT01");
                                  }
                              }
-                             node=src.get("hospitalbarcode");
+                             node=data.get("hospitalbarcode");
                              if(node!=null) {
                                  nodeStr=node.asText();
                                  if (nodeStr != null ) {
@@ -195,7 +113,7 @@ public class ADCService implements IPartner {
                      }
                   }
           }catch (Exception err){
-              err.printStackTrace();
+             // err.printStackTrace();
           }
             return null;
     }
@@ -250,6 +168,25 @@ public class ADCService implements IPartner {
         return httpClient;
     }
 
+
+
+    private void fetchToken() throws Exception {
+        HttpPost httpPost = new HttpPost(domain.concat("/api/oauth/gettoken?userName=".concat(userName)+"&userPwd=".concat(password)));
+        String response = getHttpsClient().execute(httpPost,responseHandler);
+        ObjectMapper objectMapper=new ObjectMapper();
+       JsonNode responseNode=objectMapper.readTree(response);
+        if(responseNode!=null && responseNode.get("code").asInt()==200){
+            JsonNode dataNode=responseNode.get("data");
+            if(dataNode!=null){
+                this.token=dataNode.get("access_token").asText();
+                this.tokenTime=LocalDateTime.now();
+            }else{
+                System.out.println("武汉艾迪康:获取身份token认证失败");
+            }
+        }else{
+            System.out.println("武汉艾迪康:获取身份token认证时网络异常");
+        }
+    }
 
 
 

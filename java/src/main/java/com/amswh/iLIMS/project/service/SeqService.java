@@ -29,7 +29,6 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
 
     public String nextPartySeq(){
         String partyId=String.format("%08d",getNextSeqId("party", 1L));
-      //  System.out.println("partyId is "+partyId);
         return partyId;
     }
 

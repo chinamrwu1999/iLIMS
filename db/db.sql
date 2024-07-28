@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS `PartyBar`(
     `barCode` varchar(20) not null comment '贴在采样管或采样盒上的条形码',
     `productCode` varchar(20) NOT NULL  default 'unknown' COMMENT '产品或服务code,',
     `partnerCode` varchar(10)  NOT NULL default 'unknown' comment 'Partner代码',
+    `samplingTime` datetime comment '样本采集时间',
     `age` smallint comment '病人使用检测服务时候的年龄',
     `bindWay` ENUM('wechat','api','manual') comment '绑定方式:wechat微信小程序扫码,api 通过api从partner处拉取;manual手工录入',
     `createTime` DATETIME NOT NULl default now(),
@@ -39,7 +40,8 @@ CREATE TABLE IF NOT EXISTS `analyte`(
     `createTime` datetime not null default now(),
     unique(`barCode`,`analyteCode`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '分析物:一份生物样本BioSample 可能会被多次检测,每一次检测用到的只是BioSample的一部分,称为analyte，不同analyte可以做不同检测';
-CREATE index analyteIndex on `analyte`(`analyteCode`);
+CREATE index analyteIndex_analyteCode on `analyte`(`analyteCode`);
+CREATE index analyteIndex_barCode on `analyte`(`barCode`);
 
 CREATE TABLE IF NOT EXISTS `BarExpress`(
     `id` int unsigned not null AUTO_INCREMENT primary key,
@@ -105,12 +107,12 @@ CREATE TABLE IF NOT EXISTS  `BioSample`(
     `volume` decimal(5,3) COMMENT '体积',
     `color` varchar(30) COMMENT '样本颜色',
     `location` varchar(60)  COMMENT '样本收到后的存放位置',
-    `sampleTime` datetime COMMENT '样本在病人身上的采样时间',
     `sender` varchar(100) COMMENT '送检单位',
     `status` char(1) not null default 'S' COMMENT '样本物理状态:S 表示合格(Succeed),F 表示不合格(Fail)',
     `sampleImage` varchar(200) COMMENT '样本照片',
     `formImage` varchar(200) COMMENT '个人信息表格图片',
     `surveyImage` varchar(200) COMMENT '如有纸质问卷，则拍照保存',
+    `isVIP` boolean default false comment '是否VIP用户',
    `createTime` datetime not null default now() COMMENT '收到样本时间，插入数据库时候的时间'
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '生物样本基本信息表';
 

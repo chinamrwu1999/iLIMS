@@ -1,5 +1,6 @@
 package com.amswh.iLIMS.project.mapper.lims;
 import com.amswh.iLIMS.project.domain.Bar;
+import com.amswh.iLIMS.project.domain.PcrData;
 import com.amswh.iLIMS.project.domain.Product;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Insert;
@@ -98,5 +99,7 @@ public interface IBar extends BaseMapper<Bar> {
             "ORDER BY AP.createTime  ",
             "</script>"})
     public List<Map<String,Object>>  getBarProgress(String code);
+
+
 
 }

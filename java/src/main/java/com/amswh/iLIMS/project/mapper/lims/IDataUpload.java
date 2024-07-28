@@ -18,11 +18,21 @@ public interface IDataUpload extends BaseMapper<DataUpload> {
             "<if test='testName !=null'>",
             "AND testName like '%testName%'",
             "</if>",
-
             "order by uploadTime desc ",
-            "<if test='pageIndex &gt;0 and pageSize &gt;0'>",
-            "limit #{pageIndex},#{pageSize}",
+            "<if test='offset &gt;0 and pageSize &gt;0'>",
+            "limit #{offset},#{pageSize}",
             "</if>",
             "</script>"})
     public List<DataUpload> listExperiment(Map<String,Object> input);
+
+    @Select({"<script>",
+            "SELECT count(*) cnt FROM DataUpload WHERE 1=1",
+            "<if test='beginDate!=null and endDate !=null'>",
+            "AND date(uploadTime) &gt;=date(#{beginDate}) and date(uploadTime) &lt;= date(#{endDate})",
+            "</if>",
+            "<if test='testName !=null'>",
+            "AND testName like '%testName%'",
+            "</if>",
+            "</script>"})
+    public Integer getExperimentCount(Map<String,Object> input);
 }

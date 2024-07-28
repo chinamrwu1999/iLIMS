@@ -126,20 +126,18 @@ public class XNYTService implements IPartner {
                     String userToken=userTokenNode.asText();
                     if(userToken!="" && userToken.length()>10){
                         this.token=userToken;
-                        // System.out.println("get user_token:"+this.token);
+
                     }
                 }
                 this.tokenTime=LocalDateTime.now();
-                //System.out.println("西南医投：获取用户token 成功！");
+
             } catch (Exception e) {
                 throw e;
 
             }
 
         } else {
-
-            System.out.println("Error: " + response.getStatusCodeValue());
-            throw  new Exception("获取西南医投认证token发生网络异常");
+       throw  new Exception("西南医投:获取认证token发生网络异常");
         }
 
 

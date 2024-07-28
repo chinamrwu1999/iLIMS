@@ -72,13 +72,13 @@ public interface IPartyBar extends BaseMapper<PartyBar> {
 
     @Select({"<script>",
             "SELECT PB.partyId,PB.barCode,PB.age,PB.partnerCode,PB.productCode,",
-            "PS.name,PS.gender,PS.birthday,PC.contact phone,P.name productName,PG.fullName partnerName",
+            "PS.name,PS.gender,PS.birthday,PC.contact phone,P.name productName,PG.partnerName",
             "FROM PartyBar PB ",
             "LEFT JOIN Person PS ON PS.partyId=PB.partyId ",
             "LEFT JOIN PartyContact PC ON PC.partyId=PS.partyId",
-            "LEFT JOIN PartyGroup PG ON PG.partyId=PB.partnerCode",
+            "LEFT JOIN VPartner PG ON PG.partnerCode=PB.partnerCode",
             "LEFT JOIN Product P ON P.code=PB.productCode",
-            "WHERE PB.barCode=#{barCode} and PC.contactType='mobile' ",
+            "WHERE PB.barCode=#{barCode} and PC.contactType='phone' ",
             "</script>" })
     public Map<String,Object> getBoundInfo(String barCode);
 
@@ -94,6 +94,9 @@ public interface IPartyBar extends BaseMapper<PartyBar> {
             "WHERE partyId=#{partyId}",
             "</script>"})
     public boolean updatePartyBar(PartyBar input);
+
+    @Select("SELECT * FROM PartyBar where barCode=#{barCode}")
+    public PartyBar getBarByCode(String barCode);
 
 
 }

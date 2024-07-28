@@ -83,12 +83,7 @@ public  class TestController {
            sysKey.setPrivateKey(encBase64);
            sysKey.setPublicKey(encBase641);
            this.keyService.save(sysKey);
-//           LoginUser user=new LoginUser();
-//           user.setUsername("someone");
-//           String token=this.tokenService.createToken(user);
-//
-//           JwtClaims claims =this.tokenService.parseToken(token);
-//           System.out.println(claims.getSubject());
+
 
 
        } catch (Exception e) {

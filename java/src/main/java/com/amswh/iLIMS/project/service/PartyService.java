@@ -85,21 +85,6 @@ public class PartyService extends ServiceImpl<IParty, Party> {
             }
         }
 
-        contactType="mobile";
-        obj=inputMap.get(contactType);
-        if(obj==null){ obj=inputMap.get("mobilePhone");}
-        if(obj!=null){
-            String strContact=obj.toString().trim();
-            List<PartyContact> contacts=existedContacts.stream().filter(x -> x.getContactType().equalsIgnoreCase("mobile")
-                    && strContact.equalsIgnoreCase(x.getContact())).toList();
-            if(contacts.isEmpty()){
-                PartyContact contact=new PartyContact();
-                contact.setPartyId(partyId);
-                contact.setContactType(contactType);
-                contact.setContact(obj.toString().trim());
-                this.contactService.save(contact);
-            }
-        }
             contactType="wechat";
             obj=inputMap.get(contactType);
             if(obj==null){ obj=inputMap.get("openId");}
@@ -153,6 +138,15 @@ public class PartyService extends ServiceImpl<IParty, Party> {
             }
         }
         inputMap.putIfAbsent("partyType", "PERSON");
+        if(inputMap.get("gender")!=null){
+             if(inputMap.get("gender").toString().equals("男")){
+                 inputMap.put("gender","M");
+             }else
+            if(inputMap.get("gender").toString().equals("女")){
+                inputMap.put("gender","F");
+            }
+        }
+
         Party party=new Party();
         String partyId=seqService.nextPartySeq();
         party.setPartyId(partyId);

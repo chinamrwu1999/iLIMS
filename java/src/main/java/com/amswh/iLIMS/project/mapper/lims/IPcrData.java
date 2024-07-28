@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IPcrData extends BaseMapper<PcrData> {
 
-    @Select("SELECT * FROM PCRData where uploadId=#{expId}")
+    @Select("SELECT * FROM PCRData where uploadId=#{expId} order by sampleId,well,target")
     List<PcrData> listExpData(long expId);
 
     @Select({"<script>",
@@ -19,5 +19,12 @@ public interface IPcrData extends BaseMapper<PcrData> {
 
     @Select("SELECT * FROM PCRData WHERE analyteCode=#{code}")
     List<PcrData> getPCRDataByAnalyteCode(String code);
+
+    @Select({"<script>",
+            "SELECT id,uploadId,analyteCode,well,target,CT,predict,`choose` FROM PCRData where analyteCode IN ",
+            "(SELECT analyteCode FROM analyte WHERE barCode=#{barCode})",
+            "Order BY sampleId,well,target",
+            "</script>"})
+    public List<PcrData> getSamplePCRData(String barCode);
 
 }

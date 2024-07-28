@@ -1,6 +1,7 @@
 package com.amswh.iLIMS.project.controller;
 
 
+import com.amswh.iLIMS.framework.commons.ServiceException;
 import com.amswh.iLIMS.framework.model.AjaxResult;
 
 import com.amswh.iLIMS.framework.security.SecurityUtils;
@@ -50,6 +51,9 @@ public class BioSampleController {
     @Resource
     BarService barService;
 
+    @Resource
+    ConstantsService constantsService;
+
     /**
      *  样本分拣：
      *  输入条码号或udi，获取病人信息、产品信息、partner信息给前端
@@ -57,16 +61,16 @@ public class BioSampleController {
      */
 
     @PostMapping("/sample/categorize")
-    @Transactional
+    @Transactional()
     public AjaxResult sampleCategorize(@RequestBody Map<String,Object> inputMap){
         String barCode=inputMap.get("barCode")==null?null:inputMap.get("barCode").toString().trim();
         String expressNo=inputMap.get("expressNo")==null?null:inputMap.get("expressNo").toString().trim();
         String udi=inputMap.get("udi")==null?null:inputMap.get("udi").toString().trim();
         if(barCode==null && udi==null){  return AjaxResult.error("条码号与udi至少提供一样");  }
         if(barCode==null ){   barCode=udi;    }
+        BarExpress be=new BarExpress();
+       if(expressNo!=null){ // 保存快递单号与条码的关联信息
 
-        if(expressNo!=null){ // 保存快递单号与条码的关联信息
-            BarExpress be=new BarExpress();
             be.setBarCode(barCode);
             be.setExpressNo(expressNo);
             be.setUdi(udi);
@@ -74,21 +78,11 @@ public class BioSampleController {
         }
         Map<String,Object> boundInfo=partyBarService.getBoundInfo(barCode);// 获取扫码绑定信息
         if(boundInfo!=null && !boundInfo.isEmpty() ) {//
-             if("unknown".equals(boundInfo.get("partnerCode").toString())){ //代理商未知
-               Map<String,Object> partnerMap=  normalService.findPartnerInfo(barCode);
-               if(partnerMap!=null){
-                   boundInfo.put("partnerCode",partnerMap.get("sampleSrc"));
-                   boundInfo.put("partnerName",partnerMap.get("customerName"));
-                   partyBarService.updataPartyBar(boundInfo);
+                   boundInfo.put("partnerName",constantsService.getPartnerName(boundInfo.get("partnerCode").toString()));
                    return AjaxResult.success(boundInfo);
-               }else{
-                   return AjaxResult.error("未能找到合作代理客户信息，请手工确认或联系相关销售人员",boundInfo);
-               }
-            }else{
-                return AjaxResult.success(boundInfo);
-            }
         }else{// 未找到扫码绑定信息，说明样本来自某个Partner，需要调用Partner的API接口获取受检者个人信息  ---------------------- 2
               PatientInfo patientInfo=partnerService.fetPatientInfoWithExpressNo(barCode,expressNo);
+
              if(patientInfo!=null){ // 通过partner的api成功获取信息
                    Person patient =partyService.savePatient(patientInfo);
                    if(patient!=null){
@@ -100,20 +94,20 @@ public class BioSampleController {
                         partyBarService.save(pb);
                         return AjaxResult.success(patientInfo);
                    }else{
-                       return  AjaxResult.error("保存受检者个人信息时发生异常",patientInfo);
+                       throw new ServiceException("保存受检者个人信息时发生异常!");
                    }
              }else{ //既没有绑定信息，也没有partner的API信息   --------------------------------------------- 3
-                   Map<String,Object> result=new HashMap<>();
-                   Map<String,Object> partnerMap=normalService.findPartnerInfo(barCode);
-                   if(partnerMap!=null && !partnerMap.isEmpty()){
-                       result.put("partnerCode",partnerMap.get("sampleSrc"));
-                       result.put("partnerName",partnerMap.get("partner"));
+                    Map<String,Object> result=new HashMap<>();
+                    Map<String,Object> partnerMap=normalService.findPartnerInfo(barCode);
+                    if(partnerMap!=null && !partnerMap.isEmpty()){
+                       result.put("partnerCode",partnerMap.get("partnerCode"));
+                       result.put("partnerName",partnerMap.get("partnerName"));
                    }
-                   Product product=normalService.findProductInfo(barCode);
-                   if(product!=null){
-                       result.put("productCode",product.getCode());
-                       result.put("productName",product.getName());
-                   }
+//                   Product product=normalService.findProductInfo(barCode);
+//                   if(product!=null){
+//                       result.put("productCode",product.getCode());
+//                       result.put("productName",product.getName());
+//                   }
                   return AjaxResult.success("未能找到受检者个人的信息，请手工录入！",result);
              }
         }
@@ -145,33 +139,42 @@ public class BioSampleController {
     @PostMapping("/sample/receive")
     @Transactional
     public AjaxResult saveReceivedSampleInf(@RequestBody Map<String,Object> inputMap){
+        String barCode=inputMap.get("barCode")!=null?inputMap.get("barCode").toString().trim():null;
+        String analyteCode=inputMap.get("analyteCode")!=null?inputMap.get("analyteCode").toString().trim():null;
+        if(barCode==null || analyteCode==null){
+            return AjaxResult.error("分析物编码和采样盒条码 都不能 空 ");
+        }
+
         BioSample sample=new BioSample();
         MapUtil.copyFromMap(inputMap,sample);
+
         Analyte analyte =new Analyte();
         MapUtil.copyFromMap(inputMap,analyte);
+
         AnalyteProcess process=new AnalyteProcess();
-        process.setAction("RECEIVE");
-        process.setStatus("success");
+        process.setAction("receive");
+        Object obj=inputMap.get("status");
+        if(obj!=null && obj.toString().equals("success")) {
+            process.setStatus("success");
+            sample.setStatus("S");
+        }else{
+            process.setStatus("failure");
+            sample.setStatus("F");
+            process.setRemark(inputMap.get("reason").toString()); //失败原因
+        }
+
         process.setAnalyteCode(inputMap.get("analyteCode").toString());
         LoginUser loginUser=SecurityUtils.getLoginUser();
         process.setEmployeeId(loginUser.getUsername());//此处需要从session里面获取
-
-        if(analyteService.save(analyte) &&
+         if(analyteService.save(analyte) &&
           sampleService.save(sample) &&
           analyteProcessService.save(process)){
               return AjaxResult.success("OK,收样成功");
-        }else{
-            AjaxResult result=new AjaxResult();
-            result.put("code","200");
-            result.put("msg","未找到该条码的分拣信息,请手工收样");
-            PatientInfo patientInfo=new PatientInfo();
-            MapUtil.copyFromMap(inputMap,patientInfo);
-            result.put("data",patientInfo);
-            return result;
         }
+        return AjaxResult.error("保存收样信息发生异常");
     }
     /**
-     *  查看检测进度检测
+     *  查看检测进度
      */
     @PostMapping("/sample/queryProgress")
     public AjaxResult queryBarProgress(String barCode ){
@@ -182,6 +185,10 @@ public class BioSampleController {
               return AjaxResult.error("未查到该条码的相关信息，请检查条码号是否输入正确");
           }
     }
+
+
+
+
 
 
 

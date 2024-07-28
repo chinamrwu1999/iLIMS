@@ -178,7 +178,7 @@ public class HttpClientHelper {
      * @throws IOException
      */
     public static String doPutJson(String url, String jsonStr) throws IOException{
-        // System.out.println(jsonStr);
+
         client = getHttpClient();
         HttpPut httpPut = new HttpPut(url);
         httpPut.setEntity(new StringEntity(jsonStr, ContentType.APPLICATION_JSON));

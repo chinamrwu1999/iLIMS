@@ -35,7 +35,10 @@ public class PartnerService implements ApplicationContextAware {
            PatientInfo patientInf=null;
            if(code !=null){
                patientInf= this.fetchPatientInfo(code,barCode);
-               patientInf.setPartnerCode(code);
+               if(patientInf!=null) {
+                   patientInf.setPartnerCode(code);
+
+               }
            }else{
                patientInf=this.fetchPatientInfo(barCode); //轮询各个Partner的API
                if(patientInf!=null) {
@@ -43,7 +46,7 @@ public class PartnerService implements ApplicationContextAware {
                }
            }
            if(patientInf!=null) {
-               patientInf.setPartnerName(constantsService.getPartnerName(code));
+               patientInf.setPartnerName(constantsService.getPartnerName(patientInf.getPartnerCode()));
                patientInf.setProductName(constantsService.getProductName(patientInf.getProductCode()));
            }
         return  patientInf;
@@ -55,7 +58,9 @@ public class PartnerService implements ApplicationContextAware {
         if(partner==null){       return null;   }
         try {
                 PatientInfo patientInfo=partner.fetchPatientInfo(barCode);
-                patientInfo.setProductName(constantsService.getProductName(patientInfo.getProductCode()));
+                if(patientInfo!=null) {
+                    patientInfo.setProductName(constantsService.getProductName(patientInfo.getProductCode()));
+                }
 
                 return patientInfo;
           }catch (Exception err){
@@ -76,8 +81,8 @@ public class PartnerService implements ApplicationContextAware {
                  }
              } catch(Exception err){
                  System.out.println("\n调用第三方API异常:partner="+partnerCode+" barCode="+barCode);
-                 System.out.println(err.getMessage()+"\n");
-                 err.printStackTrace();
+
+               //  err.printStackTrace();
              }
 
         }

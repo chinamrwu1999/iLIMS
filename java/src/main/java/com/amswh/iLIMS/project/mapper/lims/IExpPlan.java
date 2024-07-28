@@ -24,36 +24,36 @@ public interface IExpPlan extends BaseMapper<ExpPlan> {
      * @return
      */
     @Select({"<script>",
-            "SELECT PD.productCode,PD.productName,count(*) cnt",
-            "FROM analyteProcess AP where action='RECEIVE' AND status='success' AND createTime >= DATE_SUB(now(), INTERVAL 7 DAY) " ,
-            "LEFT JOIN analyte A ON A.analyteCode=AP.analyteCode ",
-            "LEFT JOIN partyBar PB ON A.barCode=PB.barCode ",
-            "LEFT JOIN PartnerBar PB1 ON A.barCode=PB1.barCode",
-            "LEFT JOIN Person PS ON PS.partyId=PB.partyId",
-            "LEFT JOIN PartyGroup PG ON PG.partyId=PB1.partyId",
-            "LEFT JOIN Product PD ON PD.productCode=PB1.productCode",
-            "WHERE AP.analyteCode not in (SELECT analyteCode FROM expAnalyte A1,expPlan A2 where A1.expPlanId=A2.id AND A2.createTime >= DATE_SUB(now(), INTERVAL 14 DAY))",
-            "AND AP.analyteCode not   in (SELECT analyteCode FROM analyteProcess A where action='REVIEW1'  AND createTime >= DATE_SUB(now(), INTERVAL 14 DAY)) ",
-            "GROUP BY productCode,productName having count(*) >0 order by count(*) desc",
+        "SELECT PD.code productCode,PD.name productName,count(*) cnt",
+        "FROM analyteProcess AP",
+        "LEFT JOIN analyte A ON A.analyteCode=AP.analyteCode",
+        "LEFT JOIN partyBar PB ON A.barCode=PB.barCode",
+        "LEFT JOIN Product PD ON PD.Code=PB.productCode",
+        "WHERE AP.action='RECEIVE' AND AP.status='success' AND AP.createTime >= DATE_SUB(now(), INTERVAL 5 DAY)",
+        "AND AP.analyteCode not in (SELECT analyteCode FROM expAnalyte A1,expPlan A2 where A1.expPlanId=A2.id AND A2.createTime >= DATE_SUB(now(), INTERVAL 14 DAY))",
+        "AND AP.analyteCode not   in (SELECT analyteCode FROM analyteProcess A where action='REVIEW1'  AND createTime >= DATE_SUB(now(), INTERVAL 14 DAY))",
+        "GROUP BY productCode,productName having count(*) >0 order by count(*) desc",
             "</script>"})
     public List<Map<String,Object>> AnalyteCountToTest();
 
 
+    /**
+     * 代检测分析物列表
+     * @param productCode
+     * @return
+     */
 
     @Select({"<script>",
-            "SELECT AP.analyteCode ",
-            "FROM analyteProcess AP where action='RECEIVE' AND status='success' AND createTime >= DATE_SUB(now(), INTERVAL 7 DAY) " ,
-            "LEFT JOIN analyte A ON A.analyteCode=AP.analyteCode ",
-            "LEFT JOIN partyBar PB ON A.barCode=PB.barCode ",
-            "LEFT JOIN PartnerBar PB1 ON A.barCode=PB1.barCode",
-            "LEFT JOIN Person PS ON PS.partyId=PB.partyId",
-            "LEFT JOIN PartyGroup PG ON PG.partyId=PB1.partyId",
-            "LEFT JOIN Product PD ON PD.productCode=PB1.productCode",
-            "WHERE PB1.productCode=#{productCode}",
-            "AND AP.analyteCode not in (SELECT analyteCode FROM expAnalyte A1,expPlan A2 where A1.expPlanId=A2.id AND A2.createTime >= DATE_SUB(now(), INTERVAL 14 DAY))",
-            "AND AP.analyteCode not   in (SELECT analyteCode FROM analyteProcess A where action='REVIEW1'  AND createTime >= DATE_SUB(now(), INTERVAL 14 DAY)) ",
-            "ORDER BY AP.createTime asc",
-            "</script>"})
+        "SELECT AP.analyteCode",
+        "FROM analyteProcess AP",
+        "LEFT JOIN analyte A ON A.analyteCode=AP.analyteCode",
+        "LEFT JOIN partyBar PB ON A.barCode=PB.barCode",
+        "WHERE AP.action='RECEIVE' AND AP.status='success' AND AP.createTime >= DATE_SUB(now(), INTERVAL 5 DAY)",
+        "AND PB.productCode=#{productCode}",
+        "AND AP.analyteCode not in (SELECT analyteCode FROM expAnalyte A1,expPlan A2 where A1.expPlanId=A2.id AND A2.createTime >= DATE_SUB(now(), INTERVAL 7 DAY))",
+        "AND AP.analyteCode not   in (SELECT analyteCode FROM analyteProcess A where action='REVIEW1'  AND createTime >= DATE_SUB(now(), INTERVAL 7 DAY))",
+        "ORDER BY AP.createTime asc",
+        "</script>"})
     public List<String>  listAnalytesToTest(String productCode);
 
 

@@ -1,10 +1,8 @@
 package com.amswh.iLIMS.project.service;
 
 
-import com.amswh.iLIMS.project.domain.Disease;
-import com.amswh.iLIMS.project.domain.Partner;
-import com.amswh.iLIMS.project.domain.Product;
-import com.amswh.iLIMS.project.domain.Project;
+import com.amswh.iLIMS.project.domain.*;
+import com.amswh.iLIMS.project.mapper.lims.IEnums;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -26,6 +24,9 @@ public class ConstantsService {
 
     @Resource
     PartygroupService partygroupService;
+
+    @Resource
+    IEnums emumsMapper;
 
     private final Map<String,String> productMap=new HashMap<>();
     private final Map<String,String> projectMap=new HashMap<>();
@@ -70,6 +71,7 @@ public class ConstantsService {
 
          for(Partner pt:partners){
              partnerMap.put(pt.getPartnerCode(),pt.getPartnerName());
+             partnerMap.put("NORMAL","武汉艾米森生命科技有限公司");
          }
 
 
@@ -111,5 +113,9 @@ public class ConstantsService {
 
    public String getPartnerName(String partnerCode){
         return  this.partnerMap.get(partnerCode);
+   }
+
+   public List<Enums> fetchEnums(String enumType){
+        return this.emumsMapper.fetchEnums(enumType);
    }
 }

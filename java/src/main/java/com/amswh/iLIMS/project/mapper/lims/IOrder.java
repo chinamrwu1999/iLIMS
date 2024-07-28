@@ -30,14 +30,14 @@ public interface IOrder extends BaseMapper<Order> {
      * @return
      */
     @Select({"<script>",
-            "SELECT P.*,PG.fullName customerName,PG.shortName,Party.externalId " ,
+            "SELECT P.*,PG.fullName customerName,PG.shortName,Party.externalId partnerCode " ,
             "FROM shipItem SI " ,
             "INNER JOIN orderShip OS ON SI.shipId=OS.id " ,
             "LEFT JOIN orderItem OI ON OS.orderNo=OI.orderNo and SI.itemId=OI.id " ,
             "LEFT JOIN product P ON OI.productCode=P.code " ,
             "LEFT JOIN `Order` O ON O.orderNo=OI.orderNo " ,
             "LEFT JOIN partyGroup PG ON PG.partyId=O.customer " ,
-            "LEFT JOIN party　ON party.partyId=PG.partyId " ,
+            "LEFT JOIN Party ON Party.partyId=O.customer",
             "WHERE SI.barCode=#{barCode} or SI.udi=#{barCode}",
             "</script>"})
     public Map<String,Object> getOrderInfo(String barCode);

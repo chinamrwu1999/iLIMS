@@ -38,6 +38,9 @@ public class PartyBar {
 	@TableField("bindWay")
 	private String bindWay;
 
+	@TableField("samplingTime")
+	private LocalDateTime samplingTime;
+
 	@TableField("createTime")
 	private LocalDateTime createTime;
 

@@ -81,11 +81,11 @@ public class NORMALService {
        Map<String,Object> order=orderService.getOrderInfo(barCode);// 根据订单发货查找客户
         if(order !=null){
             Map<String,Object> result=new HashMap<>();
-            result.put("partner",order.get("customerName"));
+            result.put("partnerName",order.get("customerName"));
            if(order.get("externalId")!=null){
-               result.put("sampleSrc",order.get("externalId"));
+               result.put("partnerCode",order.get("externalId"));
            }else if(order.get("fullName")!=null){
-               result.put("sampleSrc",inferSampleSrc(order.get("customerName").toString()));
+               result.put("partnerCode",inferSampleSrc(order.get("customerName").toString()));
            }
             return result;
         }

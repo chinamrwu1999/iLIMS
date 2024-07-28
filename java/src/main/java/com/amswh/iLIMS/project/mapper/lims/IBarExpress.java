@@ -10,7 +10,7 @@ public interface IBarExpress  extends BaseMapper<BarExpress> {
     @Select("SELECT * FROM BarExpress WHERE barCode=#{barCode}")
     public BarExpress getBarExpressByBarCode(String barCode);
 
-    @Select("SELECT P.* FROM Product P LEFT JOIN BarExpress BE ON P.code=BE.productNo WHERE BE.barCode=#{barCode}")
+    @Select("SELECT P.* FROM Product P LEFT JOIN BarExpress BE ON P.code=BE.productCode WHERE BE.barCode=#{barCode}")
     public Product getProductByBarCode(String barCode);
 
 }

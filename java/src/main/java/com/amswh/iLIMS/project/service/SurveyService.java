@@ -24,9 +24,7 @@ public class SurveyService extends ServiceImpl<ISurveyTemplate, SurveyTemplate> 
         ObjectMapper mapper=new ObjectMapper();
         try {
 
-            for(String key:inputMap.keySet()){
-                System.out.println(key+":"+inputMap.get(key));
-            }
+
             JsonNode node= mapper.readTree(answers);
             Map<String,Object> mp=new HashMap<>();
             mp.put("barCode",barCode);

@@ -83,7 +83,12 @@ public class PartyBarService extends ServiceImpl<IPartyBar, PartyBar> {
 
 
 	public Map<String,Object> getBoundInfo(String barCode){
+		 System.out.println(barCode);
         return this.baseMapper.getBoundInfo(barCode);
+	}
+
+	public PartyBar getBarByCode(String barCode){
+          return this.baseMapper.getBarByCode(barCode);
 	}
 
 }

@@ -80,45 +80,9 @@ public class RHService implements IPartner {
         jsonNode.put("CHealRightsCode","R00065");//健管权益编码
         jsonNode.put("CAppStatus","1");//申请单状态
 
-
-//        jsonNode.put("CUserId","");
-//        jsonNode.put("CAppName","");
-//        jsonNode.put("CAppMobile","");
-//        jsonNode.put("CProvince","");
-//        jsonNode.put("CCity","");
-//        jsonNode.put("CCounty","");
-//        jsonNode.put("COrganCode","");
-//        jsonNode.put("CAddrDetail","");
-//        jsonNode.put("TAppTm","");
-//        jsonNode.put("TCancelTm","");
-//        jsonNode.put("TFinishTm","");
-
-//        jsonNode.put("CAppTyp","");
-//        jsonNode.put("NInvalidNum","");
-//        jsonNode.put("NResidualNum","");
-//        jsonNode.put("CCountUsage","");
-//        jsonNode.put("CSatisfactionScore","");
-//        jsonNode.put("CFavourBiz","");
-//        jsonNode.put("NMinConsumeAmount","");
-//        jsonNode.put("CFavourType","");
-//        jsonNode.put("NFavourAmount","");
-
-        // Convert ObjectNode to JSON string
         try {
             String jsonString = objectMapper.writeValueAsString(jsonNode);
             String json= sdkClient.callService("HealthService.supplierHealthUse",jsonString);
-//            JsonNode node = objectMapper.readTree(json);
-//            JsonNode dataNode = node.get("data");
-//            if (dataNode.isArray()) {
-//                JsonNode dn=dataNode.get(0);
-//                System.out.println(dn.get("CBizId").asText());
-//                System.out.println(dn.get("CContStatus").asText());
-//                System.out.println(dn.get("CMasterProtocolNo").asText());
-//                System.out.println(dn.get("CProtocolNo").asText());
-//            }
-
-
-            System.out.println("\n\n"+json+"\n <<<");
 
         } catch (Exception e) {
             e.printStackTrace();

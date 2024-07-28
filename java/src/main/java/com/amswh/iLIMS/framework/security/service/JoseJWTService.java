@@ -163,12 +163,12 @@ public class JoseJWTService {
      */
     public void refreshToken(LoginUser loginUser)
     {
-       // System.out.println("refreshing token");
+
         loginUser.setLoginTime(System.currentTimeMillis());
         loginUser.setExpireTime(loginUser.getLoginTime() + EXPIRE_TIME * MILLIS_MINUTE);
         String cachedId = loginUser.getCachedId();
         redisCache.setCacheObject(cachedId, loginUser, EXPIRE_TIME, TimeUnit.MINUTES);
-    //    System.out.println("refreshed token for user "+loginUser.getUsername());
+
     }
 
     /**

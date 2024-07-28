@@ -33,7 +33,7 @@ public class SysUserService extends ServiceImpl<SysUserMapper, SysUser> implemen
         if(user!=null) {
             LoginUser loginUser=new LoginUser(user.getUsername(),user.getPassword());
             loginUser.setPermissions(this.getUserAuthorities(username));
-            //System.out.println("login user returning");
+
             return  loginUser;
         }else{
             throw new UsernameNotFoundException("用户名 "+username+" 不存在！");

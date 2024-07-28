@@ -1,5 +1,6 @@
 package com.amswh.iLIMS.project.service;
 import com.amswh.iLIMS.project.domain.Bar;
+import com.amswh.iLIMS.project.domain.PcrData;
 import com.amswh.iLIMS.project.domain.Product;
 import com.amswh.iLIMS.project.mapper.lims.IBar;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -74,6 +75,8 @@ public class BarService extends ServiceImpl<IBar, Bar> {
 	public List<Map<String,Object>> getAnalytes(String barCode){
 		 return  this.baseMapper.getAnalyteCodes(barCode);
 	}
+
+
 
 	/**
 	 *

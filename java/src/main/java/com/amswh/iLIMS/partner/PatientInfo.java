@@ -1,5 +1,6 @@
 package com.amswh.iLIMS.partner;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -29,7 +30,10 @@ public class PatientInfo {
 
     private String samplingTime;
     private String barCode;
+
+    @JsonProperty("IDNumber")
     private String IDNumber;
+    @JsonProperty("IDType")
     private String IDType;
     private String phone;
     private String partnerCode;
