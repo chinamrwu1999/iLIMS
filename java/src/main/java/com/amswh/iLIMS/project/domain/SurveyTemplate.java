@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 @TableName("surveyTemplate")
 public class SurveyTemplate {
 
-    @TableId("productId")
-    private String productId;
+    @TableId("productCode")
+    private String productCode;
 
     @TableField("template")
-    private JsonNode template;
+    private String template;
 
     @TableField("createTime")
     private LocalDateTime createTime;

@@ -10,7 +10,11 @@ import com.amswh.iLIMS.framework.security.service.SysKeyService;
 import com.amswh.iLIMS.framework.security.service.SysMenuService;
 import com.amswh.iLIMS.framework.security.service.SysUserService;
 import com.amswh.iLIMS.framework.utils.RSAUtils;
+import com.amswh.iLIMS.project.domain.SurveyTemplate;
 import com.amswh.iLIMS.project.service.ExpAnalyteService;
+import com.amswh.iLIMS.project.service.SurveyService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import org.apache.commons.codec.binary.Base64;
 import org.jose4j.jwt.JwtClaims;
@@ -18,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Key;
 import java.security.KeyPair;
 import java.util.List;
@@ -37,6 +44,9 @@ public  class TestController {
     JoseJWTService tokenService;
 
    @Resource
+    SurveyService surveyService;
+
+   @Resource
    SysKeyService keyService;
 
    @Resource
@@ -51,8 +61,8 @@ public  class TestController {
         System.out.println("calling test hello........");
         //return AjaxResult.success(menuTreeTest());
         //RSAKeyTest();
-       UserTest();
-       return AjaxResult.success("OK");
+      // UserTest();
+       return AjaxResult.success(InsertJSONSurveyTemplate());
 
     }catch (Exception err){
         err.printStackTrace();
@@ -96,4 +106,29 @@ public  class TestController {
    private void UserTest(){
         userService.createUser("guess","guess123");
    }
+
+
+   private SurveyTemplate InsertJSONSurveyTemplate(){
+       String fileName = "E:/iLIMS/db/ACK_survey.json";
+
+       try {
+           List<String> lines = Files.readAllLines(Paths.get(fileName));
+           StringBuilder jsonText= new StringBuilder();
+           for (String line : lines) {
+               jsonText.append(line.trim());
+           }
+           //ObjectMapper objectMapper = new ObjectMapper();
+          // JsonNode jsonNode = objectMapper.readTree(jsonText.toString());
+           SurveyTemplate template=new SurveyTemplate();
+           template.setProductCode("ACK");
+           template.setTemplate(jsonText.toString());
+           surveyService.addNewTemplate(template);
+           return template;
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+       return null;
+   }
+
+   private
 }

@@ -47,4 +47,10 @@ public class SurveyService extends ServiceImpl<ISurveyTemplate, SurveyTemplate> 
         return result;
     }
 
+    public boolean addNewTemplate(SurveyTemplate template){
+        return this.save(template);
+    }
+
+
+
 }

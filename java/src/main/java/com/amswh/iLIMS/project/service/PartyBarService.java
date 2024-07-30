@@ -92,7 +92,7 @@ public class PartyBarService extends ServiceImpl<IPartyBar, PartyBar> {
 	}
 
 	public List<Map<String,Object>> listReceivedToday(){
-
+         return null;
 	}
 
 }

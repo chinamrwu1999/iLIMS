@@ -179,8 +179,8 @@ CREATE TABLE IF NOT EXISTS `Diagnose`(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '记录多癌检测中阳性或弱阳性的癌症代码'; 
 
 
-CREATE TABLE IF NOT EXISTS `SurveryTemplate`(
-    `productId` varchar(12) not null primary key,
+CREATE TABLE IF NOT EXISTS `SurveyTemplate`(
+    `productCode` varchar(12) not null primary key,
     `template` JSON not null,
     `createTime` timestamp not null default now()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '调查问卷模板';

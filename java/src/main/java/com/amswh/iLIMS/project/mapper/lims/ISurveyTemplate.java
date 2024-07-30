@@ -19,4 +19,7 @@ public interface ISurveyTemplate extends BaseMapper<SurveyTemplate> {
 
     @Select("SELECT answers FROM PatientSurvey WHERE barCode=#{barCode}")
     public String getSurveyAnswers(String barCode);
+
+    @Select("SELECT answers FROM PatientSurvey WHERE barCode=#{barCode}")
+    public String getPatientSurveyAnswers(String barCode);
 }

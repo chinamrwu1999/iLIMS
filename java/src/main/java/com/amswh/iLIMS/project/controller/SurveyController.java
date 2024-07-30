@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,17 +26,17 @@ public class SurveyController {
 
     /**
      * 获取问卷调查模板
-     * @param productId：产品代码 类似：LDT1 LDT2 或样本编号ACK24000001等
+     * @param productCode：产品代码 类似：LDT1 LDT2 或样本编号ACK24000001等
      * @return
      */
-    @GetMapping("/survey/getTemplate/{productId}")
-    public AjaxResult getSurveyTemplate(@PathVariable String productId){
+    @GetMapping("/survey/template/{productCode}")
+    public AjaxResult getSurveyTemplate(@PathVariable String productCode){
              Map<String,Object> data=new HashMap<>();
-             if(productId.length()>5){
-                 String code=productId.substring(0,3).toUpperCase();
+             if(productCode.length()>5){
+                 String code=productCode.substring(0,3).toUpperCase();
                  data= this.surveyService.getSurveyTemplate(constants.getProductIdBySampleHeader(code));
              }else{
-                 data=this.surveyService.getSurveyTemplate(productId);
+                 data=this.surveyService.getSurveyTemplate(productCode);
              }
              if(!data.isEmpty()) {
                  try {
@@ -85,6 +86,7 @@ public class SurveyController {
 
     @GetMapping("/survey/getSurveyAnswers/{barCode}")
     public AjaxResult getSurveyAnswers(@PathVariable  String barCode){
+               List<String> answers=surveyService.getSurveyAnswers(barCode);
                return AjaxResult.success(this.surveyService.getSurveyAnswers(barCode));
     }
 
