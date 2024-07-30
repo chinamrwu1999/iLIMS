@@ -104,4 +104,7 @@ public class PartnerService implements ApplicationContextAware {
 
     }
 
+
+
+
 }

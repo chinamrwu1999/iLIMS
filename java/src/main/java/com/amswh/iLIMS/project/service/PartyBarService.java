@@ -91,4 +91,8 @@ public class PartyBarService extends ServiceImpl<IPartyBar, PartyBar> {
           return this.baseMapper.getBarByCode(barCode);
 	}
 
+	public List<Map<String,Object>> listReceivedToday(){
+
+	}
+
 }

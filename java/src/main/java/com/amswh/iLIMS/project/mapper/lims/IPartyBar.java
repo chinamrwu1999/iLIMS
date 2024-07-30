@@ -99,4 +99,23 @@ public interface IPartyBar extends BaseMapper<PartyBar> {
     public PartyBar getBarByCode(String barCode);
 
 
+    /**
+     * 获取当天已收样列表
+     * @return
+     */
+    @Select({"<script>",
+            "SELECT PB.partyId,PB.barCode,PB.age,PB.partnerCode,PB.productCode,",
+            "PS.name,PS.gender,PS.birthday,PC.contact phone,P.name productName," +
+            "PG.partnerCode,PG.partnerName,A.analyteCode",
+            "FROM PartyBar PB ",
+            "LEFT JOIN Person PS ON PS.partyId=PB.partyId ",
+            "LEFT JOIN PartyContact PC ON PC.partyId=PS.partyId",
+            "LEFT JOIN VPartner PG ON PG.partnerCode=PB.partnerCode",
+            "LEFT JOIN Product P ON P.code=PB.productCode",
+            "LEFT JOIN Analyte A ON A.barCode=PB.barCode",
+            "WHERE PB.barCode=#{barCode} and PC.contactType='phone' ",
+            "</script>" })
+    public List<Map<String,Object>> listReceivedToday( );
+
+
 }

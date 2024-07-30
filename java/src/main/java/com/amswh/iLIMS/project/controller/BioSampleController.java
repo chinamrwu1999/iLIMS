@@ -187,6 +187,18 @@ public class BioSampleController {
     }
 
 
+    /**
+     *  当天已收到样本列表
+     */
+    @GetMapping("/sample/receivedToday")
+    public AjaxResult listReceivedToday(){
+        Map<String,Object> progress=this.barService.getBarProgress(barCode);
+        if(progress!=null){
+            return  AjaxResult.success(progress);
+        }else{
+            return AjaxResult.error("未查到该条码的相关信息，请检查条码号是否输入正确");
+        }
+    }
 
 
 

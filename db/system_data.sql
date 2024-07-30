@@ -21,7 +21,7 @@ INSERT INTO `SysMenu`(`menuId`,`name`,`label`,`parentId`,`displayIndex`) values
 
 
 
-insert into `SysUser`(`userName`,`password`) values('15010040','$2a$12$05taBl.lV1hE71FB1bMlee4T4f8hw0nJWCZdhJUYSATJvdW7Eu83W');
+insert into `SysUser`(`userName`,`password`) values('admin','$2a$12$05taBl.lV1hE71FB1bMlee4T4f8hw0nJWCZdhJUYSATJvdW7Eu83W');
 insert into `SysRole`(`name`) values('admin');
 insert into `SysRole`(`name`) values('employee');
 insert into  `SysUserRole`(`userId`,`roleId`) values(1,1);
