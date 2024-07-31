@@ -4,59 +4,59 @@
         {
             "name":"肿瘤史",
             "choices":[
-                { "text":"一级亲属患结直肠癌", "choice":""},
-                { "text":"一级亲属患其它任何癌种", "choice":""},
-                { "text":"其它亲属患结直肠癌", "choice":""},
-                { "text":"本人患结直肠癌", "choice":""},
-                { "text":"本人患其它任何癌种", "choice":""}
+                { "text":"一级亲属患结直肠癌", "choice":false},
+                { "text":"一级亲属患其它任何癌种", "choice":false},
+                { "text":"其它亲属患结直肠癌", "choice":false},
+                { "text":"本人患结直肠癌", "choice":false},
+                { "text":"本人患其它任何癌种", "choice":false}
             ]
         },
         {
             "name":"不良生活习惯",
             "choices":[
-                { "text":"目前吸烟", "choice":""},
-                { "text":"常接触二手烟", "choice":""},
-                { "text":"长期饮酒>15g/日", "choice":""}
+                { "text":"目前吸烟", "choice":false},
+                { "text":"常接触二手烟", "choice":false},
+                { "text":"长期饮酒>15g/日", "choice":false}
             ]
         },
         {
             "name":"不良饮食习惯(经常进食)",
             "choices":[
-                { "text":"腌制食物", "choice":""},
-                { "text":"食物纤维量少", "choice":""},
-                { "text":"加工肉类", "choice":""},
-                {"text":"油炸食品","choice":""}
+                { "text":"腌制食物", "choice":false},
+                { "text":"食物纤维量少", "choice":false},
+                { "text":"加工肉类", "choice":false},
+                {"text":"油炸食品","choice":false}
             ]
         },
         {
             "name":"相关消化道预警症状",
             "choices":[
-                {"text":"经常腹泻", "detail":"近2年腹泻累计持续>3个月,每次持续时间>1周","choice":""},
-                {"text":"经常便秘", "detail":"近2年来每年便秘在2个月以上", "choice":""},
-                {"text":"腹泻便秘交替", "choice":""},
-                {"text":"粘液血便","choice":""},
-                {"text":"便血","choice":""},
-                {"text":"大便形状变细","choice":""}
+                {"text":"经常腹泻", "detail":"近2年腹泻累计持续>3个月,每次持续时间>1周","choice":false},
+                {"text":"经常便秘", "detail":"近2年来每年便秘在2个月以上", "choice":false},
+                {"text":"腹泻便秘交替", "choice":false},
+                {"text":"粘液血便","choice":false},
+                {"text":"便血","choice":false},
+                {"text":"大便形状变细","choice":false}
             ]
         },
         {
             "name":"其它病史",
             "choices":[
-                { "text":"糖尿病史","choice":""},
-                { "text":"血糖异常", "choice":""},
-                { "text":"不明原因贫血", "choice":""},
-                {"text":"不明原因体重下降","choice":""},
-                {"text":"血吸虫病","choice":""}
+                { "text":"糖尿病史","choice":false},
+                { "text":"血糖异常", "choice":false},
+                { "text":"不明原因贫血", "choice":false},
+                {"text":"不明原因体重下降","choice":false},
+                {"text":"血吸虫病","choice":false}
             ]
         },
         {
             "name":"其它危险因素",
             "choices":[
-                { "text":"肠道息肉","choice":""},
-                { "text":"溃疡性结肠炎", "choice":""},
-                { "text":"克罗恩病", "choice":""},
-                { "text":"慢性阑尾炎或阑尾切除","choice":""},
-                { "text":"慢性胆道疾病或胆囊切除","choice":""}
+                { "text":"肠道息肉","choice":false},
+                { "text":"溃疡性结肠炎", "choice":false},
+                { "text":"克罗恩病", "choice":false},
+                { "text":"慢性阑尾炎或阑尾切除","choice":false},
+                { "text":"慢性胆道疾病或胆囊切除","choice":false}
             ]
         }
 

@@ -104,18 +104,50 @@ public interface IPartyBar extends BaseMapper<PartyBar> {
      * @return
      */
     @Select({"<script>",
-            "SELECT PB.partyId,PB.barCode,PB.age,PB.partnerCode,PB.productCode,",
+            "SELECT PB.partyId,BE.barCode,PB.age,PB.partnerCode,PB.productCode,PB.samplingTime",
             "PS.name,PS.gender,PS.birthday,PC.contact phone,P.name productName," +
             "PG.partnerCode,PG.partnerName,A.analyteCode",
-            "FROM PartyBar PB ",
+            "FROM BarExpress BE ",
+            "LEFT JOIN PartyBar PB ON BE.barCode=PB.barCode",
             "LEFT JOIN Person PS ON PS.partyId=PB.partyId ",
             "LEFT JOIN PartyContact PC ON PC.partyId=PS.partyId",
-            "LEFT JOIN VPartner PG ON PG.partnerCode=PB.partnerCode",
+            "LEFT JOIN VPartner VP ON VP.partnerCode=PB.partnerCode",
             "LEFT JOIN Product P ON P.code=PB.productCode",
             "LEFT JOIN Analyte A ON A.barCode=PB.barCode",
-            "WHERE PB.barCode=#{barCode} and PC.contactType='phone' ",
+            "WHERE  date(BE.createTime)=date(now()) and PC.contactType='phone' ",
+            "<if test='productCode!=null'>",
+            "AND PB.productCode=#{productCode}",
+            "</if>",
+            "<if test='partnerCode!=null'>",
+            "AND PB.partnerCode=#{partnerCode}",
+            "</if>",
+            "limit #{offset},#{pageSize} order by BE.createTime desc",
             "</script>" })
-    public List<Map<String,Object>> listReceivedToday( );
+    public List<Map<String,Object>> listReceivedToday(Map<String,Object> input );
+
+    /**
+     * 获取当天已收样列表
+     * @return
+     */
+    @Select({"<script>",
+            "SELECT count(*) cnt FROM BarExpress BE ",
+            "LEFT JOIN PartyBar PB ON BE.barCode=PB.barCode",
+            "LEFT JOIN Person PS ON PS.partyId=PB.partyId ",
+            "LEFT JOIN PartyContact PC ON PC.partyId=PS.partyId",
+            "LEFT JOIN VPartner VP ON VP.partnerCode=PB.partnerCode",
+            "LEFT JOIN Product P ON P.code=PB.productCode",
+            "LEFT JOIN Analyte A ON A.barCode=PB.barCode",
+            "WHERE  date(BE.createTime)=date(now()) and PC.contactType='phone' ",
+            "<if test='productCode!=null'>",
+            "AND PB.productCode=#{productCode}",
+            "</if>",
+            "<if test='partnerCode!=null'>",
+            "AND PB.partnerCode=#{partnerCode}",
+            "</if>",
+           "</script>" })
+    public Integer listReceivedTodayCount(Map<String,Object> input );
+
+
 
 
 }

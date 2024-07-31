@@ -24,7 +24,11 @@ select PG.partyId partyId,fullName partnerName,P1.externalId partnerCode FROM Pa
 inner join partyRelationship PR1 ON PG.partyId=PR1.toId
 inner join Party P ON P.partyId=PR1.fromId
 inner join Party P1 ON P1.partyId=PR1.toId
-WHERE P.partyType='ROOT' AND P1.partyType='COMPANY' AND PR1.typeId='partner';
+WHERE P.partyType='ROOT' AND P1.partyType='COMPANY' AND PR1.typeId='partner'
+UNION
+SELECT P.partyId, PG.fullName partnerName,P.externalId partnerCode FROM Party P,PartyGroup PG
+WHERE P.partyId=PG.partyId AND P.partyType='ROOT'
+
 
 
 CREATE VIEW Patient AS SELECT PS.*,P.createTime FROM Person PS,Party P 

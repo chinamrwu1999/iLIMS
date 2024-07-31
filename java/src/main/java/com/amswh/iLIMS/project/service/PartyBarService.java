@@ -1,4 +1,5 @@
 package com.amswh.iLIMS.project.service;
+import com.amswh.iLIMS.framework.model.AjaxResult;
 import com.amswh.iLIMS.project.domain.PartnerBar;
 import com.amswh.iLIMS.project.domain.PartyBar;
 import com.amswh.iLIMS.project.domain.Person;
@@ -91,8 +92,20 @@ public class PartyBarService extends ServiceImpl<IPartyBar, PartyBar> {
           return this.baseMapper.getBarByCode(barCode);
 	}
 
-	public List<Map<String,Object>> listReceivedToday(){
-         return null;
+	public AjaxResult listReceivedToday(Map<String,Object> input){
+		 Integer pageSize=input.get("pageSize")==null?20:(Integer)input.get("pageSize");
+		 Integer pageIndex=input.get("pageIndex")==null?0:(Integer)input.get("pageIndex");
+		 Integer offset=pageIndex*pageSize;
+		 input.put("offset",offset);
+		 input.putIfAbsent("pageSize",pageSize);
+		 Integer total=baseMapper.listReceivedTodayCount(input);
+		 Map<String,Object> result=new HashMap<>();
+		 result.put("total",total);
+		 int pageNumber=(int)Math.ceil(total*1.0d/pageSize);
+		 result.put("pageNumber",pageNumber);
+		 result.put("currentPage",pageIndex);
+		 result.put("list",baseMapper.listReceivedToday(input));
+	     return AjaxResult.success(result);
 	}
 
 }

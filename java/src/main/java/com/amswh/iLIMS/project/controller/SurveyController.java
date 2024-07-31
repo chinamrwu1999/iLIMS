@@ -29,7 +29,7 @@ public class SurveyController {
      * @param productCode：产品代码 类似：LDT1 LDT2 或样本编号ACK24000001等
      * @return
      */
-    @GetMapping("/survey/template/{productCode}")
+    @GetMapping("/survey/{productCode}")
     public AjaxResult getSurveyTemplate(@PathVariable String productCode){
              Map<String,Object> data=new HashMap<>();
              if(productCode.length()>5){
@@ -60,17 +60,14 @@ public class SurveyController {
      *               }
      */
 
-    @PostMapping("/survey/saveSurveyAnswers")
-    public AjaxResult saveSurveyAnswers(Map<String,Object> inputMap){
-          Object obj=inputMap.get("barCode");
-          Object obj1=inputMap.get("answers");
-          if(obj==null || obj.toString().trim().length()<5 || obj1==null || obj1.toString().trim().length()<5){
+    @PostMapping("/survey/saveAnswers")
+    public AjaxResult saveSurveyAnswers(Map<String,String> inputMap){
+          String barCode=inputMap.get("barCode");
+          String answers=inputMap.get("answers");
+          if(barCode==null || barCode.trim().length()<5 || answers==null || answers.trim().length()<5){
               return AjaxResult.error("输入条件不满足问卷调查");
           }
-          String barCode=obj.toString().trim();
-          String answers=obj1.toString().trim();
-          inputMap.put("barCode",barCode);
-          inputMap.put("answers",answers);
+
           if(this.surveyService.insertAnswers(inputMap)>0){
               return AjaxResult.success("问卷调查保存成功");
           }else{

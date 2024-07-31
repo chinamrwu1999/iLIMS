@@ -18,7 +18,7 @@ public class SurveyService extends ServiceImpl<ISurveyTemplate, SurveyTemplate> 
         return this.baseMapper.getSurveyTemplate(productId);
     }
 
-    public int insertAnswers(Map<String,Object> inputMap){
+    public int insertAnswers(Map<String,String> inputMap){
         String barCode=inputMap.get("barCode").toString();
         String answers=inputMap.get("answers").toString();
         ObjectMapper mapper=new ObjectMapper();
@@ -26,7 +26,7 @@ public class SurveyService extends ServiceImpl<ISurveyTemplate, SurveyTemplate> 
 
 
             JsonNode node= mapper.readTree(answers);
-            Map<String,Object> mp=new HashMap<>();
+            Map<String,String> mp=new HashMap<>();
             mp.put("barCode",barCode);
             mp.put("answers",mapper.writeValueAsString(node));
             return this.baseMapper.insertSurveyAnswers(mp);

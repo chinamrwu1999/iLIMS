@@ -8,13 +8,13 @@ import org.apache.ibatis.annotations.Select;
 import java.util.Map;
 
 public interface ISurveyTemplate extends BaseMapper<SurveyTemplate> {
-    @Select("SELECT productId,template FROM surveyTemplate WHERE productId=#{productId}")
+    @Select("SELECT productCode,template FROM surveyTemplate WHERE productCode=#{productId}")
     public Map<String,Object> getSurveyTemplate(String productId);
 
     @Insert({"<script>",
             "INSERT INTO PatientSurvey(barCode,answers) VALUES(#{barCode},#{answers})",
             "</script>"})
-    public int insertSurveyAnswers(Map<String,Object> inputMap);
+    public int insertSurveyAnswers(Map<String,String> inputMap);
 
 
     @Select("SELECT answers FROM PatientSurvey WHERE barCode=#{barCode}")
