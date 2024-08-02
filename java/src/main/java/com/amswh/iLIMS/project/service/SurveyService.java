@@ -1,6 +1,9 @@
 package com.amswh.iLIMS.project.service;
 
 import com.amswh.iLIMS.project.domain.SurveyTemplate;
+import com.amswh.iLIMS.project.domain.survey.Choice;
+import com.amswh.iLIMS.project.domain.survey.Risk;
+import com.amswh.iLIMS.project.domain.survey.Survey;
 import com.amswh.iLIMS.project.mapper.lims.ISurveyTemplate;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -51,6 +54,36 @@ public class SurveyService extends ServiceImpl<ISurveyTemplate, SurveyTemplate> 
         return this.save(template);
     }
 
+
+
+
+    public Survey getSurvey(String barCode){
+
+        Map<String,String> mp=baseMapper.fetch_Survey_and_Template(barCode);
+        String template=mp.get("template");
+        String [] answers=mp.get("answers")!=null?mp.get("answers").split("#"):null;
+        ObjectMapper objectMapper = new ObjectMapper();
+        Survey survey = null;
+        try {
+          survey=objectMapper.readValue(template, Survey.class);
+           if(answers!=null) {
+               for (Risk risk : survey.getRisks()) {
+                   List<Choice> choices = risk.getChoices();
+                   for (Choice choice : choices) {
+                       for (String answer : answers) {
+                           if (answer.equals(choice.getText())) {
+                               choice.setChoice(Boolean.TRUE);
+                               continue;
+                           }
+                       }
+                   }
+               }
+           }
+        }catch (Exception err){
+            err.printStackTrace();
+        }
+        return  survey;
+    }
 
 
 }
