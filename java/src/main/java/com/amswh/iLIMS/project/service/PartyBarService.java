@@ -24,9 +24,17 @@ public class PartyBarService extends ServiceImpl<IPartyBar, PartyBar> {
 	   @Resource
 	   PartyService partyService;
 
+	   @Resource
+	   SeqService seqService;
+
+	   @Resource
+	   PartnerBarService partnerBarService;
+
 	   public Map<String,Object> findPartner(String barCode){
 		   return this.baseMapper.findPartner(barCode);
 	   }
+
+
 	   public List<Map<String,Object>> getBarStatus(List<String> partyIds){
 		    return  this.baseMapper.getBarStatus(partyIds);
 	   }
@@ -42,49 +50,32 @@ public class PartyBarService extends ServiceImpl<IPartyBar, PartyBar> {
 	 * @return
 	 */
 	@Transactional
-	public boolean saveBindedInfo(Map<String,Object> inputMap){
+	public String saveBindedInfo(Map<String,Object> inputMap){
+
+		PartnerBar partnerBar=new PartnerBar();
+		MapUtil.copyFromMap(inputMap, partnerBar);
+
 		PatientInfo patientInfo = new PatientInfo();
 		MapUtil.copyFromMap(inputMap, patientInfo);
-		Person patient = partyService.savePatient(patientInfo);
+
 		PartyBar pb = new PartyBar();
 		MapUtil.copyFromMap(inputMap, pb);
-		pb.setPartyId(patient.getPartyId());
-		this.save(pb);
-		return true;
-
+		if(inputMap.get("openId")!=null){
+			pb.setBindWay("wechat");
+		}
+		String barId= seqService.nextBarId();
+		partnerBar.setBarId(barId);
+		if(partnerBarService.save(partnerBar)){
+			Person patient = partyService.savePatient(patientInfo);
+			pb.setBarId(barId);
+			pb.setPartyId(patient.getPartyId());
+			this.save(pb);
+			return barId;
+		}
+		return  null;
 	}
-
-
-	public boolean updataPartyBar(Map<String,Object> input){
-		 if(input.get("partyId")!=null){
-			 String partyId=input.get("partyId").toString();
-			 PartyBar pb=new PartyBar();
-			 pb.setPartyId(partyId);
-			 if(input.get("partnerCode")!=null){
-				 pb.setPartnerCode(input.get("partnerCode").toString().trim());
-			 }else{
-				 pb.setPartnerCode(null);
-			 }
-			 if(input.get("productCode")!=null){
-				 pb.setProductCode(input.get("productCode").toString().trim());
-			 }else{
-				 pb.setProductCode(null);
-			 }
-			 if(input.get("age")!=null){
-				 pb.setAge((Integer) input.get("age"));
-			 }else{
-				 pb.setAge(null);
-			 }
-			 return baseMapper.updatePartyBar(pb);
-
-		 }
-		 return false;
-	}
-
-
 
 	public Map<String,Object> getBoundInfo(String barCode){
-		 System.out.println(barCode);
         return this.baseMapper.getBoundInfo(barCode);
 	}
 

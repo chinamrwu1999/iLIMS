@@ -1,5 +1,6 @@
 package com.amswh.iLIMS.project.mapper.lims;
 import com.amswh.iLIMS.project.domain.Bar;
+import com.amswh.iLIMS.project.domain.PartnerBar;
 import com.amswh.iLIMS.project.domain.PcrData;
 import com.amswh.iLIMS.project.domain.Product;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -59,7 +60,21 @@ public interface IBar extends BaseMapper<Bar> {
 
 
     @Select("SELECT barCode FROM analyte where analyteCode=#{analyteCode} or barCode=#{analyteCode}")
-    public String getBarCode(String analyteCode);
+    public String getBarCode_by_analyteCode(String analyteCode);
+    /**
+     * 根据条码获取BarId
+     * @param barCode
+     * @return
+     */
+    @Select("SELECT barId FROM PartnerBar where barCode=#{barCode}")
+    public String getBarId_by_barCode(String barCode);
+
+    @Select("SELECT A.barId FROM PartnerBar PB,Analyte A where PB.barId=A.barId AND  A.analyteCode=#{analyteCode}")
+    public String getBarId_by_analyteCode(String analyteCode);
+
+    @Select("SELECT barCode FROM PartnerBar WHERE barId=#{barId}")
+    public String getBarCode_by_barId(String barId);
+
 
     /**
      * 根据条码获取分析物。可能是多个分析物返回
@@ -77,6 +92,8 @@ public interface IBar extends BaseMapper<Bar> {
             "(SELECT barCode FROM analyte WHERE analyteCode=#{code})"})
     public Map<String,Object>   getBindingTime(String code);
 
+    @Select("SELECT * FROM PartnerBar WHERE barCode=#{barCode}")
+    public PartnerBar getPartnerBar(String barCode);
 
     @Select({"<script>",
             "SELECT analyteCode," +

@@ -16,6 +16,8 @@ public class Sequence {
 
     @TableField("seqId")
     private Long seqId;
+    @TableField("colName")
+    private String colName;
 
 //    @TableField("colName")
 //    private String colName;

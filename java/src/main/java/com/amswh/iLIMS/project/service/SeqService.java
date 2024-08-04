@@ -5,12 +5,16 @@ import com.amswh.iLIMS.project.mapper.lims.ISequence;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -18,6 +22,8 @@ import java.util.concurrent.ConcurrentMap;
 @Service
 public class SeqService extends ServiceImpl<ISequence, Sequence> {
 
+   @Resource
+    JdbcClient jdbcClient;
 
     private  final String tableName="sequence";
     private  String nameColName="seqName";
@@ -32,10 +38,15 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
         return partyId;
     }
 
+    public String nextBarId(){
+        String barId=String.format("B%010d",getNextSeqId("PartnerBar",1L));
+        return barId;
+    }
+
+
 
     public Long getNextSeqId(String seqName, long staggerMax) {
         SequenceBank bank = this.getBank(seqName);
-        if(bank==null){System.out.println(" sequence "+seqName+" bank  is null");}
         return bank.getNextSeqId(staggerMax);
     }
 
@@ -58,8 +69,7 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
         SequenceBank bank = sequences.get(seqName);
 
         if (bank == null) {
-            long bankSize = SequenceBank.DEF_BANK_SIZE;
-            bank = new SequenceBank(seqName, bankSize);
+            bank = new SequenceBank(seqName,  SequenceBank.DEF_BANK_SIZE);
             SequenceBank bankFromCache = sequences.putIfAbsent(seqName, bank);
             bank = bankFromCache != null ? bankFromCache : bank;
         }
@@ -79,7 +89,7 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
 
 
     private final class SequenceBank {
-        public static final long DEF_BANK_SIZE = 35;
+        public static final long DEF_BANK_SIZE = 100;
         public static final long MAX_BANK_SIZE = 5000;
         public static final long START_SEQ_ID = 10000;
 
@@ -168,7 +178,7 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
                     seq.setSeqName(seqName);
                     QueryWrapper<Sequence> queryWrapper=new QueryWrapper<>(seq);
                     if (SeqService.this.updateForLock() <= 0) {
-                        Sequence one= SeqService.this.getOne(queryWrapper);
+                        Sequence one= SeqService.this.getById(seqName);
                         if(one==null) {
                               seq.setSeqName(this.seqName);
                               seq.setSeqId(START_SEQ_ID);
@@ -208,10 +218,24 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
 
     }
 
-//    @PostConstruct
-//    public void Initialize(){
-//
-//    }
+    @PostConstruct
+    public void Initialize(){
+        List<Map<String,Object>> rows=this.jdbcClient.sql("SELECT seqName,colName FROM Sequence").query().listOfRows();
+        String sql="SELECT max(substr(%s,2,11)) FROM %s";
+        String updateSQL="UPDATE sequence set seqId=:seqId WHERE seqName=:seqName";
+        for(Map<String,Object> row:rows){
+            String strSQL=String.format(sql,row.get("colName"),row.get("seqName"));
+            Object obj=jdbcClient.sql(strSQL).query().singleValue();
+            Long maxId=0L;
+            if(obj!=null){
+                maxId=Long.parseLong(obj.toString());
+            }
+            jdbcClient.sql(updateSQL).param("seqId",maxId+1)
+                    .param("seqName",row.get("seqName").toString()).update();
+
+        }
+        System.out.println("sequence service initialized ");
+    }
 //
 //
 //    public Long getMaxUsedSeq(String seqId){

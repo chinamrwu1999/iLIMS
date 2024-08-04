@@ -10,44 +10,40 @@ CREATE TABLE IF NOT EXISTS `Bar`(
     `createTime` DATETIME NOT NULl default now()
 ) ENGINE=InnoDB  AUTO_INCREMENT=1 COMMENT '用于存储艾米森生成的所有条码';
 
+
+CREATE TABLE IF NOT EXISTS `PartnerBar`(
+      `barId` char(11) not null primary key comment '10个字符组成的主键,有应用程序服务生成，并非数据库自增列，是因考虑到应用扩展到分布式',
+      `barCode` varchar(60) not null  comment '贴在采样管或采样盒上的条形码',
+      `productCode` varchar(20) NOT NULL  default 'unknown' COMMENT '产品或服务code,',
+      `partnerCode` varchar(10)  NOT NULL default 'unknown' comment 'Partner代码',
+      `createTime` datetime not null default now(),
+      unique(`partnerCode`,`barCode`)
+) ENGINE=InnoDB  AUTO_INCREMENT=1 COMMENT '条码与Partner、product的关联信息';
+
+create index index_partnerBar_barCode on `partnerBar`(`barCode`);
+create index index_partnerBar_productCode on `partnerBar`(`productCode`);
+create index index_partnerBar_partnerCode on `partnerBar`(`partnerCode`);
+
 CREATE TABLE IF NOT EXISTS `PartyBar`(
-    `id` int unsigned not null  AUTO_INCREMENT primary key,
-    `partyId`  varchar(12) not null comment '病人对应的partyId',
-    `barCode` varchar(20) not null comment '贴在采样管或采样盒上的条形码',
-    `productCode` varchar(20) NOT NULL  default 'unknown' COMMENT '产品或服务code,',
-    `partnerCode` varchar(10)  NOT NULL default 'unknown' comment 'Partner代码',
+    `barId` char(11) not null primary key comment '外键,引用PartnerBar的barId',
+    `partyId`  varchar(12) not null comment '病人对应的partyId,引用Person表的partyId',
     `age` smallint comment '病人使用检测服务时候的年龄',
     `bindWay` ENUM('wechat','api','manual') comment '绑定方式:wechat微信小程序扫码,api 通过api从partner处拉取;manual手工录入',
-    `createTime` DATETIME NOT NULl default now(),
-    unique(`partyId`,`barCode`)
+    `createTime` DATETIME NOT NULl default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 comment '病人与样本条码关联';
 
-CREATE index partyBarIndex ON `PartyBar`(`barCode`);
-
-/* CREATE TABLE IF NOT EXISTS `PartnerBar`(
-      `id` int unsigned not null AUTO_INCREMENT primary key,
-      `barCode` varchar(60) not null comment '贴在采样管或采样盒上的条形码',
-      `partnerId` varchar(10) not null comment 'Partner的partyId',
-      `createTime` datetime not null default now(),
-      unique(`partnerId`,`barCode`)
-) ENGINE=InnoDB  AUTO_INCREMENT=1 COMMENT '条码与Partner、product的关联信息'; */
-
 CREATE TABLE IF NOT EXISTS `analyte`(
-    `id` int unsigned NOT NULL AUTO_INCREMENT primary key COMMENT '',
-    `barCode` varchar(60) NOT NULL COMMENT '分析物对应的样本条码号',
-    `analyteCode` varchar(20) NOT NULL COMMENT '分析物编号，用于实验室内部编排实验用，类如 ACK23000018等',
-    `createTime` datetime not null default now(),
-    unique(`barCode`,`analyteCode`)
+    `barId` char(11) NOT NULL primary key comment '外键,引用PartnerBar的barId',
+    `analyteCode` varchar(20) NOT NULL unique COMMENT '分析物编号，用于实验室内部编排实验用，类如 ACK23000018等',
+    `createTime` datetime not null default now()
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '分析物:一份生物样本BioSample 可能会被多次检测,每一次检测用到的只是BioSample的一部分,称为analyte，不同analyte可以做不同检测';
 CREATE index analyteIndex on `analyte`(`analyteCode`);
 
 CREATE TABLE IF NOT EXISTS `BarExpress`(
-    `id` int unsigned not null AUTO_INCREMENT primary key,
-    `barCode` varchar(60) not null comment '条码号',
-    `udi` varchar(60)  comment 'udi',
-    `expressNo` varchar(60) comment '快递单号' ,
-    `createTime` datetime not null default now(),
-    unique(`barCode`,`expressNo`)
+    `barId` char(11) NOT NULL primary key comment '外键,引用PartnerBar的barId',
+    `udi` varchar(60) not null default 'unknown' comment 'udi',
+    `expressNo` varchar(60) not null default 'unknown' comment '快递单号' ,
+    `createTime` datetime not null default now()
 ) comment '收到快递送来的样本，分拣动作' ;
 
 CREATE TABLE IF NOT EXISTS `analyteProcess` (
@@ -98,20 +94,16 @@ CREATE TABLE IF NOT EXISTS PCRCurve(
 
 
 CREATE TABLE IF NOT EXISTS  `BioSample`(
-    `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',
-    `barCode` varchar(80) not null COMMENT '唯一标识生物样本的条形码号',
+    `barId` char(11) not null primary key,
     `sampleType` varchar(12) not null COMMENT '类型:F粪便、B血液、C细胞、T组织',
     `weight` decimal(5,3) COMMENT '重量',
     `volume` decimal(5,3) COMMENT '体积',
-    `color` varchar(30) COMMENT '样本颜色',
-    `location` varchar(60)  COMMENT '样本收到后的存放位置',
     `sampleTime` datetime COMMENT '样本在病人身上的采样时间',
     `sender` varchar(100) COMMENT '送检单位',
     `status` char(1) not null default 'S' COMMENT '样本物理状态:S 表示合格(Succeed),F 表示不合格(Fail)',
     `sampleImage` varchar(200) COMMENT '样本照片',
-    `formImage` varchar(200) COMMENT '个人信息表格图片',
-    `surveyImage` varchar(200) COMMENT '如有纸质问卷，则拍照保存',
-   `createTime` datetime not null default now() COMMENT '收到样本时间，插入数据库时候的时间'
+    `isVIP` boolean default false,
+    `createTime` datetime not null default now() COMMENT '收到样本时间，插入数据库时候的时间'
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '生物样本基本信息表';
 
 
@@ -170,12 +162,12 @@ CREATE TABLE IF NOT EXISTS `expReagent`(
 ) comment '实验用试剂记录';
 
 CREATE TABLE IF NOT EXISTS `Diagnose`(
-    `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',
-    `barCode` varchar(60) not null ,
+    `id`  int unsigned not null AUTO_INCREMENT primary key,
+    `barId` char(11) not null ,
     `diseaseCode` VARCHAR(12) not null COMMENT '分析物品代码',
     `predict` varchar(8) not null comment '判定状态:阳性或弱阳性',
     `createTime` timestamp not null default now(),
-    unique(`barCode`,`diseaseCode`)
+    unique(`barId`,`diseaseCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '记录多癌检测中阳性或弱阳性的癌症代码'; 
 
 
@@ -186,7 +178,7 @@ CREATE TABLE IF NOT EXISTS `SurveyTemplate`(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '调查问卷模板';
 
 CREATE TABLE IF NOT EXISTS `PatientSurvey`(
-    `barCode` varchar(60) not null primary key,
+    `barId` char(11) not null primary key,
     `answers` varchar(512) not null,
     `createTime` timestamp not null default now()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '调查问卷答案';

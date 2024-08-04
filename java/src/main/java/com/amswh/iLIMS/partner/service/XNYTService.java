@@ -67,7 +67,7 @@ public class XNYTService implements IPartner {
                                     patient.setPhone(src.get("tel").toString());
                                 }
                                 if(src.get("birthday")!=null){
-                                    patient.setBirthDate(src.get("birthday").toString());
+                                    patient.setBirthday(src.get("birthday").toString());
                                 }
                                 if(!MyStringUtils.isEmpty(src.get("idCardNum"))){
                                     patient.setIDNumber(src.get("idCardNum").toString());

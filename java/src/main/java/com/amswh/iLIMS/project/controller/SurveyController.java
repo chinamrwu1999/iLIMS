@@ -2,6 +2,7 @@ package com.amswh.iLIMS.project.controller;
 
 
 import com.amswh.iLIMS.framework.model.AjaxResult;
+import com.amswh.iLIMS.project.domain.survey.Survey;
 import com.amswh.iLIMS.project.service.ConstantsService;
 import com.amswh.iLIMS.project.service.SurveyService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,30 +27,18 @@ public class SurveyController {
 
     /**
      * 获取问卷调查模板
-     * @param productCode：产品代码 类似：LDT1 LDT2 或样本编号ACK24000001等
+     * @param code：产品代码 类似：LDT1 LDT2 或条码号
      * @return
      */
-    @GetMapping("/survey/{productCode}")
-    public AjaxResult getSurveyTemplate(@PathVariable String productCode){
-             Map<String,Object> data=new HashMap<>();
-             if(productCode.length()>5){
-                 String code=productCode.substring(0,3).toUpperCase();
-                 data= this.surveyService.getSurveyTemplate(constants.getProductIdBySampleHeader(code));
-             }else{
-                 data=this.surveyService.getSurveyTemplate(productCode);
+    @GetMapping("/survey/fetch/{code}")
+    public AjaxResult getSurveyTemplate(@PathVariable String code){
+             Survey survey=null;
+             if(code.length()>5){   // barCode
+                 survey=this.surveyService.getSurvey(code);
+             }else {
+                 survey = this.surveyService.getSurveyTemplate(code);
              }
-             if(!data.isEmpty()) {
-                 try {
-                     ObjectMapper mapper = new ObjectMapper();
-                     JsonNode node = mapper.readTree(data.get("template").toString());
-                     data.put("template", mapper.writeValueAsString(node));
-
-                 } catch (Exception err) {
-                     err.printStackTrace();
-                 }
-             }
-                 return AjaxResult.success(data);
-
+           return AjaxResult.success(survey);
     }
 
     /**保存调查问卷答案
@@ -60,7 +49,7 @@ public class SurveyController {
      *               }
      */
 
-    @PostMapping("/survey/saveAnswers")
+    @PostMapping("/survey/save")
     public AjaxResult saveSurveyAnswers(Map<String,String> inputMap){
           String barCode=inputMap.get("barCode");
           String answers=inputMap.get("answers");
@@ -74,18 +63,5 @@ public class SurveyController {
               return AjaxResult.success("问卷调查保存失败");
           }
     }
-
-    /**
-     * 获取某个条码对应的调查问卷
-     * @param barCode
-     * @return
-     */
-
-    @GetMapping("/survey/getSurveyAnswers/{barCode}")
-    public AjaxResult getSurveyAnswers(@PathVariable  String barCode){
-               List<String> answers=surveyService.getSurveyAnswers(barCode);
-               return AjaxResult.success(this.surveyService.getSurveyAnswers(barCode));
-    }
-
 
 }

@@ -49,7 +49,7 @@ public class HYService implements IPartner {
                             patient.setAge(Integer.parseInt(src.get("AGE").toString()));
                         }
                         patient.setPhone(String.valueOf(src.get("TEL")));
-                        patient.setBirthDate(String.valueOf(src.get("BIRTHDAY")));
+                        patient.setBirthday(String.valueOf(src.get("BIRTHDAY")));
                         patient.setIDNumber(String.valueOf(src.get("CARDNUMBER")));
                         patient.setProductCode(String.valueOf(src.get("ITEMID")));
                         patient.setSamplingTime(String.valueOf(src.get("CHECKTIME")));

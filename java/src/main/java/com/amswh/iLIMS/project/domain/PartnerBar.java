@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
 @Data
 @TableName("partnerBar")
 public class PartnerBar {
-    @TableId(value="id",type = IdType.AUTO)
-    private Integer id;
+    @TableId(value="barId",type = IdType.INPUT)
+    private String barId;
     @NotBlank(message = "barCode 不能为空")
     @TableField("barCode")
     private String barCode;
     @TableField("productCode")
     private String productCode;
-    @TableField("partnerId")
-    private String partnerId;
+    @TableField("partnerCode")
+    private String partnerCode;
     @TableField("createTime")
     private LocalDateTime createTime;
 

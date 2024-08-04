@@ -52,7 +52,7 @@ public class BioSampleController {
     BarService barService;
 
     @Resource
-    ConstantsService constantsService;
+    SeqService seqService;
 
     /**
      *  样本分拣：
@@ -68,47 +68,25 @@ public class BioSampleController {
         String udi=inputMap.get("udi")==null?null:inputMap.get("udi").toString().trim();
         if(barCode==null && udi==null){  return AjaxResult.error("条码号与udi至少提供一样");  }
         if(barCode==null ){   barCode=udi;    }
-        BarExpress be=new BarExpress();
-       if(expressNo!=null){ // 保存快递单号与条码的关联信息
 
-            be.setBarCode(barCode);
-            be.setExpressNo(expressNo);
-            be.setUdi(udi);
-            barExpressService.save(be);
-        }
         Map<String,Object> boundInfo=partyBarService.getBoundInfo(barCode);// 获取扫码绑定信息
         if(boundInfo!=null && !boundInfo.isEmpty() ) {//
-                   boundInfo.put("partnerName",constantsService.getPartnerName(boundInfo.get("partnerCode").toString()));
                    return AjaxResult.success(boundInfo);
         }else{// 未找到扫码绑定信息，说明样本来自某个Partner，需要调用Partner的API接口获取受检者个人信息  ---------------------- 2
               PatientInfo patientInfo=partnerService.fetPatientInfoWithExpressNo(barCode,expressNo);
-
-             if(patientInfo!=null){ // 通过partner的api成功获取信息
-                   Person patient =partyService.savePatient(patientInfo);
-                   if(patient!=null){
-                        String partyId=patient.getPartyId();
-                        PartyBar pb=new PartyBar();
-                        BeanUtils.copyProperties(patientInfo,pb);
-                        pb.setPartyId(partyId);
-                        pb.setBindWay("api");
-                        partyBarService.save(pb);
-                        return AjaxResult.success(patientInfo);
-                   }else{
-                       throw new ServiceException("保存受检者个人信息时发生异常!");
-                   }
-             }else{ //既没有绑定信息，也没有partner的API信息   --------------------------------------------- 3
-                    Map<String,Object> result=new HashMap<>();
-                    Map<String,Object> partnerMap=normalService.findPartnerInfo(barCode);
-                    if(partnerMap!=null && !partnerMap.isEmpty()){
-                       result.put("partnerCode",partnerMap.get("partnerCode"));
-                       result.put("partnerName",partnerMap.get("partnerName"));
-                   }
-//                   Product product=normalService.findProductInfo(barCode);
-//                   if(product!=null){
-//                       result.put("productCode",product.getCode());
-//                       result.put("productName",product.getName());
-//                   }
-                  return AjaxResult.success("未能找到受检者个人的信息，请手工录入！",result);
+              if(patientInfo!=null){ // 通过partner的api成功获取信息
+                Map<String,Object> patientMap=patientInfo.getPatientMap();
+                patientMap.put("bindWay","api");
+                String barId=partyBarService.saveBindedInfo(patientMap);
+                if(barId!=null)
+                {  BarExpress be=new BarExpress(barId,expressNo,udi);
+                    barExpressService.save(be);
+                    return AjaxResult.success(patientInfo);
+                }else{
+                    throw new ServiceException("保存受检者个人信息时发生异常!");
+                }
+             }else{
+                  return AjaxResult.success("未能找到受检者个人的信息，请手工录入！");
              }
         }
   }
@@ -145,8 +123,11 @@ public class BioSampleController {
             return AjaxResult.error("分析物编码和采样盒条码 都不能 空 ");
         }
 
+        String barId=barService.getBarId_by_barCode(barCode);
+
         BioSample sample=new BioSample();
         MapUtil.copyFromMap(inputMap,sample);
+        sample.setBarId(barId);
 
         Analyte analyte =new Analyte();
         MapUtil.copyFromMap(inputMap,analyte);
@@ -170,7 +151,7 @@ public class BioSampleController {
           sampleService.save(sample) &&
           analyteProcessService.save(process)){
               return AjaxResult.success("OK,收样成功");
-        }
+          }
         return AjaxResult.error("保存收样信息发生异常");
     }
     /**

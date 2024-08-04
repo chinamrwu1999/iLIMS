@@ -48,7 +48,7 @@ public class NORMALService {
        if(!(mp==null || mp.isEmpty())) { //扫码绑定信息
            MapUtil.copyFromMap(mp, patient);
            if(mp.get("birthday")!=null) {
-               patient.setBirthDate(mp.get("birthday").toString());
+               patient.setBirthday(mp.get("birthday").toString());
            }
        }
         return  patient;

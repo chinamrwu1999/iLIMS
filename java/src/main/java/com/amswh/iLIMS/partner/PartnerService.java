@@ -48,6 +48,7 @@ public class PartnerService implements ApplicationContextAware {
            if(patientInf!=null) {
                patientInf.setPartnerName(constantsService.getPartnerName(patientInf.getPartnerCode()));
                patientInf.setProductName(constantsService.getProductName(patientInf.getProductCode()));
+
            }
         return  patientInf;
 

@@ -17,8 +17,18 @@ import java.util.*;
 public class SurveyService extends ServiceImpl<ISurveyTemplate, SurveyTemplate> {
 
 
-    public Map<String,Object> getSurveyTemplate(String productId){
-        return this.baseMapper.getSurveyTemplate(productId);
+    public Survey getSurveyTemplate(String productId){
+        Map<String,Object> mp=this.baseMapper.getSurveyTemplate(productId);
+        if(mp==null || mp.isEmpty()) return null;
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String template = mp.get("template").toString();
+            Survey survey = objectMapper.readValue(template, Survey.class);
+            return survey;
+        }catch (Exception err){
+            err.printStackTrace();
+        }
+        return  null;
     }
 
     public int insertAnswers(Map<String,String> inputMap){
@@ -60,6 +70,7 @@ public class SurveyService extends ServiceImpl<ISurveyTemplate, SurveyTemplate> 
     public Survey getSurvey(String barCode){
 
         Map<String,String> mp=baseMapper.fetch_Survey_and_Template(barCode);
+        if(mp==null || mp.isEmpty()) return null;
         String template=mp.get("template");
         String [] answers=mp.get("answers")!=null?mp.get("answers").split("#"):null;
         ObjectMapper objectMapper = new ObjectMapper();

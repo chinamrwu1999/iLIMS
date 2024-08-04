@@ -119,7 +119,7 @@ public class PAJKService implements IPartner {
                                     if(s1.length()==8){
                                         s1=s1.substring(0,4).concat("-").concat(s1.substring(4,6)).concat("-").concat(s1.substring(6,8));
                                     }
-                                    patient.setBirthDate(s1);
+                                    patient.setBirthday(s1);
                                    // result.put("birthDay",s1);
                                 }
                                 if (!MyStringUtils.isEmpty(tmpMap.get("address"))) {

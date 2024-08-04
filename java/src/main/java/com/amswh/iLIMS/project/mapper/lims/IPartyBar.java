@@ -41,16 +41,16 @@ public interface IPartyBar extends BaseMapper<PartyBar> {
      */
 
     @Select({"<script>",
-    "select PB.partyId,PB.barCode,age,A.analyteCode,productCode,A.createTime,P.name productName,AP.action,AP.status,",
+    "select PB.partyId,PB1.barCode,age,A.analyteCode,productCode,A.createTime,P.name productName,AP.action,AP.status,",
     "PS.name,PS.gender,PC.contact phone ",
     "FROM partyBar PB ",
-    "LEFT JOIN PartnerBar PB1 ON PB1.barCode=PB.barCode ",
-    "INNER JOIN analyte A ON A.barCode=PB.barCode ",
+    "LEFT JOIN PartnerBar PB1 ON PB1.barId=PB.barId ",
+    "INNER JOIN analyte A ON A.barId=PB.barId ",
     "LEFT JOIN analyteProcess AP ON AP.analyteCode=A.analyteCode",
     "LEFT JOIN product P ON P.code=PB1.productCode ",
     "LEFT JOIN PERSON PS ON PS.partyId=PB.partyID",
     "LEFT JOIN PartyContact PC ON PC.partyId=PS.partyId",
-    "WHERE partyId IN ",
+    "WHERE PB.partyId IN ",
     "<foreach item='partyId' collection='partyIds' open='(' separator=',' close=')'>",
     " #{partyId}",
     " </foreach>",
@@ -71,29 +71,17 @@ public interface IPartyBar extends BaseMapper<PartyBar> {
      */
 
     @Select({"<script>",
-            "SELECT PB.partyId,PB.barCode,PB.age,PB.partnerCode,PB.productCode,",
-            "PS.name,PS.gender,PS.birthday,PC.contact phone,P.name productName,PG.partnerName",
-            "FROM PartyBar PB ",
+            "SELECT B.barId,B.barCode,B.partnerCode,B.productCode,",
+            "PB.partyId,PB.age,PS.name,PS.gender,",
+            "PS.birthday,PC.contact phone,P.name productName,PG.partnerName",
+            "FROM PartnerBar B LEFT JOIN PartyBar PB ON B.barId=PB.barId ",
             "LEFT JOIN Person PS ON PS.partyId=PB.partyId ",
             "LEFT JOIN PartyContact PC ON PC.partyId=PS.partyId",
-            "LEFT JOIN VPartner PG ON PG.partnerCode=PB.partnerCode",
-            "LEFT JOIN Product P ON P.code=PB.productCode",
-            "WHERE PB.barCode=#{barCode} and PC.contactType='phone' ",
+            "LEFT JOIN VPartner PG ON PG.partnerCode=B.partnerCode",
+            "LEFT JOIN Product P ON P.code=B.productCode",
+            "WHERE B.barCode=#{barCode} and PC.contactType='phone' ",
             "</script>" })
     public Map<String,Object> getBoundInfo(String barCode);
-
-
-    @Update({"<script>" +
-            "UPDATE PartyBar set createTime=now()," +
-            "<if test='partnerCode!=null'>",
-            "set partnerCode=#{partnerCode}",
-            "</if>",
-            "<if test='productCode!=null'>",
-            "set productCode=#{productCode}",
-            "</if>",
-            "WHERE partyId=#{partyId}",
-            "</script>"})
-    public boolean updatePartyBar(PartyBar input);
 
     @Select("SELECT * FROM PartyBar where barCode=#{barCode}")
     public PartyBar getBarByCode(String barCode);

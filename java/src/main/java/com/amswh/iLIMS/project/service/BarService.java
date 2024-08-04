@@ -1,9 +1,11 @@
 package com.amswh.iLIMS.project.service;
 import com.amswh.iLIMS.project.domain.Bar;
+import com.amswh.iLIMS.project.domain.PartnerBar;
 import com.amswh.iLIMS.project.domain.PcrData;
 import com.amswh.iLIMS.project.domain.Product;
 import com.amswh.iLIMS.project.mapper.lims.IBar;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ import java.util.Map;
 public class BarService extends ServiceImpl<IBar, Bar> {
 
 
+	@Resource
+	SeqService seqService;
 
 
 	/**
@@ -78,17 +82,34 @@ public class BarService extends ServiceImpl<IBar, Bar> {
 
 
 
-	/**
-	 *
-	 * @param code :条码或分析物代码
-	 * @return
-	 */
-	public String  getBarCode(String code){
-		return  this.baseMapper.getBarCode(code);
-	}
 
 	public Map<String,Object> getBindingTime(String code){
              return this.baseMapper.getBindingTime(code);
 	}
+
+	public String getBarCode_by_analyteCode(String analyteCode){
+		return baseMapper.getBarCode_by_analyteCode(analyteCode);
+	}
+
+	public String getBarId_by_barCode(String barCode){
+		return baseMapper.getBarId_by_barCode(barCode);
+	}
+
+	public String  getBarId_by_analyteCode(String analyteCode){
+		return baseMapper.getBarId_by_analyteCode(analyteCode);
+	}
+
+	public String getBarCode_by_barId(String barId){
+		return baseMapper.getBarCode_by_barId(barId);
+	}
+
+   public String nextBarId(){
+       return seqService.nextBarId();
+   }
+
+   public PartnerBar getPartnerBar(String barCode){
+		return baseMapper.getPartnerBar(barCode);
+   }
+
 
 }

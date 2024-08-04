@@ -16,12 +16,8 @@ import java.time.LocalDateTime;
 @TableName("biosample")
 public class BioSample {
 
-	@TableId(value="id",type = IdType.AUTO)
-	private Integer id;
-
-	@NotBlank(message = "barCode 不能为空")
-	@TableField("barCode")
-	private String barCode;
+	@TableId(value="barId",type = IdType.INPUT)
+	private String barId;
 
 	@NotBlank(message = "type 不能为空")
 	@TableField("sampleType")
@@ -32,12 +28,6 @@ public class BioSample {
 
 	@TableField("volume")
 	private Double volume;
-
-	@TableField("color")
-	private String color;
-
-	@TableField("location")
-	private String location;
 
 	@TableField("sampleTime")
 	private LocalDateTime sampleTime;
@@ -51,12 +41,6 @@ public class BioSample {
 
 	@TableField("sampleImage")
 	private String sampleImage;
-
-//	@TableField("formImage")
-//	private String formImage;
-
-	@TableField("surveyImage")
-	private String surveyImage;
 
 	@TableField("isVIP")
 	private Boolean  fromVIP;

@@ -6,10 +6,6 @@ LEFT JOIN partyRelationship PR ON PR.toId=P0.partyId
 LEFT JOIN Party P1 ON P1.partyId=PR.fromId
 WHERE P0.partyType='DEPT' AND PR.typeId='OWN'
 ;
-
-
-
-
 create view VEmployee as
 SELECT P.partyId,P.externalId employeeId,PS.name,gender,deptId,deptName,PC1.contact phone FROM Person PS 
 INNER JOIN Party P ON PS.partyId=P.partyId 
@@ -33,3 +29,13 @@ WHERE P.partyId=PG.partyId AND P.partyType='ROOT'
 
 CREATE VIEW Patient AS SELECT PS.*,P.createTime FROM Person PS,Party P 
 WHERE PS.partyId=P.partyId AND P.partyType='PATIENT';
+
+CREATE VIEW BarView AS
+SELECT B.barId,B.barCode,B.productCode,P.name productName,B.partnerCode,partnerName,
+Pt.partyId,Pt.name,gender,age, BE.createTime receiveTime,BE.expressNo
+FROM PartnerBar B 
+LEFT JOIN PartyBar PB   ON B.barId=PB.barId
+LEFT JOIN Product P     ON P.code = B.productCode
+LEFT JOIN Patient Pt    ON Pt.partyId=PB.partyId 
+LEFT JOIN VPartner VP   ON VP.partnerCode=B.partnerCode
+LEFT JOIN BarExpress BE ON BE.barId=B.barId ;

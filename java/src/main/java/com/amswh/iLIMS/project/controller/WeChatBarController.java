@@ -25,10 +25,10 @@ public class WeChatBarController extends BaseController {
     BarService barService;
 
     @Resource
-    PartyContactService contactService;
+    PartnerBarService partnerBarService;
 
     @Resource
-    PartyrelationshipService partyrelationshipService;
+    PartyContactService contactService;
 
     @Resource
     PartyBarService partyBarService;
@@ -45,12 +45,13 @@ public class WeChatBarController extends BaseController {
     @PostMapping("/scanBar")
     @Transactional
     public AjaxResult bindBoxByScan(@RequestHeader("openId")String openId, @RequestBody Map<String,Object> inputMap) throws  Exception{
-        if(inputMap.get("barCode")==null ) {
-           // throw new Exception("条码号不能缺");
+        String barCode=inputMap.get("barCode")!=null?inputMap.get("barCode").toString().trim():null;
+        if(barCode==null || barCode.isBlank() ) {
             return AjaxResult.error("条码号不能缺失");
         }
-        Bar bar=barService.getBar(inputMap.get("barCode").toString());
-        if(bar==null){
+        Bar bar=barService.getBar(barCode);
+        PartnerBar partnerBar=barService.getPartnerBar(barCode);
+        if(bar==null || partnerBar!=null){
            return AjaxResult.error("您扫的码不是有效的产品条码！");
         }
         return AjaxResult.success("OK");
@@ -73,70 +74,28 @@ public class WeChatBarController extends BaseController {
      */
 
     @PostMapping("/bindBar")
-    @Transactional
     public AjaxResult bindBox(@RequestHeader("openId")String openId, @RequestBody Map<String,Object> input) throws  Exception{
-        String barCode=input.get("barCode")==null?null:input.get("barCode").toString();
-//        Bar bar=barService.getBar(input.get("barCode").toString());  //确保用艾米森微信小程序扫的是艾米森的条码
-//        PartyBar existed=partyBarService.getBarByCode(barCode);
-//        if(bar==null || existed!=null){
-//            return AjaxResult.error("您扫的码是无效条码！");
-//        }
-
-        PartyBar pb=new PartyBar();
-        pb.setBindWay("wechat");
-        MapUtil.copyFromMap(input,pb);
-       if(input.get("partyId")==null){ //传入的不是partyId,新建Person
-            input.put("wechat",openId);
-            input.put("partyType","PATIENT");
-            Person person=this.partyService.addPerson(input);
-           Map<String,Object> partnerMap=  normalService.findPartnerInfo(barCode);
-           if(partnerMap!=null){
-               pb.setPartnerCode(partnerMap.get("partnerCode").toString());
-           }else{
-               pb.setPartnerCode("unknown");
-           }
-            pb.setPartyId(person.getPartyId());
+        String barCode=input.get("barCode")!=null?input.get("barCode").toString().trim():null;
+        if(barCode==null || barCode.isBlank() ) {
+            return AjaxResult.error("条码号不能缺失");
         }
-//       else{
-//            pb.setPartyId(input.get("partyId").toString());
-//        }
-        partyBarService.save(pb);
-        return AjaxResult.success("绑定成功！");
-    }
-
-
-
-    /**
-     *  手机用户在成员列表中添加新成员
-     * @param inputMap
-     * @throws Exception
-     */
-    @PostMapping("/addMember")
-    @Transactional
-    public void addMember(@RequestHeader("openId")String openId ,@RequestBody Map<String,Object> inputMap) throws  Exception{
-        String masterId=null;
-        if(inputMap.get("partyId")==null ) {
-             masterId= contactService.getPartId4Wechat(openId);
+        Bar bar=barService.getBar(barCode);
+        PartnerBar partnerBar=barService.getPartnerBar(barCode);
+        if(bar==null || partnerBar!=null){
+            return AjaxResult.error("您扫的码不是有效的产品条码！");
+        }
+        input.put("wechat",openId);
+        Map<String,Object> mp=  normalService.findPartnerInfo(barCode);
+        if(mp!=null){
+            input.put("partnerCode",mp.get("partnerCode").toString());
+        }
+        if(partyBarService.saveBindedInfo(input)!=null) {
+            return AjaxResult.success("绑定成功！");
         }else{
-            masterId=inputMap.get("partyId").toString();
-            inputMap.remove("partyId");
+            return AjaxResult.error("绑定条码发生异常！");
         }
-        Person member=null;
-        List<Person> existingPersons=partyService.existPerson(inputMap);
-        if(existingPersons!=null && !existingPersons.isEmpty()){ //已经存在
-
-        }else{ //不存在
-            member=partyService.addPerson(inputMap);
-        }
-        if(member!=null) {
-            PartyRelationship relationship = new PartyRelationship();
-            relationship.setFromId(masterId);
-            relationship.setToId(member.getPartyId());
-            relationship.setRelationType("member");
-            partyrelationshipService.save(relationship);
-        }
-
     }
+
 
     /**
      * 微信新用户授权注册并登录
@@ -160,18 +119,14 @@ public class WeChatBarController extends BaseController {
     /** 根据手机号，查看关联的样本检测进度
      *
      */
-    @PostMapping("/querySampleStatus")
+    @PostMapping("/wechat/BarStatus")
     @Transactional
-    public AjaxResult querySampleStatus(@RequestHeader("openId")String openId ,@RequestBody Map<String,Object> inputMap) throws  Exception{
-        String phone=null;
-        String partyId=null;
-       if(inputMap!=null && ! inputMap.isEmpty() && inputMap.get("phone") !=null){
-           phone=inputMap.get("phone").toString();
-       }
-       if(phone==null){ //根据openId获取手机号
+    public AjaxResult querySampleStatus(@RequestHeader("openId")String openId ,@RequestBody Map<String,Object> input) throws  Exception{
+        String phone=input.get("phone")!=null?input.get("phone").toString().trim():null;
+        if(phone==null){ //根据openId获取手机号
            Map<String,Object> mp=partyService.getPersonInfo(openId);
            if(mp!=null) {
-               partyId = mp.get("partyId").toString();
+               String  partyId = mp.get("partyId").toString();
                phone=contactService.getPartyContact(partyId,"mobile");
            }
        }

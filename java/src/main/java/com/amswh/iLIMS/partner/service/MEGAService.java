@@ -57,7 +57,7 @@ public class MEGAService implements IPartner {
                             patient.setGender("男".equals(tmpMap.get("gender").toString())?"M":"F");
                             patient.setOtherFieldInfo("package",String.valueOf(tmpMap.get("package_num")));
                            // result.put("package",tmpMap.get("package_num"));
-                            patient.setBirthDate(String.valueOf(tmpMap.get("birthdate")));
+                            patient.setBirthday(String.valueOf(tmpMap.get("birthdate")));
                             patient.setSamplingTime(String.valueOf(tmpMap.get("date_sampling")));
                             patient.setPhone(String.valueOf(tmpMap.get("phone")));
                             if(tmpMap.get("package_num")!=null && "CCF001E".equals(tmpMap.get("package_num").toString())) {

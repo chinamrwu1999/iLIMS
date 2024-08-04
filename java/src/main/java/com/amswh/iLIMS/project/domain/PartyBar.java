@@ -16,31 +16,16 @@ import java.time.LocalDateTime;
 @TableName("partybar")
 public class PartyBar {
 
-	@TableId(value="id",type = IdType.AUTO)
-	private Integer id;
+	@TableId(value="barId",type = IdType.INPUT)
+	private String barId;
 
 	@TableField("partyId")
 	private String partyId;
-
-	@TableField("productCode")
-	private String productCode;
-
-	@TableField("partnerCode")
-	private String partnerCode;
-
-	@NotBlank(message = "barCode 不能为空")
-	@TableField("barCode")
-	private String barCode;
-
 	@TableField("age")
 	private Integer age;
 
 	@TableField("bindWay")
 	private String bindWay;
-
-	@TableField("samplingTime")
-	private LocalDateTime samplingTime;
-
 	@TableField("createTime")
 	private LocalDateTime createTime;
 

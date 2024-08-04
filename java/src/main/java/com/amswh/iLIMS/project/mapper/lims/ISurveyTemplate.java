@@ -26,14 +26,14 @@ public interface ISurveyTemplate extends BaseMapper<SurveyTemplate> {
 
     /**
      * 根据条码号获取产品问卷模板
-     * @param barCode
+     * @param code
      * @return
      */
     @Select({"<script>",
             "SELECT template,S.answers FROM PartyBar PB left join SurveyTemplate ST ON PB.productCode=ST.productCode",
             "LEFT JOIN PatientSurvey S ON S.barCode=PB.barCode ",
-            "WHERE PB.barCode=#{barCode}",
+            "WHERE PB.barCode=#{code} ",
             "</script>"})
-    public Map<String,String> fetch_Survey_and_Template(String barCode);
+    public Map<String,String> fetch_Survey_and_Template(String code);
 
 }

@@ -15,21 +15,15 @@ import java.time.LocalDateTime;
 @Data
 @TableName("analyte")
 public class Analyte{
-
-	@TableId(value="id",type = IdType.AUTO)
-	private Integer id;
-
-	@NotBlank(message = "barCode 不能为空")
-	@TableField("barCode")
-	private String barCode;
+//
+//	@TableId(value="id",type = IdType.AUTO)
+//	private Integer id;
+	@TableId(value="barId",type = IdType.INPUT)
+	private String barId;
 
 	@NotBlank(message = "analyteCode 不能为空")
 	@TableField("analyteCode")
 	private String analyteCode;
-
-//	@NotBlank(message = "productCode 不能为空")
-//	@TableField("productCode")
-//	private String productCode;
 
 	@TableField("createTime")
 	private LocalDateTime createTime;

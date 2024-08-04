@@ -139,10 +139,10 @@ public class PartyService extends ServiceImpl<IParty, Party> {
         }
         inputMap.putIfAbsent("partyType", "PERSON");
         if(inputMap.get("gender")!=null){
-             if(inputMap.get("gender").toString().equals("男")){
-                 inputMap.put("gender","M");
-             }else
-            if(inputMap.get("gender").toString().equals("女")){
+            String gender=inputMap.get("gender").toString().trim();
+            if("男".equals(gender)){
+                      inputMap.put("gender","M");
+             }else if("女".equals(gender)){
                 inputMap.put("gender","F");
             }
         }
@@ -241,17 +241,11 @@ public class PartyService extends ServiceImpl<IParty, Party> {
 
     public Person savePatient(PatientInfo patient){
         if(patient==null || patient.getName()==null) return null;
-        Map<String,Object> mp=new HashMap<>();
-        if(patient.getName()!=null){mp.put("name",patient.getName());}
-        if(patient.getGender()!=null){mp.put("gender",patient.getGender());  }
-        if(patient.getAge()!=null){mp.put("age",patient.getAge());}
-        if(patient.getIDNumber()!=null){mp.put("IDNumber",patient.getIDNumber());}
-        if(patient.getBirthDate()!=null){mp.put("birthday",patient.getBirthDate());}
-        if(patient.getIDType()!=null){mp.put("IDCardType",patient.getIDType());}
-        if(patient.getPhone()!=null){mp.put("phone",patient.getPhone());}
+        Map<String,Object> mp=patient.getPatientMap();
         mp.put("partyType","PATIENT");
-        mp.putAll(patient.getOtherInfo());
         try {
+
+
             return this.addPerson(mp);
         }catch (Exception err){
             err.printStackTrace();

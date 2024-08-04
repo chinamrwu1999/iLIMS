@@ -54,7 +54,6 @@ public class YQService implements IPartner {
                 JsonNode data=root.get("data");//开始解析获取的数据
                 //Map<String,Object> result=new HashMap<>();
                 PatientInfo patient=new PatientInfo(barCode,data.get("name").asText());
-
                 if(!MyStringUtils.isEmpty(data.get("gender"))){
                     patient.setGender(data.get("gender").asInt()==1?"M":"F");
                 }
@@ -79,7 +78,7 @@ public class YQService implements IPartner {
                 }
 
                 if(!MyStringUtils.isEmpty(data.get("birthDay"))){
-                    patient.setBirthDate(data.get("birthDay").asText());
+                    patient.setBirthday(data.get("birthDay").asText());
                 }
                 return patient;
 
