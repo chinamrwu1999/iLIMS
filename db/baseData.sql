@@ -120,5 +120,6 @@ CREATE TABLE IF NOT EXISTS `enums`(
 CREATE TABLE IF NOT EXISTS `sequence` (
    seqName   varchar(20) not null primary key,
    seqId   int unsigned default null,
+   colName varchar(20) not null,
    updateTime datetime default now()
 )  COMMENT '序列号生成器用表';
