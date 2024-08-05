@@ -27,11 +27,10 @@ public interface IExpPlan extends BaseMapper<ExpPlan> {
         "SELECT PD.code productCode,PD.name productName,count(*) cnt",
         "FROM analyteProcess AP",
         "LEFT JOIN analyte A ON A.analyteCode=AP.analyteCode",
-        "LEFT JOIN partyBar PB ON A.barCode=PB.barCode",
-        "LEFT JOIN Product PD ON PD.Code=PB.productCode",
+        "LEFT JOIN partnerBar PB ON A.barId=PB.barId",
+        "LEFT JOIN Product PD ON PD.code=PB.productCode",
         "WHERE AP.action='RECEIVE' AND AP.status='success' AND AP.createTime >= DATE_SUB(now(), INTERVAL 5 DAY)",
-        "AND AP.analyteCode not in (SELECT analyteCode FROM expAnalyte A1,expPlan A2 where A1.expPlanId=A2.id AND A2.createTime >= DATE_SUB(now(), INTERVAL 14 DAY))",
-        "AND AP.analyteCode not   in (SELECT analyteCode FROM analyteProcess A where action='REVIEW1'  AND createTime >= DATE_SUB(now(), INTERVAL 14 DAY))",
+        "AND AP.analyteCode not in (SELECT analyteCode FROM expAnalyte A1,expPlan A2 where A1.expPlanId=A2.id AND A2.createTime >= DATE_SUB(now(), INTERVAL 7 DAY))",
         "GROUP BY productCode,productName having count(*) >0 order by count(*) desc",
             "</script>"})
     public List<Map<String,Object>> AnalyteCountToTest();

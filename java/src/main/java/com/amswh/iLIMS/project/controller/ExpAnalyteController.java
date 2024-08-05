@@ -117,7 +117,7 @@ public class ExpAnalyteController {
      * @return
      */
 
-    @GetMapping("/exp/analyte/count")
+    @GetMapping("/exp/toTest/count")
     public AjaxResult AnalytesCountToTest(){
            return AjaxResult.success(this.expAnalyteService.getProductAnalytesCount_to_test());
     }
@@ -127,7 +127,7 @@ public class ExpAnalyteController {
      * @return
      */
 
-    @GetMapping("/exp/analyte/toTest/{productNo}")
+    @GetMapping("/exp/analytesToTest/{productNo}")
     public AjaxResult  listAnalytesToTest(@PathVariable String productNo){
         return AjaxResult.success(this.expAnalyteService.listAnalytesToTest(productNo));
     }
