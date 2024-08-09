@@ -25,6 +25,9 @@ public class ReagentBatch {
     @TableField("quantity")
     private int quantity;
 
+    @TableField("remaining")
+    int remaining;
+
     @TableField("produceDate")
     private LocalDate produceDate;
 

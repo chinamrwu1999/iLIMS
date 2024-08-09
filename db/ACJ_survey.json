@@ -1,0 +1,150 @@
+{
+  "title": "结直肠癌风险评估问卷",
+  "version": "20240808",
+  "risks": [
+    {
+      "name": "肿瘤史(本人)",
+      "questionId":"q01",
+      "question": "",
+      "choices": [
+        { "text": "本人患任何癌症", "choice": false, "input": "" },
+        { "text": "均无", "choice": false }
+      ]
+    },
+    {
+      "name": "肿瘤史(一级亲属)",
+      "questionId":"q02",
+      "question": "",
+      "choices": [
+        { "text": "食管癌", "choice": false },
+        { "text": "胃癌", "choice": false },
+        { "text": "结直肠癌", "choice": false },
+        { "text": "肝癌", "choice": false },
+        { "text": "胰腺癌", "choice": false },
+        { "text": "其他癌症", "choice": false, "input": "" },
+        { "text": "均无", "choice": false }
+      ]
+    },
+    {
+      "name": "不良生活习惯",
+      "questionId":"q03",
+      "question": "",
+      "choices": [
+        { "text": "目前吸烟", "choice": false },
+        { "text": "常接触二手烟", "choice": false },
+        { "text": "长期饮酒>15g/日", "choice": false },
+        { "text": "均无", "choice": false }
+      ]
+    },
+    {
+      "name": "不良饮食习惯(经常进食)",
+      "questionId":"q04",
+      "question": "",
+      "choices": [
+        { "text": "腌制食物", "choice": false },
+        { "text": "热烫饮食", "choice": false },
+        { "text": "食物纤维量少", "choice": false },
+        { "text": "加工肉类", "choice": false },
+        { "text": "油炸食物", "choice": false },
+        { "text": "夏季吃剩饭习惯", "choice": false },
+        { "text": "均无", "choice": false }
+      ]
+    },
+    {
+      "name": "相关消化道预警症状",
+      "questionId":"q05",
+      "question": "",
+      "choices": [
+        { "text": "进食哽噎感", "choice": false },
+        { "text": "长期上腹隐痛、反酸或上腹胀等消化系统病症状","choice": false},
+        { "text": "粘液血便", "choice": false },
+        { "text": "便血", "choice": false },
+        { "text": "黑便", "choice": false },
+        { "text": "大便形状变细", "choice": false },
+        {"text": "经常腹泻","detail": "近2年腹泻累计持续>3个月,每次持续时间>1周","choice": false},
+        {"text": "经常便秘", "tip": "近2年来每年便秘在2个月以上", "choice": false},
+        { "text": "腹泻便秘交替", "choice": false },
+        { "text": "均无", "choice": false }
+      ]
+    },
+    {
+      "name": "其他情况",
+      "question": "q06",
+      "choices": [
+        { "text": "糖尿病史", "choice": false },
+        { "text": "不明原因贫血", "choice": false },
+        { "text": "不明原因体重下降", "choice": false },
+        { "text": "均无", "choice": false }
+      ]
+    },
+    {
+      "name": "其它危险因素（食管）",
+      "questionId":"q07",
+      "question":"",
+      "choices": [
+        { "text": "慢性食管炎或反流性食管炎", "choice": false },
+        { "text": "巴雷特食管", "choice": false },
+        { "text": "贲门失驰缓症", "choice": false },
+        { "text": "食管上皮内瘤变或异型增生", "choice": false },
+        { "text": "其他食管疾病", "choice": false },
+        { "text": "均无", "choice": false }
+      ]
+    },
+    {
+        "name": "其它危险因素（胃）",
+        "questionId":"q08",
+        "question":"",
+        "choices": [
+          { "text": "幽门螺杆菌感染", "choice": false },
+          { "text": "慢性萎缩性胃炎", "choice": false },
+          { "text": "胃溃疡", "choice": false },
+          { "text": "胃息肉", "choice": false },
+          { "text": "术后残胃", "choice": false },
+          { "text": "其他慢性胃病", "choice": false },
+          { "text": "血清蛋白酶原异常", "tip":"PGI、PGII、PGR","choice": false },
+          { "text": "血清胃泌素17异常","tip":"G-17", "choice": false },
+          { "text": "均无", "choice": false }
+        ]
+      },
+      {
+        "name": "其它危险因素（结直肠）",
+        "questionId":"q09",
+        "question":"",
+        "choices": [
+          { "text": "肠道息肉", "choice": false },
+          { "text": "各种慢性肠病", "choice": false },
+          { "text": "结直肠腺瘤", "choice": false },
+          { "text": "慢性阑尾炎或阑尾切除", "choice": false },
+          { "text": "慢性胆道疾病或胆囊切除", "choice": false },
+          { "text": "均无", "choice": false }
+        ]
+      },
+      {
+        "name": "其它危险因素（肝脏）",
+        "questionId":"q10",
+        "question":"",
+        "choices": [
+          { "text": "乙肝", "choice": false },
+          { "text": "丙肝", "choice": false },
+          { "text": "其他肝病", "choice": false },
+          { "text": "肝硬化", "choice": false },
+          { "text": "肝脏结节", "choice": false },
+          { "text": "肝功能异常", "choice": false },
+          { "text": "AFP/AFP-L3异常", "choice": false },
+          { "text": "异常凝血酶原升高", "choice": false },
+          { "text": "均无", "choice": false }
+        ]
+      },
+      {
+        "name": "其它危险因素（胰腺）",
+        "questionId":"q11",
+        "question":"",
+        "choices": [
+          { "text": "慢性胰腺炎发作", "choice": false },
+          { "text": "胰腺良性肿瘤", "choice": false },
+          { "text": "血清CA19-9、CA12-5、CAE等异常", "choice": false },
+          { "text": "均无", "choice": false }
+        ]
+      }
+  ]
+}

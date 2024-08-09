@@ -8,5 +8,7 @@ import java.util.List;
 public class Risk {
 
     private String name;
+    private String questionId;
+    private String question="";
     private List<Choice> choices;
 }

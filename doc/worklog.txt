@@ -1,0 +1,1 @@
+docker service create --name iLIMS --mount type=bind,source=/home/chinamrwu,destination=/web --publish published=8964,target=8964 --entrypoint "java -jar /web/iLIMS-SNAPSHOT.war" --network amsHub --constraint node.hostname==ams jdk:18

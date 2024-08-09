@@ -1,3 +1,4 @@
 实验计划模块接口
 1. /exp/beTest   #待检测样本统计
 2 /product/progress/query  #根据检测项目查询实验流程
+

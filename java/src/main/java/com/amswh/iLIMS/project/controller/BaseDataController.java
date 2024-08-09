@@ -112,4 +112,14 @@ public class BaseDataController {
 
     }
 
+    /**
+     *
+     * @param parentCode
+     * @return
+     */
+    @GetMapping("/getChildCities/{parentCode}")
+    public AjaxResult getChildCities(String parentCode){
+         return AjaxResult.success(constantsService.getChildrenCities(parentCode));
+    }
+
 }

@@ -107,19 +107,8 @@ CREATE TABLE IF NOT EXISTS  `BioSample`(
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT '生物样本基本信息表';
 
 
-CREATE TABLE IF NOT EXISTS `ExpPlan`(
-    `id` char(9) not null primary key COMMENT '9位字符的序列号:例如240304001,前6位为当天日期,后3位为当天流水顺序号',
-    `employeeId` varchar(12) not null  COMMENT '员工工号',
-    `createTime` datetime default now()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '实验计划信息'; 
 
-CREATE TABLE IF NOT EXISTS `ExpAnalyte`(
-    `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',
-    `explanId` varchar(20) not null ,
-    `analyteCode` VARCHAR(12) not null COMMENT '分析物品代码',
-    foreign key(`explanId`) references ExpPlan(`id`),
-    unique(`explanId`,`analyteCode`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '一次检测实验包含的分析物代码'; 
+
 
 CREATE TABLE IF NOT EXISTS `Reagent`(
     `id` varchar(25) NOT NULL PRIMARY KEY,
@@ -150,6 +139,21 @@ CREATE TABLE IF NOT EXISTS `expSteps`(
     
 ) comment '不同检测项目的实验配置信息';
 
+
+CREATE TABLE IF NOT EXISTS `ExpPlan`(
+    `expId` char(9) not null primary key COMMENT '9位字符的序列号:例如240304001,前6位为当天日期,后3位为当天流水顺序号',
+    `employeeId` varchar(12) not null  COMMENT '员工工号',
+    `createTime` datetime default now()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '实验计划信息'; 
+
+CREATE TABLE IF NOT EXISTS `ExpAnalyte`(
+    `id` int unsigned not null AUTO_INCREMENT primary key  COMMENT '自增列,主键，无业务意义',
+    `expId` varchar(20) not null ,
+    `analyteCode` VARCHAR(12) not null COMMENT '分析物品代码',
+    unique(`expId`,`analyteCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '一次检测实验包含的分析物代码'; 
+
+
 CREATE TABLE IF NOT EXISTS `expReagent`(
     `id` int unsigned not null AUTO_INCREMENT primary key,
     `expId`  varchar(20) NOT NULL comment '实验Id',
@@ -159,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `expReagent`(
     `amount` int unsigned not null comment '试剂数量',
     `createTime` timestamp not null default CURRENT_TIMESTAMP,
     unique (`expId`,`stepId`)
-) comment '实验用试剂记录';
+) comment '实验计划用试剂记录';
 
 CREATE TABLE IF NOT EXISTS `Diagnose`(
     `id`  int unsigned not null AUTO_INCREMENT primary key,

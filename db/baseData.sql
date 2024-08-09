@@ -123,3 +123,14 @@ CREATE TABLE IF NOT EXISTS `sequence` (
    colName varchar(20) not null,
    updateTime datetime default now()
 )  COMMENT '序列号生成器用表';
+
+CREATE TABLE IF NOT EXISTS `china2024`(
+  `id` int unsigned not null AUTO_INCREMENT primary key,
+  `adcode` char(6) NOT NULL ,
+  `citycode` varchar(4),
+  `name` varchar(50) NOT NULL,
+  `level` varchar(10) not null,
+  `parent` varchar(8),
+  `longitude` float,
+  `latitude` float
+ );

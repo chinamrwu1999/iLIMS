@@ -1,8 +1,11 @@
 {
     "title":"结直肠癌风险评估问卷",
+    "version":"20240808",
     "risks":[
         {
             "name":"肿瘤史",
+            "questionId":"q01",
+            "question":"一级亲属患:",
             "choices":[
                 { "text":"一级亲属患结直肠癌", "choice":false},
                 { "text":"一级亲属患其它任何癌种", "choice":false},
@@ -13,6 +16,8 @@
         },
         {
             "name":"不良生活习惯",
+            "questionId":"q02",
+            "question":"",
             "choices":[
                 { "text":"目前吸烟", "choice":false},
                 { "text":"常接触二手烟", "choice":false},
@@ -21,6 +26,8 @@
         },
         {
             "name":"不良饮食习惯(经常进食)",
+            "questionId":"q03",
+            "question":"",
             "choices":[
                 { "text":"腌制食物", "choice":false},
                 { "text":"食物纤维量少", "choice":false},
@@ -30,9 +37,11 @@
         },
         {
             "name":"相关消化道预警症状",
+            "questionId":"q04",
+            "question":"",
             "choices":[
-                {"text":"经常腹泻", "detail":"近2年腹泻累计持续>3个月,每次持续时间>1周","choice":false},
-                {"text":"经常便秘", "detail":"近2年来每年便秘在2个月以上", "choice":false},
+                {"text":"经常腹泻", "tip":"近2年腹泻累计持续>3个月,每次持续时间>1周","choice":false},
+                {"text":"经常便秘", "tip":"近2年来每年便秘在2个月以上", "choice":false},
                 {"text":"腹泻便秘交替", "choice":false},
                 {"text":"粘液血便","choice":false},
                 {"text":"便血","choice":false},
@@ -41,6 +50,8 @@
         },
         {
             "name":"其它病史",
+            "questionId":"q05",
+            "question":"",
             "choices":[
                 { "text":"糖尿病史","choice":false},
                 { "text":"血糖异常", "choice":false},
@@ -51,6 +62,8 @@
         },
         {
             "name":"其它危险因素",
+            "questionId":"q06",
+            "question":"",
             "choices":[
                 { "text":"肠道息肉","choice":false},
                 { "text":"溃疡性结肠炎", "choice":false},

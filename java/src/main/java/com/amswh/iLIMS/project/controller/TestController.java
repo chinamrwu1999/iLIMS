@@ -131,7 +131,7 @@ public  class TestController {
 
 
    private SurveyTemplate InsertJSONSurveyTemplate(){
-       String fileName = "E:/iLIMS/db/ACK_survey.json";
+       String fileName = "/web/data/ACK_survey.json";
 
        try {
            List<String> lines = Files.readAllLines(Paths.get(fileName));
@@ -142,7 +142,7 @@ public  class TestController {
            //ObjectMapper objectMapper = new ObjectMapper();
           // JsonNode jsonNode = objectMapper.readTree(jsonText.toString());
            SurveyTemplate template=new SurveyTemplate();
-           template.setProductCode("ACK");
+           template.setProductCode("LDT01");
            template.setTemplate(jsonText.toString());
            surveyService.addNewTemplate(template);
            return template;

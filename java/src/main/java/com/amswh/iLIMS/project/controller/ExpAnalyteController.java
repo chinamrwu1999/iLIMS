@@ -2,6 +2,8 @@ package com.amswh.iLIMS.project.controller;
 
 
 import com.amswh.iLIMS.framework.model.AjaxResult;
+import com.amswh.iLIMS.framework.security.SecurityUtils;
+import com.amswh.iLIMS.framework.security.model.LoginUser;
 import com.amswh.iLIMS.project.domain.ExpPlan;
 import com.amswh.iLIMS.project.domain.PcrData;
 import com.amswh.iLIMS.project.service.DataUploadService;
@@ -34,10 +36,21 @@ public class ExpAnalyteController {
     @Resource
     PcrdataService pcrService;
 
-    @PostMapping("/exp/saveExpPlan")
+
+    /**
+     *
+     * @param analyteCodes
+     * @return
+     */
+    @PostMapping("/exp/savePlan")
     @Transactional
     public AjaxResult saveExpPlan(@RequestBody List<String> analyteCodes){
-        String employee="15010040"; //需要从session获取
+
+        LoginUser userLogin= SecurityUtils.getLoginUser();
+        if(userLogin==null){
+            return AjaxResult.error("请先登录");
+        }
+        String employee=userLogin.getUsername();
         ExpPlan entity=new ExpPlan();
         String expId=seqService.nextExpPlainSeq();
         entity.setId(expId);

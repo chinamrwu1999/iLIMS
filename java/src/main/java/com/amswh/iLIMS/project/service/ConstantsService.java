@@ -118,4 +118,13 @@ public class ConstantsService {
    public List<Enums> fetchEnums(String enumType){
         return this.emumsMapper.fetchEnums(enumType);
    }
+
+   public List<China2024> getCity(String adCode){
+        return this.emumsMapper.getCity(adCode);
+   }
+
+   public List<China2024> getChildrenCities(String parentCode){
+        return this.emumsMapper.getChildrenCities(parentCode);
+   }
+
 }

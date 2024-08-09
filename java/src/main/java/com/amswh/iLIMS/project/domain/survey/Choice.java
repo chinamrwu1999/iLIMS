@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class Choice {
     private String text="";
-    private String detail="";
+    private String tip="";
+    private String input="";
     private Boolean choice=Boolean.FALSE;
 }

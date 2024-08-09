@@ -42,9 +42,6 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
         String barId=String.format("B%010d",getNextSeqId("PartnerBar",1L));
         return barId;
     }
-
-
-
     public Long getNextSeqId(String seqName, long staggerMax) {
         SequenceBank bank = this.getBank(seqName);
         return bank.getNextSeqId(staggerMax);
@@ -213,7 +210,7 @@ public class SeqService extends ServiceImpl<ISequence, Sequence> {
      * @return
      */
     public String nextExpPlainSeq(){
-        long seqId=this.getNextSeqId("expPlain",1L);
+        long seqId=this.getNextSeqId("ExpPlan",1L);
          return String.format("%s%03d",LocalDateTime.now().format(date6Formatter),seqId);
 
     }

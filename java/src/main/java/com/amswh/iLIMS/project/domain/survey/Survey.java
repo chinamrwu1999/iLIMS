@@ -8,5 +8,6 @@ import java.util.List;
 public class Survey {
 
     private  String title;
+    private String version;
     private List<Risk> risks;
 }
